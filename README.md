@@ -78,24 +78,6 @@ My goal is to continue developing my technical and creative abilities while buil
 
 I am particularly interested in opportunities where technology can be used to create useful, intuitive, and meaningful digital experiences.
 
-## Portfolio Structure
-
-```text
-📁 Digital Portfolio
-│
-├── 📂 Projects
-│   ├── Web Development
-│   ├── Applications
-│   ├── Programming
-│   └── Academic Projects
-│
-├── 📂 Designs
-│   └── UI / UX
-│
-├── 📂 Experiments
-│   └── Technology & AI
-│
-└── 📄 README.md
 ```
 
 ## Currently Learning
