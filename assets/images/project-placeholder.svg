@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1000" viewBox="0 0 1440 1000">
+  <rect width="1440" height="1000" fill="#e3e8dc"/>
+  <g fill="none" stroke="#a8b496" stroke-width="2">
+    <rect x="350" y="250" width="740" height="500" rx="24"/>
+    <path d="M350 340h740"/>
+    <circle cx="397" cy="297" r="7"/><circle cx="427" cy="297" r="7"/><circle cx="457" cy="297" r="7"/>
+    <path d="m480 630 140-150 110 115 90-85 140 120"/>
+    <circle cx="860" cy="435" r="35"/>
+  </g>
+  <text x="720" y="855" text-anchor="middle" fill="#536341" font-family="Georgia,serif" font-size="48" font-style="italic">Your project goes here.</text>
+  <text x="720" y="915" text-anchor="middle" fill="#5e6859" font-family="monospace" font-size="19" letter-spacing="3">PROJECT PREVIEW COMING SOON</text>
+</svg>
