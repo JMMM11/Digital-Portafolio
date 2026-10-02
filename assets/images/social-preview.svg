@@ -1,1 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><rect width="1200" height="630" fill="#f7f3e9"/><rect x="830" width="370" height="630" fill="#e3e8dc"/><g fill="none" stroke="#a8b496"><circle cx="980" cy="315" r="145"/><circle cx="980" cy="315" r="115"/><ellipse cx="980" cy="315" rx="65" ry="145"/><ellipse cx="980" cy="315" rx="145" ry="65"/></g><g fill="#303e32" font-family="Georgia,serif"><text x="80" y="240" font-size="76">Thoughtful code.</text><text x="80" y="335" font-size="76" font-style="italic" fill="#536341">Human experiences.</text><text x="80" y="450" font-size="25">[[YOUR NAME]] — Developer portfolio</text></g><path d="M80 510H740" stroke="#ccd0bd"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<rect width="1200" height="630" fill="#08090d"/>
+<path d="M80 96h1040M80 534h1040" stroke="#1a1c24"/>
+<g font-family="Arial,sans-serif" font-weight="400">
+<text x="80" y="244" font-size="78" letter-spacing="-2.7" fill="#eceef3">Thoughtful code.</text>
+<text x="80" y="336" font-size="78" letter-spacing="-2.7" fill="#8a8f9c">Human experiences.</text>
+<text x="80" y="454" font-size="23" fill="#8a8f9c">Jair M. / Developer portfolio</text>
+</g>
+<g transform="translate(940 148) scale(.17)" fill="none" stroke="#eceef3" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"><path d="M12 447 305 324 260 18 348 223 574 223 636 74 747 13 868 122 716 99 655 258 922 240 648 374 644 450 582 450 565 491 375 491 317 414Z"/><path d="m305 324 250 59-543 64m336-224 202 54 5 106 10 108M348 223l-43 101m269-101-24 54M747 13 582 450m73-192-7 116"/></g>
+</svg>

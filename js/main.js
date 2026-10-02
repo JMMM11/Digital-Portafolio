@@ -69,7 +69,7 @@
       img.parentElement.querySelector(".preview-placeholder").hidden = false;
     }
     img.addEventListener("error", fallback, { once: true });
-    if (img.complete && !img.naturalWidth) fallback();
+    if (img.getAttribute("src").endsWith("project-placeholder.svg") || (img.complete && !img.naturalWidth)) fallback();
   });
 
   let scrollQueued = false;
@@ -90,6 +90,33 @@
     if (!scrollQueued) { scrollQueued = true; requestAnimationFrame(updateNavigation); }
   }, { passive: true });
   updateNavigation();
+  // Reveal each section once. Content stays visible when JS or observers are unavailable.
+  const revealMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  if ("IntersectionObserver" in window && !revealMotion.matches) {
+    const sections = [...document.querySelectorAll(".section > .wrap")];
+    const reveal = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.remove("reveal-pending");
+        reveal.unobserve(entry.target);
+      });
+    }, { threshold: 0, rootMargin: "0px 0px -32px 0px" });
+    sections.forEach((section) => {
+      if (section.getBoundingClientRect().top < window.innerHeight) return;
+      section.classList.add("reveal-ready", "reveal-pending");
+      reveal.observe(section);
+    });
+    // Keyboard navigation and motion preferences must never hide focused content.
+    document.addEventListener("focusin", (event) => {
+      const section = event.target.closest(".reveal-pending");
+      if (section) { section.classList.remove("reveal-pending"); reveal.unobserve(section); }
+    });
+    revealMotion.addEventListener("change", (event) => {
+      if (!event.matches) return;
+      sections.forEach((section) => section.classList.remove("reveal-pending"));
+      reveal.disconnect();
+    });
+  }
   // Preserve deep links and the fixed-header offset.
   if (location.hash) {
     const target = document.getElementById(location.hash.slice(1));
@@ -109,8 +136,10 @@
       const color = hex.trim().replace("#", "");
       return /^[0-9a-f]{6}$/i.test(color)
         ? [0, 2, 4].map((index) => parseInt(color.slice(index, index + 2), 16)).join(",")
-        : "83,99,65";
+        : "236,238,243";
     });
+    const configuredRatio = Number(document.body.dataset.accentRatio);
+    const accentRatio = Number.isFinite(configuredRatio) ? Math.max(0, Math.min(1, configuredRatio)) : .12;
     const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
     const pointerQuery = matchMedia("(pointer: fine)");
     let reducedMotion = motionQuery.matches;
@@ -271,6 +300,11 @@
           part: "stem"
         });
       }
+      // Distribute exactly 12% accent particles across the anatomy, not in color bands.
+      brainPoints.forEach((point, index) => {
+        const accent = Math.floor((index + 1) * accentRatio) > Math.floor(index * accentRatio);
+        point.color = accent ? palette[2] : palette[index % 2];
+      });
       projected.length = brainPoints.length;
       for (let index = 0; index < projected.length; index++) projected[index] = {};
     }
@@ -285,10 +319,8 @@
           x: inMargin ? (left ? .015 + random() * .07 : .915 + random() * .07) : random(),
           y: random(),
           size: 2.5 + random() * (index % 9 === 0 ? 12 : 5),
-          speed: .18 + random() * .42,
           angle: random() * Math.PI * 2,
-          phase: random() * Math.PI * 2,
-          color: palette[index % palette.length]
+          color: palette[index % 2]
         };
       });
     }
@@ -302,7 +334,7 @@
         const rect = element.getBoundingClientRect();
         return { left: rect.left - 13, right: rect.right + 13, top: rect.top + scrollOffset - 13, bottom: rect.bottom + scrollOffset + 13 };
       });
-      if (reducedMotion || manuallyPaused) drawAmbient();
+      drawAmbient();
     }
 
     function sizeCanvas(canvas, context, width, height) {
@@ -344,8 +376,8 @@
     function drawBrain() {
       brainContext.clearRect(0, 0, brainWidth, brainHeight);
       const time = reducedMotion ? 0 : elapsed / 1000;
-      const yaw = -.36 + Math.sin(time * .16) * .20 + smoothed.x * .14;
-      const pitch = .10 + Math.sin(time * .12) * .035 + smoothed.y * .055;
+      const yaw = -.36 + Math.sin(time * .035) * .22 + smoothed.x * .07;
+      const pitch = .10 + Math.sin(time * .025) * .025 + smoothed.y * .035;
       const cy = Math.cos(yaw), sy = Math.sin(yaw);
       const cp = Math.cos(pitch), sp = Math.sin(pitch);
       const scale = Math.min(brainWidth / 3.05, brainHeight / 2.65);
@@ -363,39 +395,26 @@
         projectedPoint.y = brainHeight * .48 - (y + .18) * scale * perspective;
         projectedPoint.z = depth;
         projectedPoint.size = point.size * unit * perspective;
-        projectedPoint.angle = point.angle + yaw * .4 + time * .035;
+        projectedPoint.angle = point.angle + yaw * .4;
         projectedPoint.color = point.color;
-        const pulse = .94 + Math.sin(time * .7 + point.phase) * .06;
-        projectedPoint.alpha = (point.part === "gyrus" ? .58 + front * .26 : (.24 + front * .65) * (.65 + point.ridge * .35)) * pulse;
+        projectedPoint.alpha = point.part === "gyrus" ? .36 + front * .22 : (.18 + front * .42) * (.65 + point.ridge * .35);
         projectedPoint.line = .55 + front * .55;
       }
       // Render back to front so near-surface triangles reveal the volume.
       projected.sort((a, b) => a.z - b.z);
       for (const point of projected) triangle(brainContext, point.x, point.y, point.size, point.angle, point.color, point.alpha, point.line);
 
-      // A few loose triangles echo the full-page constellation around the brain.
-      for (let index = 0; index < 18; index++) {
-        const angle = index * goldenAngle;
-        const rx = Math.cos(angle) * brainWidth * .44;
-        const ry = Math.sin(angle) * brainHeight * .43;
-        triangle(brainContext,
-          brainWidth * .5 + rx + Math.sin(time * .18 + index) * 4,
-          brainHeight * .48 + ry + Math.cos(time * .14 + index) * 4,
-          (2 + index % 5) * unit, angle + time * .05,
-          palette[index % palette.length], .16 + (index % 3) * .045, .8);
-      }
     }
 
     function drawAmbient() {
       ambientContext.clearRect(0, 0, ambientWidth, ambientHeight);
-      const time = reducedMotion ? 0 : elapsed / 1000;
+      // Static, sparse margin triangles preserve the motif without background motion.
       for (const point of ambientPoints) {
-        const x = point.x * ambientWidth + Math.sin(time * .13 + point.phase) * 9;
-        const range = ambientHeight + 60;
-        const y = ((point.y * range - time * point.speed * 8) % range + range) % range - 30;
+        const x = point.x * ambientWidth;
+        const y = point.y * ambientHeight;
         if (y < 96 || exclusions.some((rect) => x > rect.left && x < rect.right && y + scrollOffset > rect.top && y + scrollOffset < rect.bottom)) continue;
-        triangle(ambientContext, x, y, point.size, point.angle + time * .045,
-          point.color, .15 + (1 + Math.sin(time * .2 + point.phase)) * .035, .85);
+        triangle(ambientContext, x, y, point.size, point.angle,
+          point.color, .12, .85);
       }
     }
 
@@ -409,7 +428,6 @@
       smoothed.x += (pointer.x - smoothed.x) * .075;
       smoothed.y += (pointer.y - smoothed.y) * .075;
       if (heroVisible) drawBrain();
-      drawAmbient();
     }
     function sync() {
       cancelAnimationFrame(frame);
@@ -420,12 +438,12 @@
       toggle.setAttribute("aria-pressed", String(paused));
       toggle.setAttribute("aria-label", paused ? toggle.dataset.playLabel : toggle.dataset.pauseLabel);
       toggle.textContent = paused ? "▷" : "Ⅱ";
-      if (!document.hidden && !paused) frame = requestAnimationFrame(animate);
+      if (!document.hidden && !paused && heroVisible) frame = requestAnimationFrame(animate);
       else { if (heroVisible) drawBrain(); drawAmbient(); }
     }
     toggle.addEventListener("click", () => { manuallyPaused = !manuallyPaused; sync(); });
     brainCanvas.addEventListener("pointermove", (event) => {
-      if (reducedMotion || !pointerQuery.matches || event.pointerType === "touch") return;
+      if (reducedMotion || manuallyPaused || !pointerQuery.matches || event.pointerType === "touch") return;
       const rect = brainCanvas.getBoundingClientRect();
       pointer.x = (event.clientX - rect.left) / rect.width * 2 - 1;
       pointer.y = (event.clientY - rect.top) / rect.height * 2 - 1;
@@ -433,13 +451,13 @@
     brainCanvas.addEventListener("pointerleave", () => { pointer.x = 0; pointer.y = 0; });
     window.addEventListener("scroll", () => {
       scrollOffset = window.scrollY;
-      if (reducedMotion || manuallyPaused) drawAmbient();
+      drawAmbient();
     }, { passive: true });
     new ResizeObserver(resize).observe(brainCanvas);
     new ResizeObserver(measureExclusions).observe(document.querySelector("main"));
     new IntersectionObserver(([entry]) => {
       heroVisible = entry.isIntersecting;
-      if (heroVisible && (reducedMotion || manuallyPaused)) drawBrain();
+      sync();
     }, { threshold: 0 }).observe(document.getElementById("home"));
     document.addEventListener("visibilitychange", sync);
     motionQuery.addEventListener("change", (event) => {

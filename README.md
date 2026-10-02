@@ -1,5 +1,22 @@
 # Digital Portfolio
 
+## Editar el portafolio
+
+Todo el contenido se edita directamente en `index.html`. No necesitas modificar JavaScript.
+
+La marca de Jair M. se encuentra en `assets/images/jair-mark.svg`; su versión para la pestaña está en `assets/images/favicon.svg`. Puedes cambiar sus rutas en la cabecera y en el `head` del HTML. El acento verde es `#7bc89c`.
+
+- Busca `[[` para completar tus datos, títulos, descripciones y enlaces pendientes.
+- Busca `IMAGEN PROYECTO`: cambia el atributo `src` por la ruta de tu captura y describe la imagen en `alt`. El marcador desaparece al añadir una imagen válida.
+- Busca `DESCARGAR CV`: cambia los dos `href="[[CV PATH]]"` por `href="assets/cv.pdf"` y guarda el PDF en esa carpeta.
+- Busca `ENLACES DEL PROYECTO` para pegar los enlaces al repositorio y a la demo. Actualiza también el enlace de demo sobre la imagen.
+- Para añadir proyectos, duplica un `article.project-card`, asigna un ID de título único y conserva `data-category="personal"` o `"team"`. Los contadores se actualizan automáticamente.
+- El canvas `constellation` define 700 triángulos en escritorio y 300 en móvil. En `body`, `data-accent-ratio="0.12"` reserva el 12 % para el verde.
+
+El diseño usa los seis colores definidos en `:root` de `css/styles.css`, sin degradados ni sombras. Inter Tight, Inter y JetBrains Mono se cargan desde Google Fonts; si no hay conexión, se utilizan las fuentes de reserva del sistema.
+
+La animación puede pausarse junto al cerebro. La preferencia de movimiento reducido desactiva la animación, el paralaje y las transiciones. Las capturas y el CV se guardan en `assets/`, y sus rutas se cambian en el HTML.
+
 Welcome to my digital portfolio — a space where I showcase my projects, skills, ideas, and ongoing growth in technology and digital development.
 
 This portfolio represents both my technical journey and my creative approach to building digital experiences. Each project reflects a combination of problem-solving, design, programming, research, and continuous learning.
