@@ -1,22 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#08090d">
+    <meta name="theme-color" content="#f7f3e9">
     <meta name="description" content="Jair M. — developer portfolio. Explore web projects, technical skills, and experience.">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Jair M. — Developer portfolio">
     <meta property="og:description" content="Thoughtful websites, human experiences. Explore my work and get in touch.">
     <meta property="og:image" content="assets/images/social-preview.svg">
-    <meta name="color-scheme" content="dark">
+    <meta name="color-scheme" content="light dark">
     <title>Jair M. — Developer portfolio</title>
     <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <!-- TEMA: la primera visita usa modo claro; theme.js restaura tu eleccion antes de dibujar la pagina. -->
+    <script src="js/theme.js"></script>
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/main.js" defer></script>
   </head>
   <!-- PARTICULAS: texto, acero y un unico acento verde. data-accent-ratio controla su proporcion. -->
-  <body data-pending-label="Coming soon" data-triangle-colors="#eceef3,#8a8f9c,#7bc89c" data-accent-ratio="0.12">
+  <body data-pending-label="Coming soon" data-triangle-colors="#eceef3,#8a8f9c,#7bc89c" data-triangle-colors-light="#25372e,#606c64,#276a48" data-accent-ratio="0.12">
     <!--
     GUIA RAPIDA: TODO EL CONTENIDO SE EDITA EN ESTE ARCHIVO.
     Usa Ctrl+F para buscar: INICIO, HABILIDADES, PROYECTO 1, IMAGEN PROYECTO,
@@ -37,7 +39,6 @@
         <a class="logo" href="#home" aria-label="Jair M. — Home">
           <!-- MARCA PERSONAL: cambia este src si actualizas tu logo. El icono de la pestaña está en el head. -->
           <img class="logo-mark" src="assets/images/jair-mark.svg" alt="" width="48" height="28"><span>Jair M.<span class="cursor" aria-hidden="true">_</span></span></a>
-        <button class="menu-toggle" aria-expanded="false" aria-controls="navigation" data-open-label="Menu" data-close-label="Close menu"><span>Menu</span><span aria-hidden="true">☰</span></button>
         <nav class="nav" id="navigation" aria-label="A personal portfolio">
           <a class="nav-link" href="#home" aria-current="location"><sup>01</sup>// home</a>
           <a class="nav-link" href="#expertise" ><sup>02</sup>// expertise</a>
@@ -45,6 +46,14 @@
           <a class="nav-link" href="#experience" ><sup>04</sup>// experience</a>
           <a class="nav-link" href="#contact" ><sup>05</sup>// contact</a>
         </nav>
+        <div class="header-actions">
+          <!-- MODO CLARO / OSCURO: puedes editar los textos accesibles del boton aqui. -->
+          <button class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" data-dark-label="Switch to dark mode" data-light-label="Switch to light mode" hidden>
+            <svg class="theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13A8.6 8.6 0 0 1 11 3.5 8.7 8.7 0 1 0 20.5 13Z"/></svg>
+            <svg class="theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+          </button>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="navigation" data-open-label="Menu" data-close-label="Close menu"><span>Menu</span><span aria-hidden="true">☰</span></button>
+        </div>
       </div>
     </header>
     <main id="main" tabindex="-1">
@@ -295,11 +304,32 @@
             </div>
             <h2 id="experience-title">Always a work in progress.</h2>
             <p>Each experience adds a new perspective to the way I work, collaborate, and build.</p>
-            <svg class="journey-mark" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-              <g stroke="currentColor" stroke-width=".8">
-                <path d="M12 76 46 16 80 76ZM30 76 62 20 94 76ZM12 76 46 52 80 76M46 16v36"/>
-              </g>
-            </svg>
+            <!-- ANIMACION DEL RECORRIDO: tu marca de origami. data-duration esta en milisegundos.
+            Edita el texto del pie aqui; la animacion se adapta al tema y al movimiento reducido. -->
+            <figure class="journey-visual">
+              <svg class="journey-art" id="journey-art" viewBox="0 0 360 240" fill="none" aria-hidden="true">
+                <g class="journey-routes">
+                  <path id="journey-route-a" d="M24 136C34 64 174 27 278 58C377 93 340 178 229 204C115 231 3 203 24 136Z"/>
+                  <path id="journey-route-b" d="M69 194C0 131 126 47 235 51C330 53 348 109 285 167C222 227 120 241 69 194Z"/>
+                </g>
+                <g class="journey-stations">
+                  <circle cx="24" cy="136" r="3"/><circle cx="278" cy="58" r="3"/><circle cx="229" cy="204" r="3"/>
+                </g>
+                <g class="journey-bird-float">
+                  <g transform="translate(46 52) scale(.286)" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 447 305 324 260 18 348 223 574 223 636 74 747 13 868 122 716 99 655 258 922 240 648 374 644 450 582 450 565 491 375 491 317 414Z"/>
+                    <path d="m305 324 250 59-543 64m336-224 202 54 5 106 10 108M348 223l-43 101m269-101-24 54M747 13 582 450m73-192-7 116"/>
+                  </g>
+                </g>
+                <g class="journey-traveler" data-orbit-path="journey-route-a" data-duration="18000" transform="translate(24 136)"><circle r="4"/><circle class="journey-traveler-ring" r="8"/></g>
+                <g class="journey-traveler" data-orbit-path="journey-route-b" data-duration="24000" transform="translate(69 194)"><circle r="3"/><circle class="journey-traveler-ring" r="7"/></g>
+                <g transform="translate(260 56)"><g class="journey-signal"><circle r="7"/></g></g>
+              </svg>
+              <figcaption class="journey-caption">
+                <span class="mono">Learning, in motion.</span>
+                <button class="journey-toggle" type="button" aria-label="Pause journey animation" data-pause-label="Pause journey animation" data-play-label="Play journey animation" aria-pressed="false" aria-controls="journey-art" hidden><span aria-hidden="true">Ⅱ</span></button>
+              </figcaption>
+            </figure>
           </div>
           <div class="timeline">
             <div class="timeline-group">

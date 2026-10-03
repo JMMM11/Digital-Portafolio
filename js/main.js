@@ -1,6 +1,30 @@
 (() => {
   "use strict";
   // All content and URLs are edited in index.html. This file only adds behavior.
+  const themeToggle = document.querySelector(".theme-toggle");
+  function applyTheme(theme, persist = false) {
+    const selected = theme === "dark" ? "dark" : "light";
+    document.documentElement.dataset.theme = selected;
+    document.querySelector('meta[name="theme-color"]').content = selected === "dark" ? "#08090d" : "#f7f3e9";
+    if (themeToggle) {
+      const label = selected === "dark" ? themeToggle.dataset.lightLabel : themeToggle.dataset.darkLabel;
+      themeToggle.setAttribute("aria-label", label);
+      themeToggle.setAttribute("aria-pressed", String(selected === "dark"));
+      themeToggle.title = label;
+      themeToggle.hidden = false;
+    }
+    if (persist) {
+      try { localStorage.setItem("jair-portfolio-theme", selected); } catch { /* Theme switching still works. */ }
+    }
+    window.dispatchEvent(new CustomEvent("themechange", { detail: { theme: selected } }));
+  }
+  applyTheme(document.documentElement.dataset.theme);
+  themeToggle?.addEventListener("click", () => {
+    applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark", true);
+  });
+  window.addEventListener("storage", (event) => {
+    if (event.key === "jair-portfolio-theme" || event.key === null) applyTheme(event.newValue);
+  });
   // Keep unfinished links inert. Replacing href in the HTML enables them on reload.
   document.querySelectorAll("a[href]").forEach((link) => {
     const href = link.getAttribute("href").trim();
@@ -247,6 +271,58 @@
     if (target) requestAnimationFrame(() => target.scrollIntoView({ behavior: "instant" }));
   }
 
+  function startJourneyVisual() {
+    const figure = document.querySelector(".journey-visual");
+    if (!figure || !figure.animate) return;
+    const button = figure.querySelector(".journey-toggle");
+    const motion = matchMedia("(prefers-reduced-motion: reduce)");
+    const animations = [];
+    let paused = false;
+    let visible = !("IntersectionObserver" in window);
+    // Sample the editable SVG paths once. The browser animates the transforms afterwards.
+    figure.querySelectorAll("[data-orbit-path]").forEach((traveler) => {
+      const path = document.getElementById(traveler.dataset.orbitPath);
+      if (!path) return;
+      const length = path.getTotalLength();
+      const frames = Array.from({ length: 97 }, (_, index) => {
+        const point = path.getPointAtLength(length * index / 96);
+        return { transform: `translate(${point.x}px, ${point.y}px)`, offset: index / 96 };
+      });
+      const duration = Math.max(8000, Math.min(60000, Number(traveler.dataset.duration) || 18000));
+      animations.push(traveler.animate(frames, { duration, iterations: Infinity, easing: "linear" }));
+    });
+    animations.push(figure.querySelector(".journey-bird-float").animate(
+      [{ transform: "translateY(0px)" }, { transform: "translateY(-5px)" }, { transform: "translateY(0px)" }],
+      { duration: 6400, iterations: Infinity, easing: "ease-in-out" }
+    ));
+    animations.push(figure.querySelector(".journey-signal").animate(
+      [{ transform: "scale(1)", opacity: .35 }, { transform: "scale(2.8)", opacity: 0 }],
+      { duration: 3200, iterations: Infinity, easing: "ease-out" }
+    ));
+    function sync() {
+      const globalPause = document.body.classList.contains("motion-paused");
+      const stopped = paused || motion.matches || globalPause;
+      animations.forEach((animation) => {
+        if (stopped || !visible || document.hidden) animation.pause();
+        else animation.play();
+      });
+      button.hidden = motion.matches;
+      button.disabled = globalPause;
+      button.setAttribute("aria-pressed", String(stopped));
+      button.setAttribute("aria-label", stopped ? button.dataset.playLabel : button.dataset.pauseLabel);
+      button.firstElementChild.textContent = stopped ? "▷" : "Ⅱ";
+    }
+    button.addEventListener("click", () => { paused = !paused; sync(); });
+    motion.addEventListener("change", sync);
+    document.addEventListener("visibilitychange", sync);
+    new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }).observe(figure);
+    }
+    sync();
+  }
+  startJourneyVisual();
+
   function startParticles() {
     const brainCanvas = document.getElementById("constellation");
     const ambientCanvas = document.getElementById("ambient-particles");
@@ -256,12 +332,17 @@
     if (!brainContext || !ambientContext) return;
 
     // All visual settings that you may want to change are HTML data attributes.
-    const palette = document.body.dataset.triangleColors.split(",").map((hex) => {
-      const color = hex.trim().replace("#", "");
-      return /^[0-9a-f]{6}$/i.test(color)
-        ? [0, 2, 4].map((index) => parseInt(color.slice(index, index + 2), 16)).join(",")
-        : "236,238,243";
-    });
+    function readPalette() {
+      const colors = document.documentElement.dataset.theme === "light"
+        ? document.body.dataset.triangleColorsLight : document.body.dataset.triangleColors;
+      return colors.split(",").map((hex) => {
+        const color = hex.trim().replace("#", "");
+        return /^[0-9a-f]{6}$/i.test(color)
+          ? [0, 2, 4].map((index) => parseInt(color.slice(index, index + 2), 16)).join(",")
+          : "96,108,100";
+      });
+    }
+    let palette = readPalette();
     const configuredRatio = Number(document.body.dataset.accentRatio);
     const accentRatio = Number.isFinite(configuredRatio) ? Math.max(0, Math.min(1, configuredRatio)) : .12;
     const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
@@ -673,6 +754,13 @@
       sync();
     }, { threshold: 0 }).observe(document.getElementById("home"));
     document.addEventListener("visibilitychange", sync);
+    window.addEventListener("themechange", () => {
+      palette = readPalette();
+      buildBrain();
+      buildAmbient();
+      drawBrain();
+      drawAmbient();
+    });
     motionQuery.addEventListener("change", (event) => {
       reducedMotion = event.matches;
       smoothed.x = 0; smoothed.y = 0;

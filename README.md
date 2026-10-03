@@ -13,9 +13,19 @@ La marca de Jair M. se encuentra en `assets/images/jair-mark.svg`; su versión p
 - Para añadir proyectos, duplica un `article.project-card`, asigna un ID de título único y conserva `data-category="personal"` o `"team"`. Los contadores se actualizan automáticamente.
 - El canvas `constellation` define 700 triángulos en escritorio y 300 en móvil. En `body`, `data-accent-ratio="0.12"` reserva el 12 % para el verde.
 
-El diseño usa los seis colores definidos en `:root` de `css/styles.css`, sin degradados ni sombras. Poppins se carga localmente desde `Fonts/` en varios pesos e itálicas para dar personalidad a títulos, énfasis y texto general.
+El diseño usa un tema claro por defecto y el tema oscuro original. Los seis colores de cada tema están definidos en `:root` y `:root[data-theme="dark"]` de `css/styles.css`, sin degradados ni sombras. Poppins se carga localmente desde `Fonts/` en varios pesos e itálicas para dar personalidad a títulos, énfasis y texto general.
 
 La animación puede pausarse junto al cerebro. La preferencia de movimiento reducido desactiva la animación, el paralaje y las transiciones. Las capturas y el CV se guardan en `assets/`, y sus rutas se cambian en el HTML.
+
+### Modo claro y oscuro
+
+La primera visita abre en modo claro, con fondo crema y acento verde. El botón de luna/sol en la cabecera permite cambiar al modo oscuro original. La selección se guarda localmente; `js/theme.js` la restaura antes de cargar los estilos para evitar parpadeos. Si el navegador no permite almacenamiento, el selector sigue funcionando durante la visita.
+
+El cerebro usa `data-triangle-colors-light` en modo claro y `data-triangle-colors` en modo oscuro, ambos en el `body` de `index.html`. Los iconos incluidos se adaptan al fondo; las capturas de tus proyectos conservan sus colores.
+
+### Animación del recorrido
+
+Busca `ANIMACION DEL RECORRIDO` en `index.html`: el ave de origami flota entre rutas con puntos en movimiento. Puedes editar el pie y los valores `data-duration` de cada punto (milisegundos). Tiene un botón de pausa propio, respeta la pausa general y el movimiento reducido, y se detiene fuera de pantalla. Sin JavaScript se muestra la ilustración estática.
 
 ### Carrusel de iconos
 
@@ -109,24 +119,6 @@ My goal is to continue developing my technical and creative abilities while buil
 
 I am particularly interested in opportunities where technology can be used to create useful, intuitive, and meaningful digital experiences.
 
-## Portfolio Structure
-
-```text
-📁 Digital Portfolio
-│
-├── 📂 Projects
-│   ├── Web Development
-│   ├── Applications
-│   ├── Programming
-│   └── Academic Projects
-│
-├── 📂 Designs
-│   └── UI / UX
-│
-├── 📂 Experiments
-│   └── Technology & AI
-│
-└── 📄 README.md
 ```
 
 ## Currently Learning
