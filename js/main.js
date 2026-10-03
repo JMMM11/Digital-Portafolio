@@ -72,6 +72,113 @@
     if (img.getAttribute("src").endsWith("project-placeholder.svg") || (img.complete && !img.naturalWidth)) fallback();
   });
 
+  // Icon sources live in HTML. Clones are only visual and hidden from assistive technology.
+  function startIconCarousels() {
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    document.querySelectorAll(".tech-marquee").forEach((carousel) => {
+      const viewport = carousel.querySelector(".tech-marquee-viewport");
+      const track = carousel.querySelector(".tech-marquee-track");
+      const source = carousel.querySelector("[data-marquee-source]");
+      const toggle = carousel.querySelector(".tech-marquee-toggle");
+      if (!viewport || !track || !source || !toggle || !track.animate) return;
+      const configuredSpeed = Number(carousel.dataset.speed);
+      const speed = Number.isFinite(configuredSpeed) && configuredSpeed > 0
+        ? Math.max(8, Math.min(100, configuredSpeed)) : 32;
+      let animation;
+      let duration = 0;
+      let paused = false;
+      let hovered = false;
+      let focused = false;
+      let visible = true;
+      let resizeFrame = 0;
+
+      function sync() {
+        const globalPause = document.body.classList.contains("motion-paused");
+        const stopped = paused || globalPause || reducedMotion.matches;
+        toggle.hidden = !animation;
+        toggle.disabled = globalPause || reducedMotion.matches;
+        toggle.setAttribute("aria-pressed", String(stopped));
+        toggle.setAttribute("aria-label", stopped ? toggle.dataset.playLabel : toggle.dataset.pauseLabel);
+        toggle.firstElementChild.textContent = stopped ? "▷" : "Ⅱ";
+        if (!animation) return;
+        if (stopped || hovered || focused || !visible || document.hidden) animation.pause();
+        else animation.play();
+      }
+
+      function build() {
+        resizeFrame = 0;
+        const phase = animation && duration ? (Number(animation.currentTime) % duration) / duration : 0;
+        animation?.cancel();
+        animation = undefined;
+        track.querySelectorAll("[data-marquee-clone]").forEach((clone) => clone.remove());
+        carousel.classList.remove("is-looping");
+        carousel.hidden = source.children.length === 0;
+        const width = source.getBoundingClientRect().width;
+        if (reducedMotion.matches || !source.children.length || !width || !viewport.clientWidth) {
+          sync();
+          return;
+        }
+        // Fill even very wide screens or lists containing a single icon, plus one full cycle.
+        const copies = Math.ceil(viewport.clientWidth / width);
+        for (let index = 0; index < copies; index++) {
+          const clone = source.cloneNode(true);
+          clone.removeAttribute("data-marquee-source");
+          clone.setAttribute("data-marquee-clone", "");
+          clone.setAttribute("aria-hidden", "true");
+          clone.setAttribute("inert", "");
+          clone.removeAttribute("id");
+          clone.querySelectorAll("[id]").forEach((element) => element.removeAttribute("id"));
+          clone.querySelectorAll("img").forEach((img) => { img.alt = ""; });
+          track.append(clone);
+        }
+        viewport.scrollLeft = 0;
+        duration = width / speed * 1000;
+        animation = track.animate(
+          [{ transform: "translateX(0)" }, { transform: `translateX(-${width}px)` }],
+          { duration, iterations: Infinity, easing: "linear" }
+        );
+        animation.currentTime = phase * duration;
+        carousel.classList.add("is-looping");
+        sync();
+      }
+      function scheduleBuild() {
+        cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(build);
+      }
+      toggle.addEventListener("click", () => { paused = !paused; sync(); });
+      viewport.addEventListener("pointerenter", (event) => {
+        if (event.pointerType !== "mouse") return;
+        hovered = true;
+        sync();
+      });
+      viewport.addEventListener("pointerleave", () => { hovered = false; sync(); });
+      viewport.addEventListener("focusin", () => { focused = true; sync(); });
+      viewport.addEventListener("focusout", (event) => {
+        focused = viewport.contains(event.relatedTarget);
+        sync();
+      });
+      document.addEventListener("visibilitychange", sync);
+      reducedMotion.addEventListener("change", scheduleBuild);
+      new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+      new MutationObserver(scheduleBuild).observe(source, {
+        childList: true, subtree: true, attributes: true, attributeFilter: ["src", "alt"]
+      });
+      if ("ResizeObserver" in window) {
+        const resize = new ResizeObserver(scheduleBuild);
+        resize.observe(viewport);
+        resize.observe(source);
+      } else {
+        window.addEventListener("resize", scheduleBuild, { passive: true });
+      }
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); })
+          .observe(carousel);
+      }
+      build();
+    });
+  }
+  startIconCarousels();
+
   let scrollQueued = false;
   function updateNavigation() {
     const sections = [...document.querySelectorAll("main > section")];
@@ -90,33 +197,50 @@
     if (!scrollQueued) { scrollQueued = true; requestAnimationFrame(updateNavigation); }
   }, { passive: true });
   updateNavigation();
-  // Reveal each section once. Content stays visible when JS or observers are unavailable.
+  // Cinematic entrances use existing HTML; the content stays editable and works without JS.
   const revealMotion = matchMedia("(prefers-reduced-motion: reduce)");
-  if ("IntersectionObserver" in window && !revealMotion.matches) {
-    const sections = [...document.querySelectorAll(".section > .wrap")];
-    const reveal = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.remove("reveal-pending");
-        reveal.unobserve(entry.target);
-      });
-    }, { threshold: 0, rootMargin: "0px 0px -32px 0px" });
-    sections.forEach((section) => {
-      if (section.getBoundingClientRect().top < window.innerHeight) return;
-      section.classList.add("reveal-ready", "reveal-pending");
-      reveal.observe(section);
-    });
-    // Keyboard navigation and motion preferences must never hide focused content.
-    document.addEventListener("focusin", (event) => {
-      const section = event.target.closest(".reveal-pending");
-      if (section) { section.classList.remove("reveal-pending"); reveal.unobserve(section); }
-    });
-    revealMotion.addEventListener("change", (event) => {
-      if (!event.matches) return;
-      sections.forEach((section) => section.classList.remove("reveal-pending"));
-      reveal.disconnect();
-    });
+  let revealObserver;
+  function revealAll() {
+    document.querySelectorAll(".reveal-pending").forEach((element) => element.classList.remove("reveal-pending"));
+    revealObserver?.disconnect();
   }
+  if (!revealMotion.matches) {
+    document.body.classList.add("motion-ready", "hero-enter");
+    if ("IntersectionObserver" in window) {
+      const targets = [...document.querySelectorAll(
+        ".section > .wrap > .eyebrow, .section-heading, .skill, .work-tools, .project-card, .experience-heading, .timeline-label, .timeline-entry, .contact .wrap > :not(.eyebrow), .footer-inner"
+      )];
+      revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.remove("reveal-pending");
+          revealObserver.unobserve(entry.target);
+        });
+      }, { threshold: 0, rootMargin: "0px 0px -24px 0px" });
+      targets.forEach((element) => {
+        // Do not transform the sticky experience column.
+        if (element.matches(".experience-heading")) return;
+        if (element.matches(".skill, .project-card")) {
+          const siblings = [...element.parentElement.children];
+          element.style.setProperty("--reveal-delay", (siblings.indexOf(element) % 3) * 90 + "ms");
+        }
+        element.classList.add("reveal-ready", "reveal-pending");
+        revealObserver.observe(element);
+      });
+      document.addEventListener("focusin", (event) => {
+        const target = event.target.closest(".reveal-pending");
+        if (target) { target.classList.remove("reveal-pending"); revealObserver.unobserve(target); }
+      });
+    }
+  }
+  revealMotion.addEventListener("change", (event) => {
+    if (event.matches) {
+      revealAll();
+      document.body.classList.remove("motion-ready", "hero-enter");
+    } else {
+      document.body.classList.add("motion-ready");
+    }
+  });
   // Preserve deep links and the fixed-header offset.
   if (location.hash) {
     const target = document.getElementById(location.hash.slice(1));
@@ -149,6 +273,14 @@
     let lastTime = 0;
     let lastDraw = 0;
     let elapsed = 0;
+    let entranceElapsed = 0;
+    let heroTop = 0;
+    let heroHeight = 1;
+    let scrollDepth = 0;
+    let orbitPoints = [];
+    const requestedDuration = Number(brainCanvas.dataset.revealDuration);
+    const entranceDuration = Number.isFinite(requestedDuration) && requestedDuration > 0
+      ? Math.max(800, Math.min(5000, requestedDuration)) : 2600;
     let scrollOffset = window.scrollY;
     let brainWidth = 0;
     let brainHeight = 0;
@@ -304,7 +436,23 @@
       brainPoints.forEach((point, index) => {
         const accent = Math.floor((index + 1) * accentRatio) > Math.floor(index * accentRatio);
         point.color = accent ? palette[2] : palette[index % 2];
+        point.accent = accent;
+        // Every triangle starts on a Fibonacci sphere and settles into its brain position.
+        const sphereY = 1 - 2 * (index + .5) / count;
+        const sphereRadius = Math.sqrt(Math.max(0, 1 - sphereY * sphereY));
+        point.orbX = Math.cos(index * goldenAngle) * sphereRadius * .98;
+        point.orbY = sphereY * .98 - .12;
+        point.orbZ = Math.sin(index * goldenAngle) * sphereRadius * .98;
       });
+      const orbitLimit = window.innerWidth <= 760 ? brainCanvas.dataset.mobileOrbitCount : brainCanvas.dataset.orbitCount;
+      const orbitCount = Math.max(0, Math.min(240, Number(orbitLimit) || 0));
+      orbitPoints = Array.from({ length: orbitCount }, (_, index) => ({
+        angle: index * goldenAngle,
+        radius: 1.20 + random() * .15,
+        inclination: index % 3,
+        size: .55 + random() * .65,
+        accent: index % 8 === 0
+      }));
       projected.length = brainPoints.length;
       for (let index = 0; index < projected.length; index++) projected[index] = {};
     }
@@ -345,6 +493,9 @@
     }
     function resize() {
       const bounds = brainCanvas.getBoundingClientRect();
+      const heroBounds = document.getElementById("home").getBoundingClientRect();
+      heroTop = heroBounds.top + window.scrollY;
+      heroHeight = heroBounds.height;
       brainWidth = bounds.width;
       brainHeight = bounds.height;
       ambientWidth = window.innerWidth;
@@ -376,34 +527,88 @@
     function drawBrain() {
       brainContext.clearRect(0, 0, brainWidth, brainHeight);
       const time = reducedMotion ? 0 : elapsed / 1000;
-      const yaw = -.36 + Math.sin(time * .035) * .22 + smoothed.x * .07;
-      const pitch = .10 + Math.sin(time * .025) * .025 + smoothed.y * .035;
+      const progress = reducedMotion ? 1 : Math.min(1, entranceElapsed / entranceDuration);
+      const settle = progress * progress * (3 - 2 * progress);
+      const morph = (1 - settle) + settle * scrollDepth * .65;
+      const yaw = -.36 + Math.sin(time * .12) * .28 + smoothed.x * .14;
+      const pitch = .10 + Math.sin(time * .08) * .045 + smoothed.y * .065;
       const cy = Math.cos(yaw), sy = Math.sin(yaw);
       const cp = Math.cos(pitch), sp = Math.sin(pitch);
-      const scale = Math.min(brainWidth / 3.05, brainHeight / 2.65);
+      const scale = Math.min(brainWidth / 3.15, brainHeight / 2.9);
       const unit = Math.max(.65, scale / 175);
+      const breath = 1 + Math.sin(time * .42) * .014;
+      const wave = Math.sin(time * .55) * 1.5;
+
+      function project(x, y, z) {
+        const rx = x * cy + z * sy;
+        const rz = z * cy - x * sy;
+        const ry = y * cp - rz * sp;
+        const depth = y * sp + rz * cp;
+        const perspective = 3.8 / (3.8 - depth * .6);
+        return {
+          x: brainWidth * .49 + rx * scale * perspective,
+          y: brainHeight * .48 - (ry + .18) * scale * perspective,
+          z: depth, perspective
+        };
+      }
+
+      // Fine orbital arcs and satellites add the depth of a data orb, in the existing palette.
+      function orbitPosition(angle, radius, inclination) {
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        const tilt = [.40, -.62, 1.04][inclination];
+        return project(x * Math.cos(tilt) - y * .28 * Math.sin(tilt),
+          x * Math.sin(tilt) + y * .28 * Math.cos(tilt) - .12, y * .84);
+      }
+      for (let ring = 0; ring < 3; ring++) {
+        brainContext.beginPath();
+        for (let step = 0; step <= 100; step++) {
+          const point = orbitPosition(step / 100 * Math.PI * 2 + time * .035, 1.30, ring);
+          if (step === 0) brainContext.moveTo(point.x, point.y);
+          else brainContext.lineTo(point.x, point.y);
+        }
+        brainContext.strokeStyle = `rgba(${palette[2]},.09)`;
+        brainContext.lineWidth = .65;
+        brainContext.stroke();
+      }
+      for (const point of orbitPoints) {
+        const p = orbitPosition(point.angle + time * .055, point.radius, point.inclination);
+        const opacity = p.z < 0 ? .12 : .34;
+        brainContext.beginPath();
+        brainContext.arc(p.x, p.y, point.size * unit, 0, Math.PI * 2);
+        brainContext.fillStyle = `rgba(${point.accent ? palette[2] : palette[1]},${opacity})`;
+        brainContext.fill();
+      }
+
       for (let index = 0; index < brainPoints.length; index++) {
         const point = brainPoints[index];
-        const x = point.x * cy + point.z * sy;
-        const z = point.z * cy - point.x * sy;
-        const y = point.y * cp - z * sp;
-        const depth = point.y * sp + z * cp;
-        const perspective = 3.8 / (3.8 - depth * .6);
-        const front = Math.max(0, Math.min(1, (depth + .8) / 1.6));
-        const projectedPoint = projected[index];
-        projectedPoint.x = brainWidth * .49 + x * scale * perspective;
-        projectedPoint.y = brainHeight * .48 - (y + .18) * scale * perspective;
-        projectedPoint.z = depth;
-        projectedPoint.size = point.size * unit * perspective;
-        projectedPoint.angle = point.angle + yaw * .4;
-        projectedPoint.color = point.color;
-        projectedPoint.alpha = point.part === "gyrus" ? .36 + front * .22 : (.18 + front * .42) * (.65 + point.ridge * .35);
-        projectedPoint.line = .55 + front * .55;
+        const bx = (point.x * (1 - morph) + point.orbX * morph) * breath;
+        const by = (point.y * (1 - morph) + point.orbY * morph) * breath;
+        const bz = (point.z * (1 - morph) + point.orbZ * morph) * breath;
+        const p = project(bx, by, bz);
+        const front = Math.max(0, Math.min(1, (p.z + .8) / 1.6));
+        const signal = reducedMotion ? 0 : Math.exp(-((bx - wave) ** 2) / .055);
+        const target = projected[index];
+        target.x = p.x;
+        target.y = p.y;
+        target.z = p.z;
+        target.size = point.size * unit * p.perspective * (1 + signal * .16);
+        target.angle = point.angle + yaw * .4 + (1 - settle) * Math.PI * .5;
+        target.color = point.color;
+        target.accent = point.accent;
+        target.signal = signal;
+        target.alpha = Math.min(.9, (point.part === "gyrus" ? .40 + front * .24 : (.20 + front * .44) * (.65 + point.ridge * .35)) + signal * .16);
+        target.line = .55 + front * .55;
       }
-      // Render back to front so near-surface triangles reveal the volume.
       projected.sort((a, b) => a.z - b.z);
-      for (const point of projected) triangle(brainContext, point.x, point.y, point.size, point.angle, point.color, point.alpha, point.line);
-
+      for (const point of projected) {
+        // A broad, faint outline makes green signals luminous without shadows or gradients.
+        if (point.accent && point.z > 0) {
+          triangle(brainContext, point.x, point.y, point.size * 1.4, point.angle,
+            point.color, .06 + point.signal * .10, 2);
+        }
+        triangle(brainContext, point.x, point.y, point.size, point.angle, point.color, point.alpha, point.line);
+      }
     }
 
     function drawAmbient() {
@@ -411,7 +616,7 @@
       // Static, sparse margin triangles preserve the motif without background motion.
       for (const point of ambientPoints) {
         const x = point.x * ambientWidth;
-        const y = point.y * ambientHeight;
+        const y = point.y * ambientHeight + (reducedMotion || manuallyPaused ? 0 : Math.sin(scrollOffset * .0008 + point.angle) * 16);
         if (y < 96 || exclusions.some((rect) => x > rect.left && x < rect.right && y + scrollOffset > rect.top && y + scrollOffset < rect.bottom)) continue;
         triangle(ambientContext, x, y, point.size, point.angle,
           point.color, .12, .85);
@@ -422,11 +627,17 @@
       frame = requestAnimationFrame(animate);
       // Canvas drawing stays at 30fps; no frame catch-up after tab visibility changes.
       if (lastDraw && time - lastDraw < 1000 / 30) return;
-      if (lastTime) elapsed += Math.min(time - lastTime, 80);
+      if (lastTime) {
+        const delta = Math.min(time - lastTime, 80);
+        elapsed += delta;
+        entranceElapsed += delta;
+      }
       lastTime = time;
       lastDraw = time;
       smoothed.x += (pointer.x - smoothed.x) * .075;
       smoothed.y += (pointer.y - smoothed.y) * .075;
+      const targetDepth = Math.max(0, Math.min(1, (scrollOffset - heroTop) / heroHeight));
+      scrollDepth += (targetDepth - scrollDepth) * .05;
       if (heroVisible) drawBrain();
     }
     function sync() {
@@ -434,6 +645,8 @@
       lastTime = 0;
       lastDraw = 0;
       const paused = manuallyPaused || reducedMotion;
+      document.body.classList.toggle("motion-paused", paused);
+      if (paused) revealAll();
       toggle.disabled = reducedMotion;
       toggle.setAttribute("aria-pressed", String(paused));
       toggle.setAttribute("aria-label", paused ? toggle.dataset.playLabel : toggle.dataset.pauseLabel);
@@ -463,6 +676,9 @@
     motionQuery.addEventListener("change", (event) => {
       reducedMotion = event.matches;
       smoothed.x = 0; smoothed.y = 0;
+      pointer.x = 0; pointer.y = 0;
+      scrollDepth = 0;
+      entranceElapsed = entranceDuration;
       sync();
     });
     window.addEventListener("resize", resize, { passive: true });

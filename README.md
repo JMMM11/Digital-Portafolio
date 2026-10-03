@@ -13,9 +13,23 @@ La marca de Jair M. se encuentra en `assets/images/jair-mark.svg`; su versión p
 - Para añadir proyectos, duplica un `article.project-card`, asigna un ID de título único y conserva `data-category="personal"` o `"team"`. Los contadores se actualizan automáticamente.
 - El canvas `constellation` define 700 triángulos en escritorio y 300 en móvil. En `body`, `data-accent-ratio="0.12"` reserva el 12 % para el verde.
 
-El diseño usa los seis colores definidos en `:root` de `css/styles.css`, sin degradados ni sombras. Inter Tight, Inter y JetBrains Mono se cargan desde Google Fonts; si no hay conexión, se utilizan las fuentes de reserva del sistema.
+El diseño usa los seis colores definidos en `:root` de `css/styles.css`, sin degradados ni sombras. Poppins se carga localmente desde `Fonts/` en varios pesos e itálicas para dar personalidad a títulos, énfasis y texto general.
 
 La animación puede pausarse junto al cerebro. La preferencia de movimiento reducido desactiva la animación, el paralaje y las transiciones. Las capturas y el CV se guardan en `assets/`, y sus rutas se cambian en el HTML.
+
+### Carrusel de iconos
+
+Busca `CARRUSEL DE ICONOS` en `index.html`. Guarda tus imágenes en `assets/icons/` y cambia el `src` de cada `img`. Para añadir un icono, copia una sola línea `img` y cambia su ruta y su `alt`. No dupliques la lista: el carrusel repite automáticamente las imágenes sin cortes.
+
+`data-speed="32"` controla la velocidad en píxeles por segundo. Se pausa con su botón, al pasar el cursor o al enfocarlo con el teclado. También respeta la pausa general y el movimiento reducido; en ese modo, o sin JavaScript, puedes desplazar la lista horizontalmente.
+
+Se incluyen iconos de Python, Java, JavaScript, C++, HTML, CSS y Git de [Devicon v2.16.0](https://github.com/devicons/devicon/tree/v2.16.0), adaptados a blanco para combinar con la paleta. La licencia está en `assets/icons/LICENSE.txt`. Tus nuevas imágenes conservan sus propios colores.
+
+### Animaciones del cerebro
+
+La entrada transforma una esfera de triángulos en el cerebro. Sus órbitas giran lentamente y una onda luminosa recorre la figura. Al desplazarte, el cerebro se aproxima a la forma de un orbe; las secciones, iconos y proyectos aparecen en secuencia. El contenido y la tipografía Poppins se conservan.
+
+En el canvas `constellation` de `index.html` puedes ajustar `data-reveal-duration="2600"` (duración de la entrada en milisegundos), `data-orbit-count="120"` y `data-mobile-orbit-count="48"` (puntos orbitales; usa 0 para ocultarlos). El botón de pausa detiene también las entradas y efectos de interacción. El cerebro deja de animarse cuando sale de la pantalla o la pestaña está oculta. Todo el texto permanece visible si JavaScript no está disponible.
 
 Welcome to my digital portfolio — a space where I showcase my projects, skills, ideas, and ongoing growth in technology and digital development.
 

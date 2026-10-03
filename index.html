@@ -12,9 +12,6 @@
     <meta name="color-scheme" content="dark">
     <title>Jair M. — Developer portfolio</title>
     <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;family=Libre+Caslon+Display&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/main.js" defer></script>
   </head>
@@ -23,7 +20,7 @@
     <!--
     GUIA RAPIDA: TODO EL CONTENIDO SE EDITA EN ESTE ARCHIVO.
     Usa Ctrl+F para buscar: INICIO, HABILIDADES, PROYECTO 1, IMAGEN PROYECTO,
-    DESCARGAR CV, EXPERIENCIA Y ESTUDIOS, CONTACTO o CEREBRO DE TRIANGULOS.
+    DESCARGAR CV, EXPERIENCIA Y ESTUDIOS, CONTACTO, CEREBRO DE TRIANGULOS o CARRUSEL DE ICONOS.
     Particulas: cambia las cantidades en los canvas; data-accent-ratio="0.12" significa 12% verde.
     Textos: cambia lo que esta entre las etiquetas.
     Imagenes: cambia src="..." en el img de cada proyecto.
@@ -69,8 +66,10 @@
           <figure class="hero-art" aria-labelledby="brain-title">
             <span class="art-label mono">The shape of an idea</span>
             <span class="sr-only" id="brain-title">A three-dimensional brain formed from steel, off-white and green outlined triangles</span>
-            <!-- CEREBRO DE TRIANGULOS: las cantidades se pueden ajustar aqui; los colores estan en body. -->
-            <canvas id="constellation" data-count="700" data-mobile-count="300" aria-hidden="true"></canvas>
+            <!-- CEREBRO DE TRIANGULOS: cantidades editables; colores en body.
+            ANIMACION: data-reveal-duration = duracion de esfera a cerebro (milisegundos).
+            data-orbit-count / data-mobile-orbit-count = puntos de las orbitas. Usa 0 para quitarlos. -->
+            <canvas id="constellation" data-count="700" data-mobile-count="300" data-reveal-duration="2600" data-orbit-count="120" data-mobile-orbit-count="48" aria-hidden="true"></canvas>
             <img class="brain-fallback" src="assets/images/brain-particles.svg" alt="A brain formed from triangular particles" width="660" height="600">
             <figcaption class="art-caption"><span>Curiosity, connected.</span>
               <button class="motion-toggle" type="button" aria-label="Pause animation" data-pause-label="Pause animation" data-play-label="Play animation" aria-pressed="false" aria-controls="constellation ambient-particles" hidden>Ⅱ</button>
@@ -81,6 +80,33 @@
           <a class="scroll-link mono" href="#expertise">A little further down<span class="scroll-icon" aria-hidden="true">↓</span></a><span class="location mono">Based in Panama ↗</span>
         </div>
       </section>
+      <!--
+      CARRUSEL DE ICONOS: solo edita las imagenes de esta lista.
+      1. Guarda tus iconos en assets/icons/.
+      2. Cambia src por la ruta de tu imagen y alt por su nombre.
+      3. Para agregar otro, copia UNA linea img. No tienes que duplicar la lista.
+      SVG, PNG y WebP funcionan; preferiblemente usa imagenes con fondo transparente.
+      data-speed controla la velocidad en pixeles por segundo; un numero menor es mas lento.
+      -->
+      <div class="tech-marquee" role="region" aria-labelledby="tech-marquee-title" data-speed="32">
+        <div class="wrap tech-marquee-inner">
+          <p class="tech-marquee-label mono" id="tech-marquee-title">Tools &amp; languages</p>
+          <div class="tech-marquee-viewport" tabindex="0" aria-label="Technology icons" id="tech-marquee-viewport">
+            <div class="tech-marquee-track">
+              <div class="tech-marquee-group" data-marquee-source>
+                <img src="assets/icons/python.svg" alt="Python" width="32" height="32" decoding="async">
+                <img src="assets/icons/java.svg" alt="Java" width="32" height="32" decoding="async">
+                <img src="assets/icons/javascript.svg" alt="JavaScript" width="32" height="32" decoding="async">
+                <img src="assets/icons/cplusplus.svg" alt="C++" width="32" height="32" decoding="async">
+                <img src="assets/icons/html5.svg" alt="HTML" width="32" height="32" decoding="async">
+                <img src="assets/icons/css3.svg" alt="CSS" width="32" height="32" decoding="async">
+                <img src="assets/icons/git.svg" alt="Git" width="32" height="32" decoding="async">
+              </div>
+            </div>
+          </div>
+          <button class="tech-marquee-toggle" type="button" aria-label="Pause icon carousel" data-pause-label="Pause icon carousel" data-play-label="Play icon carousel" aria-pressed="false" aria-controls="tech-marquee-viewport" hidden><span aria-hidden="true">Ⅱ</span></button>
+        </div>
+      </div>
       <!-- HABILIDADES: edita los titulos, descripciones y tecnologias. -->
       <section class="section expertise" id="expertise" aria-labelledby="expertise-title">
         <div class="wrap">
