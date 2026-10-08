@@ -271,58 +271,6 @@
     if (target) requestAnimationFrame(() => target.scrollIntoView({ behavior: "instant" }));
   }
 
-  function startJourneyVisual() {
-    const figure = document.querySelector(".journey-visual");
-    if (!figure || !figure.animate) return;
-    const button = figure.querySelector(".journey-toggle");
-    const motion = matchMedia("(prefers-reduced-motion: reduce)");
-    const animations = [];
-    let paused = false;
-    let visible = !("IntersectionObserver" in window);
-    // Sample the editable SVG paths once. The browser animates the transforms afterwards.
-    figure.querySelectorAll("[data-orbit-path]").forEach((traveler) => {
-      const path = document.getElementById(traveler.dataset.orbitPath);
-      if (!path) return;
-      const length = path.getTotalLength();
-      const frames = Array.from({ length: 97 }, (_, index) => {
-        const point = path.getPointAtLength(length * index / 96);
-        return { transform: `translate(${point.x}px, ${point.y}px)`, offset: index / 96 };
-      });
-      const duration = Math.max(8000, Math.min(60000, Number(traveler.dataset.duration) || 18000));
-      animations.push(traveler.animate(frames, { duration, iterations: Infinity, easing: "linear" }));
-    });
-    animations.push(figure.querySelector(".journey-bird-float").animate(
-      [{ transform: "translateY(0px)" }, { transform: "translateY(-5px)" }, { transform: "translateY(0px)" }],
-      { duration: 6400, iterations: Infinity, easing: "ease-in-out" }
-    ));
-    animations.push(figure.querySelector(".journey-signal").animate(
-      [{ transform: "scale(1)", opacity: .35 }, { transform: "scale(2.8)", opacity: 0 }],
-      { duration: 3200, iterations: Infinity, easing: "ease-out" }
-    ));
-    function sync() {
-      const globalPause = document.body.classList.contains("motion-paused");
-      const stopped = paused || motion.matches || globalPause;
-      animations.forEach((animation) => {
-        if (stopped || !visible || document.hidden) animation.pause();
-        else animation.play();
-      });
-      button.hidden = motion.matches;
-      button.disabled = globalPause;
-      button.setAttribute("aria-pressed", String(stopped));
-      button.setAttribute("aria-label", stopped ? button.dataset.playLabel : button.dataset.pauseLabel);
-      button.firstElementChild.textContent = stopped ? "▷" : "Ⅱ";
-    }
-    button.addEventListener("click", () => { paused = !paused; sync(); });
-    motion.addEventListener("change", sync);
-    document.addEventListener("visibilitychange", sync);
-    new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class"] });
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }).observe(figure);
-    }
-    sync();
-  }
-  startJourneyVisual();
-
   function startParticles() {
     const brainCanvas = document.getElementById("constellation");
     const ambientCanvas = document.getElementById("ambient-particles");

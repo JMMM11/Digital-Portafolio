@@ -25,7 +25,17 @@ El cerebro usa `data-triangle-colors-light` en modo claro y `data-triangle-color
 
 ### Animación del recorrido
 
-Busca `ANIMACION DEL RECORRIDO` en `index.html`: el ave de origami flota entre rutas con puntos en movimiento. Puedes editar el pie y los valores `data-duration` de cada punto (milisegundos). Tiene un botón de pausa propio, respeta la pausa general y el movimiento reducido, y se detiene fuera de pantalla. Sin JavaScript se muestra la ilustración estática.
+Busca `ANIMACION DEL RECORRIDO` en `index.html`: ahí está todo el SVG inline de tu marca, con sus alas y pliegues conectados, dos órbitas y 15 logos: Python, Java, JavaScript, TypeScript, C++, HTML5, CSS3, Git, GitHub, Supabase, Firebase, IntelliJ IDEA, Figma, Visual Studio Code y Cursor. No usa imágenes, librerías ni CDN. Las apariciones y señales se reparten automáticamente dentro del ciclo, según la cantidad de logos.
+
+- **Vista previa autónoma:** abre `origami-demo.html` directamente en el navegador, incluso sin conexión. Incluye SVG, CSS, JavaScript y un selector de tema exclusivo de la demo.
+- **Velocidad:** cambia `data-duration="12000"` en la figura de `index.html`; el número son milisegundos para el ciclo completo.
+- **Tamaño:** cambia `style="--oj-size: 480px"` en esa misma figura. Siempre se ajusta al ancho disponible.
+- **Colores:** variables al inicio de `css/origami-journey.css`. El ave usa `#246B4B` en claro y `#8FD5AE` en oscuro. Órbitas y conexiones tienen su propia opacidad.
+- **Logos:** cada grupo tiene un ID `journey-logo-…`. Los `path` son vectores reales. Si mueves un grupo, actualiza también el origen `M` de su `journey-link-…`.
+- **Pausa:** el botón propio congela el instante actual. También respeta la pausa general, la pestaña oculta y la salida de pantalla. Con movimiento reducido o sin JavaScript se ven los 15 logos estáticos.
+- **Tema:** tu botón actual ya cambia `document.documentElement.dataset.theme` a `"light"` o `"dark"`; el componente responde automáticamente por CSS.
+
+Para integrarlo en otra página, copia la figura y carga `css/origami-journey.css` y `js/origami-journey.js` (con `defer`). También puedes copiar los bloques inline de la demostración. Si repites el componente en una página, asigna IDs únicos y actualiza `aria-labelledby`, `aria-describedby` y `aria-controls`. Los vectores de Devicon conservan su licencia MIT; la demo incluye una copia en un comentario final. El símbolo de Cursor proviene de sus recursos oficiales de marca. Fuentes y adaptaciones en `assets/icons/SOURCES.md`.
 
 ### Carrusel de iconos
 
@@ -33,7 +43,7 @@ Busca `CARRUSEL DE ICONOS` en `index.html`. Guarda tus imágenes en `assets/icon
 
 `data-speed="32"` controla la velocidad en píxeles por segundo. Se pausa con su botón, al pasar el cursor o al enfocarlo con el teclado. También respeta la pausa general y el movimiento reducido; en ese modo, o sin JavaScript, puedes desplazar la lista horizontalmente.
 
-Se incluyen iconos de Python, Java, JavaScript, C++, HTML, CSS y Git de [Devicon v2.16.0](https://github.com/devicons/devicon/tree/v2.16.0), adaptados a blanco para combinar con la paleta. La licencia está en `assets/icons/LICENSE.txt`. Tus nuevas imágenes conservan sus propios colores.
+El carrusel incluye las mismas 15 tecnologías que el origami: Python, Java, JavaScript, TypeScript, C++, HTML5, CSS3, Git, GitHub, Supabase, Firebase, IntelliJ IDEA, Figma, Visual Studio Code y Cursor. Sus SVG son monocromos para conservar el estilo del carrusel y cambian de contraste con el tema. Los logos de Devicon v2.16.0 mantienen su licencia en `assets/icons/LICENSE.txt`; Cursor usa su símbolo oficial. Las fuentes están en `assets/icons/SOURCES.md`. Tus imágenes con otras rutas conservan sus propios colores.
 
 ### Animaciones del cerebro
 

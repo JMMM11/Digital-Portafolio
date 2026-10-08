@@ -1,0 +1,111 @@
+/*
+ * ORIGAMI / JAIR M.
+ * Colores: cambia --oj-ink en cada tema. Tamaño: --oj-size.
+ * Velocidad: data-duration="12000" en la figura del HTML (milisegundos).
+ * Los nombres oj-* están encapsulados; no afectan al resto de la página.
+ */
+.origami-journey {
+  --oj-ink: #246b4b;
+  --oj-orbit-opacity: .26;
+  --oj-connection-opacity: .42;
+  --oj-logo-edge: #806b25;
+  --oj-neutral: #26251e;
+  --oj-size: 480px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--oj-size);
+  margin: 24px 0 0;
+  color: var(--oj-ink);
+}
+html[data-theme="dark"] .origami-journey {
+  --oj-ink: #8fd5ae;
+  --oj-orbit-opacity: .23;
+  --oj-connection-opacity: .45;
+  --oj-logo-edge: transparent;
+  --oj-neutral: #edecec;
+}
+.origami-journey .oj-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 640 / 460;
+  overflow: hidden;
+  background: transparent;
+  isolation: isolate;
+}
+.origami-journey .oj-orbits {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: var(--oj-orbit-opacity);
+}
+.origami-journey .oj-orbit-node { fill: currentColor; stroke: none; }
+.origami-journey .oj-bird {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.origami-journey .oj-link {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-opacity: var(--oj-connection-opacity);
+  opacity: 0;
+}
+.origami-journey .oj-packet { fill: currentColor; opacity: 0; }
+.origami-journey .oj-packet-halo { opacity: .14; }
+.origami-journey .oj-logo { opacity: 1; }
+.origami-journey .oj-neutral { color: var(--oj-neutral); }
+.origami-journey .oj-yellow {
+  stroke: var(--oj-logo-edge);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  paint-order: stroke fill;
+}
+.origami-journey .oj-float,
+.origami-journey .oj-wing,
+.origami-journey .oj-logo,
+.origami-journey .oj-packet {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+.origami-journey .oj-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -8px;
+}
+.origami-journey .oj-toggle {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--oj-ink);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.origami-journey .oj-toggle:focus-visible {
+  outline: 2px solid var(--oj-ink);
+  outline-offset: 4px;
+}
+.origami-journey .oj-toggle:disabled { opacity: .45; cursor: default; }
+.origami-journey .oj-toggle[hidden] { display: none; }
+.origami-journey .oj-toggle svg { display: block; width: 16px; height: 16px; }
+.origami-journey .oj-play { display: none; }
+.origami-journey .oj-toggle[aria-pressed="true"] .oj-play { display: block; }
+.origami-journey .oj-toggle[aria-pressed="true"] .oj-pause { display: none; }
+/* Respaldo estático incluso antes de que se ejecute JavaScript. */
+@media (prefers-reduced-motion: reduce) {
+  .origami-journey .oj-logo { opacity: 1 !important; transform: none !important; }
+  .origami-journey .oj-float,
+  .origami-journey .oj-wing { transform: none !important; }
+  .origami-journey .oj-link,
+  .origami-journey .oj-packet { opacity: 0 !important; }
+}

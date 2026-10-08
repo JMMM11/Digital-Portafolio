@@ -97,7 +97,24 @@
 }
 /* Supplied monochrome artwork changes tone; uploaded project images keep their colors. */
 :root[data-theme="light"] .logo-mark,
-:root[data-theme="light"] .tech-marquee-group img:is([src="assets/icons/python.svg"], [src="assets/icons/java.svg"], [src="assets/icons/javascript.svg"], [src="assets/icons/cplusplus.svg"], [src="assets/icons/html5.svg"], [src="assets/icons/css3.svg"], [src="assets/icons/git.svg"]) { filter: brightness(0); opacity: .8; }
+/* Solo los SVG monocromos incluidos: tus otras imágenes conservan sus colores. */
+:root[data-theme="light"] .tech-marquee-group img:is(
+  [src="assets/icons/python.svg"],
+  [src="assets/icons/java.svg"],
+  [src="assets/icons/javascript.svg"],
+  [src="assets/icons/typescript.svg"],
+  [src="assets/icons/cplusplus.svg"],
+  [src="assets/icons/html5.svg"],
+  [src="assets/icons/css3.svg"],
+  [src="assets/icons/git.svg"],
+  [src="assets/icons/github.svg"],
+  [src="assets/icons/supabase.svg"],
+  [src="assets/icons/firebase.svg"],
+  [src="assets/icons/intellij.svg"],
+  [src="assets/icons/figma.svg"],
+  [src="assets/icons/vscode.svg"],
+  [src="assets/icons/cursor.svg"]
+) { filter: brightness(0); opacity: .8; }
 :root[data-theme="light"] .brain-fallback { filter: brightness(.35); }
 :root[data-theme="light"] .project-preview img[src="assets/images/project-placeholder.svg"] { filter: invert(1); }
 * { box-sizing: border-box; }
@@ -251,18 +268,6 @@ a[aria-disabled="true"] { cursor: default; color: var(--muted); }
 .experience-heading { position: sticky; top: 128px; align-self: start; }
 .experience-heading h2 { margin-top: 24px; }
 .experience-heading > p { margin-top: 24px; }
-.journey-visual { width: 100%; max-width: 360px; margin-top: 32px; color: var(--accent); }
-.journey-art { display: block; width: 100%; height: auto; overflow: visible; }
-.journey-routes { stroke: currentColor; stroke-width: .8; opacity: .3; }
-.journey-stations { fill: var(--bg); stroke: currentColor; stroke-width: 1; opacity: .65; }
-.journey-traveler { fill: currentColor; }
-.journey-traveler-ring { fill: none; stroke: currentColor; stroke-width: .7; opacity: .35; }
-.journey-signal { fill: none; stroke: currentColor; stroke-width: 1; opacity: .3; }
-.journey-bird-float, .journey-traveler, .journey-signal { transform-origin: 0 0; }
-.journey-caption { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 8px; color: var(--muted); }
-.journey-caption .mono { font-size: 10px; letter-spacing: .06em; }
-.journey-toggle { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--accent); font-size: 12px; }
-.journey-toggle:disabled { color: var(--muted); }
 .timeline-group + .timeline-group { margin-top: 48px; }
 .timeline-label { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; padding-bottom: 16px; margin-bottom: 24px; }
 .timeline-entry { position: relative; padding: 0 0 32px 24px; border-left: 1px solid var(--line); }
@@ -398,7 +403,6 @@ a[aria-disabled="true"]::after { display: none; }
   .project-panel h3 { font-size: 29px; }
   .experience-layout { grid-template-columns: 1fr; gap: 40px; }
   .experience-heading { position: static; }
-  .journey-visual { max-width: 300px; margin-top: 24px; }
   .contact h2 { font-size: clamp(43px, 8.3vw, 62px); }
   .contact-intro { font-size: 17px; }
   .socials { gap: 24px; }

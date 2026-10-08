@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Jair M. — Origami en movimiento</title>
+  <!-- Ejemplo AUTÓNOMO: funciona sin conexión. Copia la figura + CSS + JS a tu web. -->
+  <style>
+/*
+ * ORIGAMI / JAIR M.
+ * Colores: cambia --oj-ink en cada tema. Tamaño: --oj-size.
+ * Velocidad: data-duration="12000" en la figura del HTML (milisegundos).
+ * Los nombres oj-* están encapsulados; no afectan al resto de la página.
+ */
+.origami-journey {
+  --oj-ink: #246b4b;
+  --oj-orbit-opacity: .26;
+  --oj-connection-opacity: .42;
+  --oj-logo-edge: #806b25;
+  --oj-neutral: #26251e;
+  --oj-size: 480px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--oj-size);
+  margin: 24px 0 0;
+  color: var(--oj-ink);
+}
+html[data-theme="dark"] .origami-journey {
+  --oj-ink: #8fd5ae;
+  --oj-orbit-opacity: .23;
+  --oj-connection-opacity: .45;
+  --oj-logo-edge: transparent;
+  --oj-neutral: #edecec;
+}
+.origami-journey .oj-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 640 / 460;
+  overflow: hidden;
+  background: transparent;
+  isolation: isolate;
+}
+.origami-journey .oj-orbits {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: var(--oj-orbit-opacity);
+}
+.origami-journey .oj-orbit-node { fill: currentColor; stroke: none; }
+.origami-journey .oj-bird {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.origami-journey .oj-link {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-opacity: var(--oj-connection-opacity);
+  opacity: 0;
+}
+.origami-journey .oj-packet { fill: currentColor; opacity: 0; }
+.origami-journey .oj-packet-halo { opacity: .14; }
+.origami-journey .oj-logo { opacity: 1; }
+.origami-journey .oj-neutral { color: var(--oj-neutral); }
+.origami-journey .oj-yellow {
+  stroke: var(--oj-logo-edge);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  paint-order: stroke fill;
+}
+.origami-journey .oj-float,
+.origami-journey .oj-wing,
+.origami-journey .oj-logo,
+.origami-journey .oj-packet {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+.origami-journey .oj-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -8px;
+}
+.origami-journey .oj-toggle {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--oj-ink);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.origami-journey .oj-toggle:focus-visible {
+  outline: 2px solid var(--oj-ink);
+  outline-offset: 4px;
+}
+.origami-journey .oj-toggle:disabled { opacity: .45; cursor: default; }
+.origami-journey .oj-toggle[hidden] { display: none; }
+.origami-journey .oj-toggle svg { display: block; width: 16px; height: 16px; }
+.origami-journey .oj-play { display: none; }
+.origami-journey .oj-toggle[aria-pressed="true"] .oj-play { display: block; }
+.origami-journey .oj-toggle[aria-pressed="true"] .oj-pause { display: none; }
+/* Respaldo estático incluso antes de que se ejecute JavaScript. */
+@media (prefers-reduced-motion: reduce) {
+  .origami-journey .oj-logo { opacity: 1 !important; transform: none !important; }
+  .origami-journey .oj-float,
+  .origami-journey .oj-wing { transform: none !important; }
+  .origami-journey .oj-link,
+  .origami-journey .oj-packet { opacity: 0 !important; }
+}
+
+  /* Solo la demostración: el SVG sigue teniendo fondo transparente. */
+  .oj-demo-page {
+    --demo-bg: #f7f4e9;
+    --demo-ink: #246b4b;
+    box-sizing: border-box;
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: var(--demo-bg);
+    color: var(--demo-ink);
+    font-family: system-ui, sans-serif;
+  }
+  html[data-theme="dark"] .oj-demo-page { --demo-bg: #101310; --demo-ink: #8fd5ae; }
+  .oj-demo-layout { width: min(100%, 720px); }
+  .oj-demo-page .origami-journey { margin: 24px auto 0; }
+  .oj-demo-theme {
+    display: block;
+    margin-left: auto;
+    padding: 12px 20px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .oj-demo-theme:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+  .oj-demo-theme[hidden] { display: none; }
+  </style>
+</head>
+<body class="oj-demo-page">
+  <main class="oj-demo-layout">
+    <!-- Este botón es EXCLUSIVO de la demo; el portafolio ya tiene su selector. -->
+    <button class="oj-demo-theme" type="button" aria-pressed="false" hidden>Cambiar a modo oscuro</button>
+    <!-- ANIMACION DEL RECORRIDO: SVG real, sin imágenes ni dependencias.
+         Velocidad: data-duration="12000" = 12 segundos. Tamaño: --oj-size.
+         Colores: css/origami-journey.css. Tema: data-theme en html.
+         Cada logo, conexión y ala tiene su propio ID. Mantén únicos los IDs si duplicas la figura. -->
+    <figure class="journey-visual origami-journey" data-origami-journey data-duration="12000" style="--oj-size: 640px">
+      <svg class="oj-art" id="journey-art" viewBox="0 0 640 460" fill="none"
+           xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="journey-title" aria-describedby="journey-desc" focusable="false">
+        <title id="journey-title">Jair M. — origami, learning in motion</title>
+        <desc id="journey-desc">A geometric origami bird, faithful to Jair's personal mark, floats within two fine orbits.
+          Python, Java, JavaScript, TypeScript, C++, HTML5, CSS3, Git, GitHub, Supabase, Firebase,
+          IntelliJ IDEA, Figma, Visual Studio Code and Cursor appear around the orbits and send a small light toward the bird.
+          The wings fold gently, then the bird rises and returns. The cycle lasts twelve seconds.
+          A pause control follows the illustration. With reduced motion, all fifteen logos remain visible.</desc>
+
+        <!-- Órbitas sin relleno. No hay ningún fondo dentro del SVG. -->
+        <g id="journey-orbits" class="oj-orbits">
+          <ellipse cx="320" cy="228" rx="266" ry="182"/>
+          <ellipse cx="320" cy="228" rx="242" ry="166" transform="rotate(26 320 228)"/>
+          <circle class="oj-orbit-node" cx="375.3" cy="50" r="2.2"/>
+          <circle class="oj-orbit-node" cx="464" cy="381" r="2"/>
+          <circle class="oj-orbit-node" cx="55" cy="209" r="1.8"/>
+        </g>
+
+        <g class="oj-float" id="journey-bird-float">
+          <!-- Las conexiones flotan con el ave: siempre terminan exactamente en su pliegue.
+               El otro extremo nace bajo el logo. Edita M para cambiar el origen, L para el destino. -->
+          <g id="journey-connections">
+            <path id="journey-link-python" class="oj-link" data-oj-link="python" d="M320 46 L350.25 269.05"/>
+            <path id="journey-link-java" class="oj-link" data-oj-link="java" d="M428.19 61.73 L350.25 269.05"/>
+            <path id="journey-link-javascript" class="oj-link" data-oj-link="javascript" d="M517.68 106.22 L350.25 269.05"/>
+            <path id="journey-link-typescript" class="oj-link" data-oj-link="typescript" d="M572.98 171.76 L350.25 269.05"/>
+            <path id="journey-link-cplusplus" class="oj-link" data-oj-link="cplusplus" d="M584.54 247.02 L350.25 269.05"/>
+            <path id="journey-link-html5" class="oj-link" data-oj-link="html5" d="M550.36 319 L350.25 269.05"/>
+            <path id="journey-link-css3" class="oj-link" data-oj-link="css3" d="M476.35 375.24 L350.25 269.05"/>
+            <path id="journey-link-git" class="oj-link" data-oj-link="git" d="M375.3 406.02 L350.25 269.05"/>
+            <path id="journey-link-github" class="oj-link" data-oj-link="github" d="M264.7 406.02 L350.25 269.05"/>
+            <path id="journey-link-supabase" class="oj-link" data-oj-link="supabase" d="M163.65 375.24 L350.25 269.05"/>
+            <path id="journey-link-firebase" class="oj-link" data-oj-link="firebase" d="M89.64 319 L350.25 269.05"/>
+            <path id="journey-link-intellij" class="oj-link" data-oj-link="intellij" d="M55.46 247.02 L350.25 269.05"/>
+            <path id="journey-link-figma" class="oj-link" data-oj-link="figma" d="M67.02 171.76 L350.25 269.05"/>
+            <path id="journey-link-vscode" class="oj-link" data-oj-link="vscode" d="M122.32 106.22 L350.25 269.05"/>
+            <path id="journey-link-cursor" class="oj-link" data-oj-link="cursor" d="M211.81 61.73 L350.25 269.05"/>
+          </g>
+          <g id="journey-light-packets">
+            <g id="journey-packet-python" class="oj-packet" data-oj-packet="python">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-java" class="oj-packet" data-oj-packet="java">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-javascript" class="oj-packet" data-oj-packet="javascript">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-typescript" class="oj-packet" data-oj-packet="typescript">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-cplusplus" class="oj-packet" data-oj-packet="cplusplus">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-html5" class="oj-packet" data-oj-packet="html5">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-css3" class="oj-packet" data-oj-packet="css3">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-git" class="oj-packet" data-oj-packet="git">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-github" class="oj-packet" data-oj-packet="github">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-supabase" class="oj-packet" data-oj-packet="supabase">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-firebase" class="oj-packet" data-oj-packet="firebase">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-intellij" class="oj-packet" data-oj-packet="intellij">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-figma" class="oj-packet" data-oj-packet="figma">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-vscode" class="oj-packet" data-oj-packet="vscode">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+            <g id="journey-packet-cursor" class="oj-packet" data-oj-packet="cursor">
+              <circle class="oj-packet-halo" r="6"/><circle r="2.2"/>
+            </g>
+          </g>
+
+          <!-- Geometría original de la marca: mismas proporciones y pliegues.
+               Las alas se proyectan sobre bisagras fijas; nunca se separan del cuerpo. -->
+          <g class="oj-bird" id="journey-bird" transform="translate(156 135) scale(.35)">
+            <g id="journey-bird-body">
+              <path d="M12 447 305 324 348 223 574 223 636 74 747 13 868 122 716 99 655 258 648 374 644 450 582 450 565 491 375 491 317 414Z"/>
+              <path id="journey-bird-folds" d="m305 324 250 59-543 64m336-224 202 54 5 106 10 108m9-268-24 54M747 13 582 450"/>
+            </g>
+            <!-- Ala alta: bisagra entre (305,324) y (348,223). -->
+            <g transform="translate(305 324) rotate(-66.938480468)">
+              <g class="oj-wing" id="journey-wing-back">
+                <g transform="rotate(66.938480468) translate(-305 -324)">
+                  <path d="M305 324 260 18 348 223"/>
+                </g>
+              </g>
+            </g>
+            <!-- Ala delantera: bisagra entre (655,258) y (648,374). -->
+            <g transform="translate(655 258) rotate(93.453316251)">
+              <g class="oj-wing" id="journey-wing-front">
+                <g transform="rotate(-93.453316251) translate(-655 -258)">
+                  <path d="M655 258 922 240 648 374"/>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+
+        <!-- Logos vectoriales: Devicon v2.16.0 (MIT) y símbolo oficial de Cursor.
+             Fuentes y licencias: assets/icons/SOURCES.md y assets/icons/LICENSE.txt.
+             Los degradados decorativos se han sustituido por colores planos.
+             Para mover un logo, cambia translate y el origen M de su conexión.
+             Para añadir otro, copia su grupo, conexión y punto; el JS ajusta los tiempos automáticamente. -->
+        <g id="journey-technology-logos">
+          <g id="journey-logo-python" transform="translate(293 19)">
+            <title>Python</title>
+            <g class="oj-logo" data-oj-logo="python">
+              <g transform="scale(0.421875)">
+                <path fill="#3776AB" d="M63.391 1.988c-4.222.02-8.252.379-11.8 1.007-10.45 1.846-12.346 5.71-12.346 12.837v9.411h24.693v3.137H29.977c-7.176 0-13.46 4.313-15.426 12.521-2.268 9.405-2.368 15.275 0 25.096 1.755 7.311 5.947 12.519 13.124 12.519h8.491V67.234c0-8.151 7.051-15.34 15.426-15.34h24.665c6.866 0 12.346-5.654 12.346-12.548V15.833c0-6.693-5.646-11.72-12.346-12.837-4.244-.706-8.645-1.027-12.866-1.008zM50.037 9.557c2.55 0 4.634 2.117 4.634 4.721 0 2.593-2.083 4.69-4.634 4.69-2.56 0-4.633-2.097-4.633-4.69-.001-2.604 2.073-4.721 4.633-4.721z" transform="translate(0 10.26)"/>
+                <path class="oj-yellow" fill="#FFD343" d="M91.682 28.38v10.966c0 8.5-7.208 15.655-15.426 15.655H51.591c-6.756 0-12.346 5.783-12.346 12.549v23.515c0 6.691 5.818 10.628 12.346 12.547 7.816 2.297 15.312 2.713 24.665 0 6.216-1.801 12.346-5.423 12.346-12.547v-9.412H63.938v-3.138h37.012c7.176 0 9.852-5.005 12.348-12.519 2.578-7.735 2.467-15.174 0-25.096-1.774-7.145-5.161-12.521-12.348-12.521h-9.268zM77.809 87.927c2.561 0 4.634 2.097 4.634 4.692 0 2.602-2.074 4.719-4.634 4.719-2.55 0-4.633-2.117-4.633-4.719 0-2.595 2.083-4.692 4.633-4.692z" transform="translate(0 10.26)"/>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-java" transform="translate(399.19 32.73)">
+            <title>Java</title>
+            <g class="oj-logo" data-oj-logo="java">
+              <g transform="scale(0.453125)">
+                <path fill="#0074BD" d="M47.617 98.12s-4.767 2.774 3.397 3.71c9.892 1.13 14.947.968 25.845-1.092 0 0 2.871 1.795 6.873 3.351-24.439 10.47-55.308-.607-36.115-5.969zm-2.988-13.665s-5.348 3.959 2.823 4.805c10.567 1.091 18.91 1.18 33.354-1.6 0 0 1.993 2.025 5.132 3.131-29.542 8.64-62.446.68-41.309-6.336z"/>
+                <path fill="#EA2D2E" d="M69.802 61.271c6.025 6.935-1.58 13.17-1.58 13.17s15.289-7.891 8.269-17.777c-6.559-9.215-11.587-13.792 15.635-29.58 0 .001-42.731 10.67-22.324 34.187z"/>
+                <path fill="#0074BD" d="M102.123 108.229s3.529 2.91-3.888 5.159c-14.102 4.272-58.706 5.56-71.094.171-4.451-1.938 3.899-4.625 6.526-5.192 2.739-.593 4.303-.485 4.303-.485-4.953-3.487-32.013 6.85-13.743 9.815 49.821 8.076 90.817-3.637 77.896-9.468zM49.912 70.294s-22.686 5.389-8.033 7.348c6.188.828 18.518.638 30.011-.326 9.39-.789 18.813-2.474 18.813-2.474s-3.308 1.419-5.704 3.053c-23.042 6.061-67.544 3.238-54.731-2.958 10.832-5.239 19.644-4.643 19.644-4.643zm40.697 22.747c23.421-12.167 12.591-23.86 5.032-22.285-1.848.385-2.677.72-2.677.72s.688-1.079 2-1.543c14.953-5.255 26.451 15.503-4.823 23.725 0-.002.359-.327.468-.617z"/>
+                <path fill="#EA2D2E" d="M76.491 1.587S89.459 14.563 64.188 34.51c-20.266 16.006-4.621 25.13-.007 35.559-11.831-10.673-20.509-20.07-14.688-28.815C58.041 28.42 81.722 22.195 76.491 1.587z"/>
+                <path fill="#0074BD" d="M52.214 126.021c22.476 1.437 57-.8 57.817-11.436 0 0-1.571 4.032-18.577 7.231-19.186 3.612-42.854 3.191-56.887.874 0 .001 2.875 2.381 17.647 3.331z"/>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-javascript" transform="translate(492.68 81.22)">
+            <title>JavaScript</title>
+            <g class="oj-logo" data-oj-logo="javascript">
+              <g transform="scale(0.390625)">
+                <path class="oj-yellow" fill="#F0DB4F" d="M1.408 1.408h125.184v125.185H1.408z"/>
+                <path fill="#323330" d="M116.347 96.736c-.917-5.711-4.641-10.508-15.672-14.981-3.832-1.761-8.104-3.022-9.377-5.926-.452-1.69-.512-2.642-.226-3.665.821-3.32 4.784-4.355 7.925-3.403 2.023.678 3.938 2.237 5.093 4.724 5.402-3.498 5.391-3.475 9.163-5.879-1.381-2.141-2.118-3.129-3.022-4.045-3.249-3.629-7.676-5.498-14.756-5.355l-3.688.477c-3.534.893-6.902 2.748-8.877 5.235-5.926 6.724-4.236 18.492 2.975 23.335 7.104 5.332 17.54 6.545 18.873 11.531 1.297 6.104-4.486 8.08-10.234 7.378-4.236-.881-6.592-3.034-9.139-6.949-4.688 2.713-4.688 2.713-9.508 5.485 1.143 2.499 2.344 3.63 4.26 5.795 9.068 9.198 31.76 8.746 35.83-5.176.165-.478 1.261-3.666.38-8.581zM69.462 58.943H57.753l-.048 30.272c0 6.438.333 12.34-.714 14.149-1.713 3.558-6.152 3.117-8.175 2.427-2.059-1.012-3.106-2.451-4.319-4.485-.333-.584-.583-1.036-.667-1.071l-9.52 5.83c1.583 3.249 3.915 6.069 6.902 7.901 4.462 2.678 10.459 3.499 16.731 2.059 4.082-1.189 7.604-3.652 9.448-7.401 2.666-4.915 2.094-10.864 2.07-17.444.06-10.735.001-21.468.001-32.237z"/>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-typescript" transform="translate(547.98 146.76)">
+            <title>TypeScript</title>
+            <g class="oj-logo" data-oj-logo="typescript">
+              <g transform="scale(0.390625)">
+                <path fill="#fff" d="M22.67 47h99.67v73.67H22.67z"/>
+                <path data-name="original" fill="#007acc" d="M1.5 63.91v62.5h125v-125H1.5zm100.73-5a15.56 15.56 0 017.82 4.5 20.58 20.58 0 013 4c0 .16-5.4 3.81-8.69 5.85-.12.08-.6-.44-1.13-1.23a7.09 7.09 0 00-5.87-3.53c-3.79-.26-6.23 1.73-6.21 5a4.58 4.58 0 00.54 2.34c.83 1.73 2.38 2.76 7.24 4.86 8.95 3.85 12.78 6.39 15.16 10 2.66 4 3.25 10.46 1.45 15.24-2 5.2-6.9 8.73-13.83 9.9a38.32 38.32 0 01-9.52-.1 23 23 0 01-12.72-6.63c-1.15-1.27-3.39-4.58-3.25-4.82a9.34 9.34 0 011.15-.73L82 101l3.59-2.08.75 1.11a16.78 16.78 0 004.74 4.54c4 2.1 9.46 1.81 12.16-.62a5.43 5.43 0 00.69-6.92c-1-1.39-3-2.56-8.59-5-6.45-2.78-9.23-4.5-11.77-7.24a16.48 16.48 0 01-3.43-6.25 25 25 0 01-.22-8c1.33-6.23 6-10.58 12.82-11.87a31.66 31.66 0 019.49.26zm-29.34 5.24v5.12H56.66v46.23H45.15V69.26H28.88v-5a49.19 49.19 0 01.12-5.17C29.08 59 39 59 51 59h21.83z"/>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-cplusplus" transform="translate(557.54 220.02)">
+            <title>C++</title>
+            <g class="oj-logo" data-oj-logo="cplusplus">
+              <g transform="scale(0.421875)">
+                <path fill="#00599c" d="M118.766 95.82c.89-1.543 1.441-3.28 1.441-4.843V36.78c0-1.558-.55-3.297-1.441-4.84l-55.32 31.94Zm0 0"/>
+                <path fill="#004482" d="m68.36 126.586 46.933-27.094c1.352-.781 2.582-2.129 3.473-3.672l-55.32-31.94L8.12 95.82c.89 1.543 2.121 2.89 3.473 3.672l46.933 27.094c2.703 1.562 7.13 1.562 9.832 0Zm0 0"/>
+                <path fill="#659ad2" d="M118.766 31.941c-.891-1.546-2.121-2.894-3.473-3.671L68.359 1.172c-2.703-1.563-7.129-1.563-9.832 0L11.594 28.27C8.89 29.828 6.68 33.66 6.68 36.78v54.196c0 1.562.55 3.3 1.441 4.843L63.445 63.88Zm0 0"/>
+                <path fill="#fff" d="M63.445 26.035c-20.867 0-37.843 16.977-37.843 37.844s16.976 37.844 37.843 37.844c13.465 0 26.024-7.247 32.77-18.91L79.84 73.335c-3.38 5.84-9.66 9.465-16.395 9.465-10.433 0-18.922-8.488-18.922-18.922 0-10.434 8.49-18.922 18.922-18.922 6.73 0 13.017 3.629 16.39 9.465l16.38-9.477c-6.75-11.664-19.305-18.91-32.77-18.91zM92.88 57.57v4.207h-4.207v4.203h4.207v4.207h4.203V65.98h4.203v-4.203h-4.203V57.57H92.88zm15.766 0v4.207h-4.204v4.203h4.204v4.207h4.207V65.98h4.203v-4.203h-4.203V57.57h-4.207z"/>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-html5" transform="translate(525.36 294)">
+            <title>HTML5</title>
+            <g class="oj-logo" data-oj-logo="html5">
+              <g transform="scale(0.390625)">
+                <path fill="#E44D26" d="M19.037 113.876L9.032 1.661h109.936l-10.016 112.198-45.019 12.48z"/>
+                <path fill="#F16529" d="M64 116.8l36.378-10.086 8.559-95.878H64z"/>
+                <path fill="#EBEBEB" d="M64 52.455H45.788L44.53 38.361H64V24.599H29.489l.33 3.692 3.382 37.927H64zm0 35.743l-.061.017-15.327-4.14-.979-10.975H33.816l1.928 21.609 28.193 7.826.063-.017z"/>
+                <path fill="#fff" d="M63.952 52.455v13.763h16.947l-1.597 17.849-15.35 4.143v14.319l28.215-7.82.207-2.325 3.234-36.233.335-3.696h-3.708zm0-27.856v13.762h33.244l.276-3.092.628-6.978.329-3.692z"/>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-css3" transform="translate(451.35 350.24)">
+            <title>CSS3</title>
+            <g class="oj-logo" data-oj-logo="css3">
+              <g transform="scale(0.390625)">
+                <path fill="#1572B6" d="M18.814 114.123L8.76 1.352h110.48l-10.064 112.754-45.243 12.543-45.119-12.526z"/>
+                <path fill="#33A9DC" d="M64.001 117.062l36.559-10.136 8.601-96.354h-45.16v106.49z"/>
+                <path fill="#fff" d="M64.001 51.429h18.302l1.264-14.163H64.001V23.435h34.682l-.332 3.711-3.4 38.114h-30.95V51.429z"/>
+                <path fill="#EBEBEB" d="M64.083 87.349l-.061.018-15.403-4.159-.985-11.031H33.752l1.937 21.717 28.331 7.863.063-.018v-14.39z"/>
+                <path fill="#fff" d="M81.127 64.675l-1.666 18.522-15.426 4.164v14.39l28.354-7.858.208-2.337 2.406-26.881H81.127z"/>
+                <path fill="#EBEBEB" d="M64.048 23.435v13.831H30.64l-.277-3.108-.63-7.012-.331-3.711h34.646zm-.047 27.996v13.831H48.792l-.277-3.108-.631-7.012-.33-3.711h16.447z"/>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-git" transform="translate(349.3 380.02)">
+            <title>Git</title>
+            <g class="oj-logo" data-oj-logo="git">
+              <g transform="scale(0.40625)">
+                <path fill="#F34F29" d="M124.737 58.378L69.621 3.264c-3.172-3.174-8.32-3.174-11.497 0L46.68 14.71l14.518 14.518c3.375-1.139 7.243-.375 9.932 2.314 2.703 2.706 3.461 6.607 2.294 9.993l13.992 13.993c3.385-1.167 7.292-.413 9.994 2.295 3.78 3.777 3.78 9.9 0 13.679a9.673 9.673 0 01-13.683 0 9.677 9.677 0 01-2.105-10.521L68.574 47.933l-.002 34.341a9.708 9.708 0 012.559 1.828c3.778 3.777 3.778 9.898 0 13.683-3.779 3.777-9.904 3.777-13.679 0-3.778-3.784-3.778-9.905 0-13.683a9.65 9.65 0 013.167-2.11V47.333a9.581 9.581 0 01-3.167-2.111c-2.862-2.86-3.551-7.06-2.083-10.576L41.056 20.333 3.264 58.123a8.133 8.133 0 000 11.5l55.117 55.114c3.174 3.174 8.32 3.174 11.499 0l54.858-54.858a8.135 8.135 0 00-.001-11.501z"/>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-github" transform="translate(238.7 380.02)">
+            <title>GitHub</title>
+            <g class="oj-logo" data-oj-logo="github">
+              <g transform="scale(0.40625)">
+                <g class="oj-neutral" fill="currentColor">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M64 5.103c-33.347 0-60.388 27.035-60.388 60.388 0 26.682 17.303 49.317 41.297 57.303 3.017.56 4.125-1.31 4.125-2.905 0-1.44-.056-6.197-.082-11.243-16.8 3.653-20.345-7.125-20.345-7.125-2.747-6.98-6.705-8.836-6.705-8.836-5.48-3.748.413-3.67.413-3.67 6.063.425 9.257 6.223 9.257 6.223 5.386 9.23 14.127 6.562 17.573 5.02.542-3.903 2.107-6.568 3.834-8.076-13.413-1.525-27.514-6.704-27.514-29.843 0-6.593 2.36-11.98 6.223-16.21-.628-1.52-2.695-7.662.584-15.98 0 0 5.07-1.623 16.61 6.19C53.7 35 58.867 34.327 64 34.304c5.13.023 10.3.694 15.127 2.033 11.526-7.813 16.59-6.19 16.59-6.19 3.287 8.317 1.22 14.46.593 15.98 3.872 4.23 6.215 9.617 6.215 16.21 0 23.194-14.127 28.3-27.574 29.796 2.167 1.874 4.097 5.55 4.097 11.183 0 8.08-.07 14.583-.07 16.572 0 1.607 1.088 3.49 4.148 2.897 23.98-7.994 41.263-30.622 41.263-57.294C124.388 32.14 97.35 5.104 64 5.104z"/>
+                <path d="M26.484 91.806c-.133.3-.605.39-1.035.185-.44-.196-.685-.605-.543-.906.13-.31.603-.395 1.04-.188.44.197.69.61.537.91zm2.446 2.729c-.287.267-.85.143-1.232-.28-.396-.42-.47-.983-.177-1.254.298-.266.844-.14 1.24.28.394.426.472.984.17 1.255zM31.312 98.012c-.37.258-.976.017-1.35-.52-.37-.538-.37-1.183.01-1.44.373-.258.97-.025 1.35.507.368.545.368 1.19-.01 1.452zm3.261 3.361c-.33.365-1.036.267-1.552-.23-.527-.487-.674-1.18-.343-1.544.336-.366 1.045-.264 1.564.23.527.486.686 1.18.333 1.543zm4.5 1.951c-.147.473-.825.688-1.51.486-.683-.207-1.13-.76-.99-1.238.14-.477.823-.7 1.512-.485.683.206 1.13.756.988 1.237zm4.943.361c.017.498-.563.91-1.28.92-.723.017-1.308-.387-1.315-.877 0-.503.568-.91 1.29-.924.717-.013 1.306.387 1.306.88zm4.598-.782c.086.485-.413.984-1.126 1.117-.7.13-1.35-.172-1.44-.653-.086-.498.422-.997 1.122-1.126.714-.123 1.354.17 1.444.663zm0 0"/>
+                </g>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-supabase" transform="translate(138.65 350.24)">
+            <title>Supabase</title>
+            <g class="oj-logo" data-oj-logo="supabase">
+              <g transform="scale(0.390625)">
+                <path fill="#249361" d="M102.24 186.21c-3.267 4.117-9.904 1.862-9.977-3.397l-1.156-76.906h51.715c9.365 0 14.587 10.817 8.763 18.149z" transform="translate(-27.722 -60.338)"/>
+                <path fill="#3ecf8e" d="M53.484 2.128c3.267-4.117 9.905-1.862 9.977 3.396l.508 76.907H12.902c-9.365 0-14.587-10.817-8.764-18.149z"/>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-firebase" transform="translate(62.64 292)">
+            <title>Firebase</title>
+            <g class="oj-logo" data-oj-logo="firebase">
+              <g transform="scale(0.421875)">
+                <path fill="#ffa000" d="M17.474 103.276 33.229 2.462a2.91 2.91 0 0 1 5.44-.924l16.294 30.39 6.494-12.366a2.91 2.91 0 0 1 5.15 0l43.97 83.714H17.474Z"/>
+                <path fill="#f57c00" d="M71.903 64.005 54.955 31.913l-37.481 71.363Z"/>
+                <path fill="#ffca28" d="M110.577 103.276 98.51 28.604a2.913 2.913 0 0 0-1.984-2.286 2.906 2.906 0 0 0-2.94.714l-76.112 76.243 42.115 23.618a8.728 8.728 0 0 0 8.51 0l42.478-23.618Z"/>
+                <path fill="#fff" fill-opacity=".2" d="M98.51 28.604a2.913 2.913 0 0 0-1.984-2.286 2.906 2.906 0 0 0-2.94.713L78.479 42.178 66.6 19.562a2.91 2.91 0 0 0-5.15 0l-6.494 12.365L38.662 1.538A2.91 2.91 0 0 0 35.605.044a2.907 2.907 0 0 0-2.384 2.425L17.474 103.276h-.051l.05.058.415.204 75.676-75.764a2.91 2.91 0 0 1 4.932 1.571l11.965 74.003.116-.073L98.51 28.603Zm-80.898 74.534L33.228 3.182A2.91 2.91 0 0 1 35.613.756a2.911 2.911 0 0 1 3.057 1.495l16.292 30.39 6.495-12.366a2.91 2.91 0 0 1 5.15 0L78.245 42.41 17.61 103.138Z"/>
+                <path fill="#a52714" d="M68.099 126.18a8.728 8.728 0 0 1-8.51 0l-42.015-23.55-.102.647 42.115 23.61a8.728 8.728 0 0 0 8.51 0l42.48-23.61-.11-.67-42.37 23.575z" opacity=".2"/>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-intellij" transform="translate(27.46 219.02)">
+            <title>IntelliJ IDEA</title>
+            <g class="oj-logo" data-oj-logo="intellij">
+              <g transform="scale(0.4375)">
+                <path fill="#fc801d" d="M23.492 88.027 6.277 74.434 16.41 55.676l15.223 5.094Zm0 0"/>
+                <path fill="#087cfa" d="m121.988 36.68-2.105 67.78L74.8 122.517l-24.55-15.849Zm0 0"/>
+                <path fill="#087cfa" d="M121.988 36.68 99.68 58.44 71.035 23.297l14.14-15.899Zm0 0"/>
+                <path fill="#fe2857" d="m50.25 106.668-35.852 12.957 7.508-26.293 9.727-32.562L4.96 51.848 21.906 5.484l38.301 4.524L99.68 58.44Zm0 0"/>
+                <path fill="#000" d="M27.43 27.43h73.14v73.14H27.43Zm0 0"/>
+                <path fill="#fff" d="M36.547 86.746h27.43v4.574h-27.43Zm13.691-45.152v-4.996h-13.64v4.996h3.824v17.261h-3.824v5h13.64v-5h-3.816V41.594Zm13.078 22.648a10.802 10.802 0 0 1-5.351-1.219 12.299 12.299 0 0 1-3.559-2.875l3.766-4.207c.687.778 1.484 1.45 2.367 2a4.849 4.849 0 0 0 2.621.73 3.46 3.46 0 0 0 2.668-1.058 5.07 5.07 0 0 0 .977-3.449V36.57h6.093v17.86a12.384 12.384 0 0 1-.668 4.254 7.919 7.919 0 0 1-4.964 4.879 12.097 12.097 0 0 1-4.036.632"/>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-figma" transform="translate(39.02 143.76)">
+            <title>Figma</title>
+            <g class="oj-logo" data-oj-logo="figma">
+              <g transform="scale(0.4375)">
+                <g transform="translate(0 .5) scale(.98)">
+                <path fill="#0acf83" d="M45.5 129c11.9 0 21.5-9.6 21.5-21.5V86H45.5C33.6 86 24 95.6 24 107.5S33.6 129 45.5 129zm0 0"/>
+                <path fill="#a259ff" d="M24 64.5C24 52.6 33.6 43 45.5 43H67v43H45.5C33.6 86 24 76.4 24 64.5zm0 0"/>
+                <path fill="#f24e1e" d="M24 21.5C24 9.6 33.6 0 45.5 0H67v43H45.5C33.6 43 24 33.4 24 21.5zm0 0"/>
+                <path fill="#ff7262" d="M67 0h21.5C100.4 0 110 9.6 110 21.5S100.4 43 88.5 43H67zm0 0"/>
+                <path fill="#1abcfe" d="M110 64.5c0 11.9-9.6 21.5-21.5 21.5S67 76.4 67 64.5 76.6 43 88.5 43 110 52.6 110 64.5zm0 0"/>
+                </g>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-vscode" transform="translate(97.32 81.22)">
+            <title>Visual Studio Code</title>
+            <g class="oj-logo" data-oj-logo="vscode">
+              <g transform="scale(0.390625)">
+                <mask id="journey-vscode-mask" width="128" height="128" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+                <path fill="#fff" fill-rule="evenodd" d="M90.767 127.126a7.968 7.968 0 0 0 6.35-.244l26.353-12.681a8 8 0 0 0 4.53-7.209V21.009a8 8 0 0 0-4.53-7.21L97.117 1.12a7.97 7.97 0 0 0-9.093 1.548l-50.45 46.026L15.6 32.013a5.328 5.328 0 0 0-6.807.302l-7.048 6.411a5.335 5.335 0 0 0-.006 7.888L20.796 64 1.74 81.387a5.336 5.336 0 0 0 .006 7.887l7.048 6.411a5.327 5.327 0 0 0 6.807.303l21.974-16.68 50.45 46.025a7.96 7.96 0 0 0 2.743 1.793Zm5.252-92.183L57.74 64l38.28 29.058V34.943Z" clip-rule="evenodd"/>
+                </mask>
+                <g mask="url(#journey-vscode-mask)">
+                <path fill="#0065A9" d="M123.471 13.82 97.097 1.12A7.973 7.973 0 0 0 88 2.668L1.662 81.387a5.333 5.333 0 0 0 .006 7.887l7.052 6.411a5.333 5.333 0 0 0 6.811.303l103.971-78.875c3.488-2.646 8.498-.158 8.498 4.22v-.306a8.001 8.001 0 0 0-4.529-7.208Z"/>
+                <g>
+                <path fill="#007ACC" d="m123.471 114.181-26.374 12.698A7.973 7.973 0 0 1 88 125.333L1.662 46.613a5.333 5.333 0 0 1 .006-7.887l7.052-6.411a5.333 5.333 0 0 1 6.811-.303l103.971 78.874c3.488 2.647 8.498.159 8.498-4.219v.306a8.001 8.001 0 0 1-4.529 7.208Z"/>
+                </g>
+                <g>
+                <path fill="#1F9CF0" d="M97.098 126.882A7.977 7.977 0 0 1 88 125.333c2.952 2.952 8 .861 8-3.314V5.98c0-4.175-5.048-6.266-8-3.313a7.977 7.977 0 0 1 9.098-1.549L123.467 13.8A8 8 0 0 1 128 21.01v85.982a8 8 0 0 1-4.533 7.21l-26.369 12.681Z"/>
+                </g>
+                </g>
+              </g>
+            </g>
+          </g>
+          <g id="journey-logo-cursor" transform="translate(185.81 35.73)">
+            <title>Cursor</title>
+            <g class="oj-logo" data-oj-logo="cursor">
+              <g transform="scale(0.40625)">
+                <g class="oj-neutral">
+                <g transform="translate(7.667 0) scale(.333333333) translate(-88 -64)">
+                <path d="m410.344 159.545-146.38-84.5111c-4.7-2.7145-10.5-2.7145-15.2 0l-146.373 84.5111c-3.9515 2.282-6.391 6.501-6.391 11.071v170.418c0 4.569 2.4395 8.789 6.391 11.07l146.379 84.512c4.701 2.714 10.501 2.714 15.201 0l146.38-84.512c3.951-2.281 6.391-6.501 6.391-11.07v-170.418c0-4.57-2.44-8.789-6.391-11.071zm-9.195 17.902-141.308 244.751c-.955 1.65-3.477.976-3.477-.934v-160.261c0-3.203-1.711-6.164-4.487-7.772l-138.786-80.127c-1.65-.956-.976-3.478.934-3.478h282.616c4.013 0 6.522 4.35 4.515 7.828h-.007z" fill="currentColor"/>
+                </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>
+      <!-- Control real, accesible por teclado. Sin JavaScript permanece oculto. -->
+      <div class="oj-controls">
+        <button class="oj-toggle" type="button" aria-label="Pausar animación de origami"
+                data-pause-label="Pausar animación de origami" data-play-label="Reanudar animación de origami"
+                data-reduced-label="Ilustración estática: movimiento reducido activado"
+                data-global-label="Animación pausada por el control general"
+                aria-pressed="false" aria-controls="journey-art" hidden>
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path class="oj-pause" d="M7 5v10m6-10v10"/>
+            <path class="oj-play" d="m7 4 9 6-9 6Z"/>
+          </svg>
+        </button>
+      </div>
+    </figure>
+  </main>
+  <script>
+/* SVG nativo + Web Animations API. Sin librerías ni bucle requestAnimationFrame. */
+(() => {
+  "use strict";
+  document.querySelectorAll("[data-origami-journey]").forEach((figure) => {
+    if (!Element.prototype.animate) return; // Sin JS/WAAPI: todos los logos visibles.
+    const button = figure.querySelector(".oj-toggle");
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    const duration = Math.max(6000, Number(figure.dataset.duration) || 12000);
+    const animations = [];
+    let paused = false;
+    let visible = !("IntersectionObserver" in window);
+
+    function animate(element, frames, easing = "ease-in-out") {
+      const animation = element.animate(frames, { duration, iterations: Infinity, easing: "linear" });
+      // Easing por tramo: las pausas y todos los elementos comparten el mismo reloj.
+      animation.effect.setKeyframes(frames.map((frame) => ({ ...frame, easing })));
+      animation.pause();
+      animation.currentTime = 0;
+      animations.push(animation);
+    }
+
+    // Flotación, impulso después de recibir las señales y vuelta al origen.
+    animate(figure.querySelector(".oj-float"), [
+      { transform: "translateY(0px)", offset: 0 },
+      { transform: "translateY(-4px)", offset: .18 },
+      { transform: "translateY(0px)", offset: .36 },
+      { transform: "translateY(-3px)", offset: .54 },
+      { transform: "translateY(-2px)", offset: .70 },
+      { transform: "translateY(-13px)", offset: .82 },
+      { transform: "translateY(0px)", offset: 1 }
+    ]);
+    // Cada ala tiene coordenadas locales alineadas con su bisagra.
+    // scaleY cambia SOLO su proyección; los dos extremos del pliegue quedan fijos.
+    figure.querySelectorAll(".oj-wing").forEach((wing, index) => {
+      const fold = index === 0 ? .965 : .955;
+      animate(wing, [
+        { transform: "scaleY(1)", offset: 0 },
+        { transform: "scaleY(" + fold + ")", offset: .18 },
+        { transform: "scaleY(1)", offset: .36 },
+        { transform: "scaleY(" + fold + ")", offset: .54 },
+        { transform: "scaleY(1)", offset: .70 },
+        { transform: "scaleY(" + (fold - .015) + ")", offset: .79 },
+        { transform: "scaleY(1)", offset: .90 },
+        { transform: "scaleY(1)", offset: 1 }
+      ]);
+    });
+
+    const logos = figure.querySelectorAll("[data-oj-logo]");
+    // Reparte cualquier cantidad de logos dentro del mismo ciclo de 12 s.
+    // El último termina su señal antes del impulso; ningún offset puede superar 1.
+    logos.forEach((logo, index) => {
+      const slot = index / Math.max(1, logos.length - 1);
+      const enter = .035 + slot * .30;
+      const send = .14 + slot * .46;
+      animate(logo, [
+        { opacity: 0, transform: "translateY(4px)", offset: 0 },
+        { opacity: 0, transform: "translateY(4px)", offset: enter },
+        { opacity: 1, transform: "translateY(0px)", offset: enter + .065 },
+        { opacity: 1, transform: "translateY(0px)", offset: .88 },
+        { opacity: 0, transform: "translateY(4px)", offset: .985 },
+        { opacity: 0, transform: "translateY(4px)", offset: 1 }
+      ]);
+      const link = figure.querySelector('[data-oj-link="' + logo.dataset.ojLogo + '"]');
+      const packet = figure.querySelector('[data-oj-packet="' + logo.dataset.ojLogo + '"]');
+      animate(link, [
+        { opacity: 0, offset: 0 },
+        { opacity: 0, offset: send },
+        { opacity: 1, offset: send + .02 },
+        { opacity: 1, offset: send + .09 },
+        { opacity: 0, offset: send + .12 },
+        { opacity: 0, offset: 1 }
+      ]);
+      // Las coordenadas se leen del path editable del HTML, sin duplicarlas en JS.
+      const start = link.getPointAtLength(0);
+      const end = link.getPointAtLength(link.getTotalLength());
+      const at = (point) => "translate(" + point.x + "px," + point.y + "px)";
+      animate(packet, [
+        { opacity: 0, transform: at(start), offset: 0 },
+        { opacity: 0, transform: at(start), offset: send + .015 },
+        { opacity: 1, transform: at(start), offset: send + .025 },
+        { opacity: 1, transform: at(end), offset: send + .095 },
+        { opacity: 0, transform: at(end), offset: send + .11 },
+        { opacity: 0, transform: at(end), offset: 1 }
+      ], "linear");
+    });
+
+    function sync() {
+      const globalPause = document.body.classList.contains("motion-paused");
+      const stopped = paused || globalPause || reduced.matches;
+      animations.forEach((animation) => {
+        if (reduced.matches) animation.cancel(); // Estilo base: composición completa y estática.
+        else if (stopped || !visible || document.hidden) animation.pause();
+        else animation.play();
+      });
+      button.hidden = false;
+      button.disabled = reduced.matches || globalPause;
+      button.setAttribute("aria-pressed", String(stopped));
+      const label = reduced.matches ? button.dataset.reducedLabel
+        : globalPause ? button.dataset.globalLabel
+        : paused ? button.dataset.playLabel : button.dataset.pauseLabel;
+      button.setAttribute("aria-label", label);
+      button.title = label;
+    }
+    button.addEventListener("click", () => { paused = !paused; sync(); });
+    reduced.addEventListener("change", sync);
+    document.addEventListener("visibilitychange", sync);
+    new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }).observe(figure);
+    }
+    sync();
+  });
+})();
+
+  /* Tu botón existente solo necesita cambiar este mismo atributo en <html>. */
+  (() => {
+    const toggle = document.querySelector(".oj-demo-theme");
+    toggle.hidden = false;
+    toggle.addEventListener("click", () => {
+      const dark = document.documentElement.dataset.theme !== "dark";
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+      toggle.setAttribute("aria-pressed", String(dark));
+      toggle.textContent = dark ? "Cambiar a modo claro" : "Cambiar a modo oscuro";
+    });
+  })();
+  </script>
+  <!-- Cursor: símbolo oficial de https://cursor.com/brand (marca de Anysphere).
+       Otros logos: Devicon v2.16.0, https://github.com/devicons/devicon/tree/v2.16.0
+The MIT License (MIT)
+
+Copyright (c) 2015 konpa
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+</body>
+</html>
