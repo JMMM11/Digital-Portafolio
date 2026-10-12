@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f3f6f1">
+    <meta name="color-scheme" content="light dark">
+    <title>Skills | Jair M. Morales Magallon</title>
+    <meta name="description" content="What Jair M. Morales Magallon works with: HTML, CSS, JavaScript, Python, Java, Supabase, Firebase, Power BI, Git and GitHub, grouped by use.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Skills | Jair M. Morales Magallon">
+    <meta property="og:description" content="What Jair M. Morales Magallon works with: HTML, CSS, JavaScript, Python, Java, Supabase, Firebase, Power BI, Git and GitHub, grouped by use.">
+    <meta property="og:url" content="https://jmmm11.github.io/Digital-Portafolio/skills.html">
+    <meta property="og:image" content="https://jmmm11.github.io/Digital-Portafolio/assets/images/projects/digital-portfolio.jpg">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <!-- theme.js va primero: aplica el tema guardado antes de pintar la pagina. -->
+    <script src="js/theme.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/vendor/motion.js" defer></script>
+    <script src="js/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <!-- CABECERA: es igual en las seis paginas. Si cambias un enlace, cambialo en todas.
+         aria-current="page" marca la pagina activa (la pestana naranja la sigue). -->
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="index.html" aria-label="Jair M. Morales Magallon, home">
+          <svg class="bird" viewBox="0 0 934 506" aria-hidden="true"><path d="M12 447 305 324 260 18 348 223 574 223 636 74 747 13 868 122 716 99 655 258 922 240 648 374 644 450 582 450 565 491 375 491 317 414Z"/><path d="m305 324 250 59-543 64m336-224 202 54 5 106 10 108M348 223l-43 101m269-101-24 54M747 13 582 450m73-192-7 116"/></svg>
+          <span>Jair M.</span>
+        </a>
+        <nav class="nav" id="site-nav" aria-label="Main">
+          <ul class="nav-list">
+            <li><a class="nav-link" href="index.html">Home</a></li>
+            <li><a class="nav-link" href="about.html">About</a></li>
+            <li><a class="nav-link" href="projects.html">Projects</a></li>
+            <li><a class="nav-link" href="skills.html" aria-current="page">Skills</a></li>
+            <li><a class="nav-link" href="experience.html">Experience</a></li>
+            <li><a class="nav-link" href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="header-tools">
+          <button class="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false" hidden>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13A8.6 8.6 0 0 1 11 3.5 8.7 8.7 0 1 0 20.5 13Z"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+          </button>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <span class="menu-toggle-label">Menu</span><span class="menu-toggle-bars" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <div class="wrap page-head">
+        <h1 data-intro>What I work with</h1>
+        <p class="lead" data-intro>Grouped by what I use each thing for, with the project where you can see it when there is one.</p>
+      </div>
+
+      <!-- HABILIDADES: cada skill-group es un area. Para agregar una habilidad, copia un <li> completo. -->
+      <div class="wrap section-tight" data-intro>
+        <section class="skill-group" aria-labelledby="skills-web">
+          <div>
+            <h2 id="skills-web">Building for the web</h2>
+            <p>Where I spend most of my time.</p>
+          </div>
+          <ul class="skill-list">
+            <li><h3>HTML and CSS</h3><p>Semantic, responsive layouts written by hand, with shared styles and variables so a site stays easy to change. This portfolio is built this way.</p></li>
+            <li><h3>JavaScript</h3><p>Interaction and animation in the browser: guided story flows, particle systems and form handling. See <a href="projects.html">La Gran Noche and Feliz Navidad</a>.</p></li>
+            <li><h3>UX and interface design</h3><p>Planning the flow and the look of a page so it fits the person or occasion it is for.</p></li>
+          </ul>
+        </section>
+
+        <section class="skill-group" aria-labelledby="skills-languages">
+          <div>
+            <h2 id="skills-languages">Programming languages</h2>
+            <p>For logic and problem solving beyond the browser.</p>
+          </div>
+          <ul class="skill-list">
+            <li><h3>Python</h3><p>Certified by Cisco Networking Academy in 2025.</p></li>
+            <li><h3>Java</h3><p>Object-oriented programming.</p></li>
+          </ul>
+        </section>
+
+        <section class="skill-group" aria-labelledby="skills-data">
+          <div>
+            <h2 id="skills-data">Data and back end</h2>
+            <p>Where a site stops being static and starts remembering things.</p>
+          </div>
+          <ul class="skill-list">
+            <li><h3>Supabase</h3><p>Stores the RSVPs and guest messages for <a href="projects.html">La Gran Noche</a>, with the table structure written in SQL.</p></li>
+            <li><h3>Firebase</h3><p>Database and authentication for web projects.</p></li>
+            <li><h3>Databases</h3><p>Designing tables and querying them with SQL.</p></li>
+            <li><h3>Power BI</h3><p>Turning raw data into reports and dashboards.</p></li>
+          </ul>
+        </section>
+
+        <section class="skill-group" aria-labelledby="skills-tools">
+          <div>
+            <h2 id="skills-tools">Tools and workflow</h2>
+            <p>How the work gets saved, shared and published.</p>
+          </div>
+          <ul class="skill-list">
+            <li><h3>Git and GitHub</h3><p>Version control for every project. My public work is on <a href="https://github.com/JMMM11" target="_blank" rel="noopener noreferrer">GitHub</a> and deployed with GitHub Pages.</p></li>
+          </ul>
+        </section>
+
+        <section class="skill-group" aria-labelledby="skills-security">
+          <div>
+            <h2 id="skills-security">Security</h2>
+            <p>What I am studying now.</p>
+          </div>
+          <ul class="skill-list">
+            <!-- TODO: cuando tengas cursos, laboratorios o certificaciones de seguridad, agregalos aqui. -->
+            <li><h3>Cybersecurity degree, in progress</h3><p>Universidad Tecnológica de Panamá.</p></li>
+          </ul>
+        </section>
+      </div>
+    </main>
+
+    <!-- PIE DE PAGINA: igual en las seis paginas. -->
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <p class="footer-copy">&copy; <span data-year>2026</span> Jair M. Morales Magallon. Built by hand in Panama.</p>
+        <ul class="footer-links">
+          <li><a href="mailto:jairm9010@gmail.com">Email</a></li>
+          <li><a href="https://github.com/JMMM11" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href="https://jmmm11.github.io/Digital-CV/" target="_blank" rel="noopener noreferrer">Digital CV</a></li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>

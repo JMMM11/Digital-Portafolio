@@ -1,0 +1,13 @@
+{
+  "name": "digital-portafolio",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Portafolio personal de Jair M. Morales Magallon. Sitio estatico: HTML, CSS y JavaScript.",
+  "scripts": {
+    "start": "npx --yes serve . -l 4173",
+    "vendor": "node scripts/copy-vendor.mjs"
+  },
+  "dependencies": {
+    "motion": "^14.1.0"
+  }
+}

@@ -92,6 +92,7 @@
         else if (stopped || !visible || document.hidden) animation.pause();
         else animation.play();
       });
+      if (!button) return; // Sin boton de pausa: la animacion corre siempre.
       button.hidden = false;
       button.disabled = reduced.matches || globalPause;
       button.setAttribute("aria-pressed", String(stopped));
@@ -101,7 +102,7 @@
       button.setAttribute("aria-label", label);
       button.title = label;
     }
-    button.addEventListener("click", () => { paused = !paused; sync(); });
+    button?.addEventListener("click", () => { paused = !paused; sync(); });
     reduced.addEventListener("change", sync);
     document.addEventListener("visibilitychange", sync);
     new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class"] });

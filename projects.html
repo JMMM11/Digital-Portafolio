@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f3f6f1">
+    <meta name="color-scheme" content="light dark">
+    <title>Projects | Jair M. Morales Magallon</title>
+    <meta name="description" content="Websites built by Jair M. Morales Magallon: digital invitations and gifts, informational sites and web apps, with live demos and source code.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Projects | Jair M. Morales Magallon">
+    <meta property="og:description" content="Websites built by Jair M. Morales Magallon: digital invitations and gifts, informational sites and web apps, with live demos and source code.">
+    <meta property="og:url" content="https://jmmm11.github.io/Digital-Portafolio/projects.html">
+    <meta property="og:image" content="https://jmmm11.github.io/Digital-Portafolio/assets/images/projects/digital-portfolio.jpg">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+    <!-- theme.js va primero: aplica el tema guardado antes de pintar la pagina. -->
+    <script src="js/theme.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/vendor/motion.js" defer></script>
+    <script src="js/projects-data.js" defer></script>
+    <script src="js/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <!-- CABECERA: es igual en las seis paginas. Si cambias un enlace, cambialo en todas.
+         aria-current="page" marca la pagina activa (la pestana naranja la sigue). -->
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="index.html" aria-label="Jair M. Morales Magallon, home">
+          <svg class="bird" viewBox="0 0 934 506" aria-hidden="true"><path d="M12 447 305 324 260 18 348 223 574 223 636 74 747 13 868 122 716 99 655 258 922 240 648 374 644 450 582 450 565 491 375 491 317 414Z"/><path d="m305 324 250 59-543 64m336-224 202 54 5 106 10 108M348 223l-43 101m269-101-24 54M747 13 582 450m73-192-7 116"/></svg>
+          <span>Jair M.</span>
+        </a>
+        <nav class="nav" id="site-nav" aria-label="Main">
+          <ul class="nav-list">
+            <li><a class="nav-link" href="index.html">Home</a></li>
+            <li><a class="nav-link" href="about.html">About</a></li>
+            <li><a class="nav-link" href="projects.html" aria-current="page">Projects</a></li>
+            <li><a class="nav-link" href="skills.html">Skills</a></li>
+            <li><a class="nav-link" href="experience.html">Experience</a></li>
+            <li><a class="nav-link" href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="header-tools">
+          <button class="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false" hidden>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13A8.6 8.6 0 0 1 11 3.5 8.7 8.7 0 1 0 20.5 13Z"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+          </button>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <span class="menu-toggle-label">Menu</span><span class="menu-toggle-bars" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <div class="wrap page-head">
+        <h1 data-intro>Projects</h1>
+        <p class="lead" data-intro>Things I have built and published. Each one has a live demo, its source code, or both.</p>
+      </div>
+
+      <!-- PROYECTOS: el contenido sale de js/projects-data.js. No se edita aqui. -->
+      <section class="wrap section-tight" aria-label="All projects" data-intro>
+        <div class="filter-bar">
+          <!-- FILTROS: data-filter debe coincidir con "category" en projects-data.js. -->
+          <div class="filters" role="group" aria-label="Filter projects by type">
+            <button class="filter" type="button" data-filter="all" aria-pressed="true">All <span class="filter-count"></span></button>
+            <button class="filter" type="button" data-filter="gift" aria-pressed="false">Invitations and gifts <span class="filter-count"></span></button>
+            <button class="filter" type="button" data-filter="website" aria-pressed="false">Websites <span class="filter-count"></span></button>
+            <button class="filter" type="button" data-filter="app" aria-pressed="false">Web apps <span class="filter-count"></span></button>
+          </div>
+          <p class="filter-status" role="status" aria-live="polite" data-filter-status></p>
+        </div>
+        <div class="project-grid is-wide" data-projects="all"></div>
+          <noscript><p class="muted">The project list needs JavaScript. You can also see my work on <a href="https://github.com/JMMM11">GitHub</a>.</p></noscript>
+        <p class="more-work">More experiments live on <a class="link-strong" href="https://github.com/JMMM11?tab=repositories" target="_blank" rel="noopener noreferrer">my GitHub profile</a>.</p>
+      </section>
+    </main>
+
+    <!-- PIE DE PAGINA: igual en las seis paginas. -->
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <p class="footer-copy">&copy; <span data-year>2026</span> Jair M. Morales Magallon. Built by hand in Panama.</p>
+        <ul class="footer-links">
+          <li><a href="mailto:jairm9010@gmail.com">Email</a></li>
+          <li><a href="https://github.com/JMMM11" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href="https://jmmm11.github.io/Digital-CV/" target="_blank" rel="noopener noreferrer">Digital CV</a></li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>

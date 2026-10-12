@@ -1,158 +1,91 @@
-# Digital Portfolio
+# Digital Portafolio
 
-## Editar el portafolio
+Portafolio personal de Jair M. Morales Magallon: estudiante de Ciberseguridad en la Universidad Tecnológica de Panamá y desarrollador web.
 
-Todo el contenido se edita directamente en `index.html`. No necesitas modificar JavaScript.
+Sitio en vivo: <https://jmmm11.github.io/Digital-Portafolio/>
 
-La marca de Jair M. se encuentra en `assets/images/jair-mark.svg`; su versión para la pestaña está en `assets/images/favicon.svg`. Puedes cambiar sus rutas en la cabecera y en el `head` del HTML. El acento verde es `#7bc89c`.
+Es un sitio estático (HTML, CSS y JavaScript, sin framework ni paso de compilación). El contenido del sitio está en inglés; los comentarios del código, en español.
 
-- Busca `[[` para completar tus datos, títulos, descripciones y enlaces pendientes.
-- Busca `IMAGEN PROYECTO`: cambia el atributo `src` por la ruta de tu captura y describe la imagen en `alt`. El marcador desaparece al añadir una imagen válida.
-- Busca `DESCARGAR CV`: cambia los dos `href="[[CV PATH]]"` por `href="assets/cv.pdf"` y guarda el PDF en esa carpeta.
-- Busca `ENLACES DEL PROYECTO` para pegar los enlaces al repositorio y a la demo. Actualiza también el enlace de demo sobre la imagen.
-- Para añadir proyectos, duplica un `article.project-card`, asigna un ID de título único y conserva `data-category="personal"` o `"team"`. Los contadores se actualizan automáticamente.
-- El canvas `constellation` define 700 triángulos en escritorio y 300 en móvil. En `body`, `data-accent-ratio="0.12"` reserva el 12 % para el verde.
+## Cómo ejecutarlo
 
-El diseño usa un tema claro por defecto y el tema oscuro original. Los seis colores de cada tema están definidos en `:root` y `:root[data-theme="dark"]` de `css/styles.css`, sin degradados ni sombras. Poppins se carga localmente desde `Fonts/` en varios pesos e itálicas para dar personalidad a títulos, énfasis y texto general.
+Opción rápida: abre `index.html` con doble clic. Todo funciona sin servidor.
 
-La animación puede pausarse junto al cerebro. La preferencia de movimiento reducido desactiva la animación, el paralaje y las transiciones. Las capturas y el CV se guardan en `assets/`, y sus rutas se cambian en el HTML.
+Con servidor local (recomendado, se comporta igual que GitHub Pages):
 
-### Modo claro y oscuro
-
-La primera visita abre en modo claro, con fondo crema y acento verde. El botón de luna/sol en la cabecera permite cambiar al modo oscuro original. La selección se guarda localmente; `js/theme.js` la restaura antes de cargar los estilos para evitar parpadeos. Si el navegador no permite almacenamiento, el selector sigue funcionando durante la visita.
-
-El cerebro usa `data-triangle-colors-light` en modo claro y `data-triangle-colors` en modo oscuro, ambos en el `body` de `index.html`. Los iconos incluidos se adaptan al fondo; las capturas de tus proyectos conservan sus colores.
-
-### Animación del recorrido
-
-Busca `ANIMACION DEL RECORRIDO` en `index.html`: ahí está todo el SVG inline de tu marca, con sus alas y pliegues conectados, dos órbitas y 15 logos: Python, Java, JavaScript, TypeScript, C++, HTML5, CSS3, Git, GitHub, Supabase, Firebase, IntelliJ IDEA, Figma, Visual Studio Code y Cursor. No usa imágenes, librerías ni CDN. Las apariciones y señales se reparten automáticamente dentro del ciclo, según la cantidad de logos.
-
-- **Vista previa autónoma:** abre `origami-demo.html` directamente en el navegador, incluso sin conexión. Incluye SVG, CSS, JavaScript y un selector de tema exclusivo de la demo.
-- **Velocidad:** cambia `data-duration="12000"` en la figura de `index.html`; el número son milisegundos para el ciclo completo.
-- **Tamaño:** cambia `style="--oj-size: 480px"` en esa misma figura. Siempre se ajusta al ancho disponible.
-- **Colores:** variables al inicio de `css/origami-journey.css`. El ave usa `#246B4B` en claro y `#8FD5AE` en oscuro. Órbitas y conexiones tienen su propia opacidad.
-- **Logos:** cada grupo tiene un ID `journey-logo-…`. Los `path` son vectores reales. Si mueves un grupo, actualiza también el origen `M` de su `journey-link-…`.
-- **Pausa:** el botón propio congela el instante actual. También respeta la pausa general, la pestaña oculta y la salida de pantalla. Con movimiento reducido o sin JavaScript se ven los 15 logos estáticos.
-- **Tema:** tu botón actual ya cambia `document.documentElement.dataset.theme` a `"light"` o `"dark"`; el componente responde automáticamente por CSS.
-
-Para integrarlo en otra página, copia la figura y carga `css/origami-journey.css` y `js/origami-journey.js` (con `defer`). También puedes copiar los bloques inline de la demostración. Si repites el componente en una página, asigna IDs únicos y actualiza `aria-labelledby`, `aria-describedby` y `aria-controls`. Los vectores de Devicon conservan su licencia MIT; la demo incluye una copia en un comentario final. El símbolo de Cursor proviene de sus recursos oficiales de marca. Fuentes y adaptaciones en `assets/icons/SOURCES.md`.
-
-### Carrusel de iconos
-
-Busca `CARRUSEL DE ICONOS` en `index.html`. Guarda tus imágenes en `assets/icons/` y cambia el `src` de cada `img`. Para añadir un icono, copia una sola línea `img` y cambia su ruta y su `alt`. No dupliques la lista: el carrusel repite automáticamente las imágenes sin cortes.
-
-`data-speed="32"` controla la velocidad en píxeles por segundo. Se pausa con su botón, al pasar el cursor o al enfocarlo con el teclado. También respeta la pausa general y el movimiento reducido; en ese modo, o sin JavaScript, puedes desplazar la lista horizontalmente.
-
-El carrusel incluye las mismas 15 tecnologías que el origami: Python, Java, JavaScript, TypeScript, C++, HTML5, CSS3, Git, GitHub, Supabase, Firebase, IntelliJ IDEA, Figma, Visual Studio Code y Cursor. Sus SVG son monocromos para conservar el estilo del carrusel y cambian de contraste con el tema. Los logos de Devicon v2.16.0 mantienen su licencia en `assets/icons/LICENSE.txt`; Cursor usa su símbolo oficial. Las fuentes están en `assets/icons/SOURCES.md`. Tus imágenes con otras rutas conservan sus propios colores.
-
-### Animaciones del cerebro
-
-La entrada transforma una esfera de triángulos en el cerebro. Sus órbitas giran lentamente y una onda luminosa recorre la figura. Al desplazarte, el cerebro se aproxima a la forma de un orbe; las secciones, iconos y proyectos aparecen en secuencia. El contenido y la tipografía Poppins se conservan.
-
-En el canvas `constellation` de `index.html` puedes ajustar `data-reveal-duration="2600"` (duración de la entrada en milisegundos), `data-orbit-count="120"` y `data-mobile-orbit-count="48"` (puntos orbitales; usa 0 para ocultarlos). El botón de pausa detiene también las entradas y efectos de interacción. El cerebro deja de animarse cuando sale de la pantalla o la pestaña está oculta. Todo el texto permanece visible si JavaScript no está disponible.
-
-Welcome to my digital portfolio — a space where I showcase my projects, skills, ideas, and ongoing growth in technology and digital development.
-
-This portfolio represents both my technical journey and my creative approach to building digital experiences. Each project reflects a combination of problem-solving, design, programming, research, and continuous learning.
-
-## About Me
-
-I am a technology enthusiast interested in software development, web design, programming, and the creation of interactive digital experiences.
-
-I enjoy transforming ideas into functional and visually appealing projects, while continuously exploring new technologies and improving my technical skills.
-
-My approach is based on learning through practice, experimentation, and real-world projects. I believe that every project is an opportunity to learn something new, solve a problem, and improve the way I build digital solutions.
-
-## What You'll Find Here
-
-This portfolio contains a selection of projects and work related to:
-
-* 💻 Web Development
-* 🎨 UI/UX and Digital Design
-* 📱 Application Development
-* 🐍 Python Programming
-* ☕ Java Programming
-* ⚙️ C++ Development
-* 📊 Data Structures and Algorithms
-* 🤖 Artificial Intelligence
-* 🌐 Interactive Digital Experiences
-* 📚 Academic and Personal Projects
-
-## Technologies & Tools
-
-Throughout my learning and development process, I have worked with and explored different technologies, including:
-
-### Programming Languages
-
-* Python
-* Java
-* C++
-* JavaScript
-* HTML
-* CSS
-
-### Development & Design
-
-* Git & GitHub
-* Responsive Web Design
-* UI/UX Principles
-* Interactive Web Interfaces
-* Digital Prototyping
-
-### Exploring
-
-I am continuously learning and experimenting with new technologies, particularly in areas such as:
-
-* Artificial Intelligence
-* Mobile Development
-* Modern Web Technologies
-* Automation
-* Digital Product Development
-
-## Featured Projects
-
-The portfolio includes projects developed for different purposes, from academic assignments and programming exercises to web experiences and creative digital concepts.
-
-Each project is an opportunity to demonstrate not only the final result, but also the process behind it — including planning, development, problem-solving, testing, and iteration.
-
-## My Development Philosophy
-
-> **Learn. Build. Experiment. Improve.**
-
-I believe the best way to grow as a developer is by creating.
-
-Instead of focusing only on theory, I try to apply what I learn through practical projects, experiments, and challenges. This allows me to understand technologies more deeply while developing a stronger problem-solving mindset.
-
-## Goals
-
-My goal is to continue developing my technical and creative abilities while building projects that combine functionality, design, and innovation.
-
-I am particularly interested in opportunities where technology can be used to create useful, intuitive, and meaningful digital experiences.
-
+```bash
+npm install     # solo la primera vez
+npm start       # abre http://localhost:4173
 ```
 
-## Currently Learning
+Para publicar, haz `git push` a `main`. GitHub Pages sirve los archivos tal como están.
 
-I am continuously expanding my knowledge through courses, personal projects, experimentation, and practical development.
+## Estructura
 
-Some of the areas I am currently focusing on include:
+```
+index.html          Inicio: presentación, proyectos destacados
+about.html          Sobre mí: historia, motivación, formación
+projects.html       Todos los proyectos, con filtros
+skills.html         Habilidades agrupadas por área
+experience.html     Experiencia, voluntariado y certificaciones
+contact.html        Correo, enlaces y formulario
 
-* Advanced programming concepts
-* Data structures and algorithms
-* Modern web development
-* Mobile application development
-* Artificial intelligence
-* Software architecture
-* UI/UX design
+css/styles.css            Estilos de todo el sitio (variables al inicio)
+css/origami-journey.css   Solo la animación del ave en experience.html
 
-## Let's Connect
+js/theme.js           Tema claro/oscuro (se carga primero)
+js/site.js            Navegación, filtros, formulario y animaciones
+js/projects-data.js   Datos de los proyectos
+js/brain.js           Cerebro de triángulos del inicio
+js/origami-journey.js Animación del ave de origami
+js/vendor/motion.js   Librería Motion (copia de node_modules)
 
-Thank you for visiting my portfolio.
+assets/fonts/     Chakra Petch y Hanken Grotesk
+assets/images/    Favicon, cerebro de respaldo y capturas de proyectos
+scripts/          Utilidad para actualizar Motion
+```
 
-This portfolio is a work in progress and will continue to evolve as I learn, build, and explore new technologies.
+## Cómo editar
 
-**Feel free to explore the projects and follow my journey as I continue developing my skills in technology and digital development.**
+| Quiero cambiar | Dónde |
+| --- | --- |
+| Textos de una página | En su `.html`. Cada bloque tiene un comentario en mayúsculas que dice qué es. |
+| Agregar o editar un proyecto | `js/projects-data.js`. Copia un bloque `{ ... }`; las instrucciones están al inicio del archivo. |
+| Captura de un proyecto | Guárdala en `assets/images/projects/` (1280x800) y pon su ruta en `image`. |
+| Colores, tipografía, espaciado | Variables de `:root` en `css/styles.css` (tema claro) y `:root[data-theme="dark"]` (oscuro). |
+| El menú | La cabecera se repite en las seis páginas: cambia el enlace en todas. `aria-current="page"` marca la página activa. |
+| Correo de contacto | `contact.html` (enlace y `data-to` del formulario) y el pie de cada página. |
+| Colores y cantidad de triángulos del cerebro | Atributos `data-*` del `<body>` y del `<canvas>` en `index.html`. |
 
----
+Busca `TODO` en el proyecto para ver los datos que faltan por completar (rol en cada proyecto, fechas de trabajos, historia personal).
 
-*Designed and developed as part of my ongoing journey in technology.*
+## Diseño
+
+La idea visual es el papel de origami, por el ave que uso como marca: una cara verde y otra naranja. El naranja aparece solo donde algo está "doblado": la pestaña del menú, la esquina de las tarjetas y los botones.
+
+- Tipografías: Chakra Petch para títulos y Hanken Grotesk para texto.
+- Tema claro por defecto y tema oscuro con el botón de la cabecera. La elección se guarda en el navegador.
+
+## Animaciones
+
+Se usan con [Motion](https://motion.dev) y solo donde aportan:
+
+- La pestaña naranja del menú se desliza desde la página anterior a la actual y acompaña al cursor.
+- Una sola secuencia de entrada por página (elementos con `data-intro`).
+- El menú móvil se despliega con sus enlaces en cascada.
+- Las tarjetas aparecen en secuencia al cambiar de filtro.
+- La línea naranja de `experience.html` avanza con el scroll.
+
+Todas usan únicamente `transform` y `opacity`, y se desactivan si el sistema pide movimiento reducido.
+
+Motion se instala con npm, pero el sitio carga la copia de `js/vendor/motion.js` porque GitHub Pages no publica `node_modules`. Para actualizarla:
+
+```bash
+npm install motion@latest
+npm run vendor
+```
+
+## Créditos
+
+- Logos del origami: [Devicon](https://github.com/devicons/devicon) v2.16.0, licencia MIT (`assets/licenses/devicon-MIT.txt`). El símbolo de Cursor proviene de sus recursos oficiales de marca y pertenece a Anysphere.
+- Fuentes: Chakra Petch y Hanken Grotesk, SIL Open Font License 1.1, descargadas de Google Fonts.
+- Motion: licencia MIT.
