@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1000" viewBox="0 0 1440 1000">
-  <rect width="1440" height="1000" fill="#08090d"/>
-  <g fill="none" stroke="#1a1c24" stroke-width="2">
-    <rect x="320" y="224" width="800" height="520" rx="16"/>
-    <path d="M320 304h800M368 264h120M368 680l224-224 160 144 128-96 192 176"/>
-  </g>
-  <text x="720" y="840" text-anchor="middle" fill="#8a8f9c" font-family="Arial,sans-serif" font-size="32">Project preview coming soon</text>
-</svg>
