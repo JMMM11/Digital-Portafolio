@@ -77,14 +77,14 @@ window.PROJECTS = [
     kind: "Gesture control web app",
     category: "app",
     featured: true,
-    summary: "A web app that recognizes hand gestures in real time through the camera. Each gesture controls 3D animations, particles and on-screen messages, with no physical contact.",
-    role: "Front-end and back-end development",
-    stack: ["Next.js", "React", "TypeScript", "MediaPipe Hands", "Three.js"],
-    image: "",
-    alt: "",
-    demo: "",
-    repo: "https://github.com/JMMM11/Tony-Stark",
-    note: "No live demo yet. It runs locally with npm install and npm run dev."
+    summary: "A web app that recognizes hand gestures in real time through the camera and turns them into 3D particle effects: a beating heart, spheres, an explosion and text messages. Everything runs in the browser, and the video never leaves the device.",
+    role: "Front-end development",
+    stack: ["JavaScript", "Three.js", "MediaPipe Hands"],
+    image: "assets/images/projects/hands.jpg",
+    alt: "Hands running in the browser: the word HOLA drawn in blue particles over the camera view, with a guide of gestures along the bottom.",
+    demo: "https://jmmm11.github.io/Hands/",
+    repo: "https://github.com/JMMM11/Hands",
+    note: "The demo asks for camera access to detect your hands."
   },
   {
     title: "Bajo el Mismo Cielo",
