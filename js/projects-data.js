@@ -45,6 +45,34 @@ window.PROJECTS = [
     note: ""
   },
   {
+    title: "PanaRoots",
+    kind: "Tourism website",
+    category: "website",
+    featured: false,
+    summary: "A site that connects travelers with the authentic Panama: its culture, traditions, gastronomy, crafts and local communities, through curated destinations, tour concepts and a cultural calendar.",
+    role: "Front-end development",
+    stack: ["HTML", "CSS", "JavaScript"],
+    image: "assets/images/projects/panaroots.jpg",
+    alt: "PanaRoots home page: the name over a palm-covered island in turquoise water, with a search bar for destination, starting point and experience type.",
+    demo: "https://jmmm11.github.io/Panaroots/",
+    repo: "https://github.com/JMMM11/Panaroots",
+    note: ""
+  },
+  {
+    title: "HealthBoost",
+    kind: "Wellness website",
+    category: "website",
+    featured: false,
+    summary: "A wellness platform that brings nutrition, mental wellness and physical activity together in one place, to help people build healthier habits with guidance from professionals and wellness partners.",
+    role: "Front-end development",
+    stack: ["HTML", "CSS", "JavaScript"],
+    image: "assets/images/projects/healthboost.jpg",
+    alt: "HealthBoost home page: a pilates class behind the headline Train wherever you want, whenever you want, with buttons to choose a plan and view programs.",
+    demo: "https://jmmm11.github.io/HealthBoost/",
+    repo: "https://github.com/JMMM11/HealthBoost",
+    note: ""
+  },
+  {
     title: "Hands",
     kind: "Gesture control web app",
     category: "app",
