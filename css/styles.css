@@ -305,10 +305,12 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 .hero { padding-block: clamp(28px, 5vw, 64px) clamp(48px, 7vw, 88px); }
 /* El nombre ocupa todo el ancho: es la primera impresion. */
 .hero-name {
-  font-size: clamp(2.75rem, 7.3vw, 5.75rem);
-  font-weight: 700; line-height: 0.95; letter-spacing: -0.02em;
+  font-size: clamp(2.75rem, 10.5vw, 9.25rem);
+  font-weight: 700; line-height: 0.9; letter-spacing: -0.02em;
 }
-.hero-name span { display: inline-block; }
+.hero-name span { display: block; }
+/* Nombre escalonado: la segunda linea se va a la derecha. */
+.hero-name span + span { text-align: right; }
 .hero-grid {
   display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
   gap: clamp(24px, 4vw, 64px); align-items: center;
@@ -345,6 +347,37 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 .closing .button { background: var(--kami); color: var(--on-kami); }
 .closing .button:hover { background: #ffffff; color: var(--on-kami); }
 .closing :focus-visible { outline-color: #ffffff; }
+
+/* Lista de trabajos del inicio: titulos grandes a la izquierda y, a la derecha,
+   la captura del proyecto activo (el que tiene el cursor o el foco). */
+.work-list { position: relative; border-bottom: 1px solid var(--line); }
+.work-row { display: grid; justify-items: start; gap: 10px; padding-block: clamp(24px, 3.4vw, 44px); border-top: 1px solid var(--line); }
+.work-title { font-size: clamp(2.25rem, 1rem + 5vw, 4.5rem); font-weight: 600; line-height: 1; }
+.work-title a { text-decoration: none; transition: color 0.25s ease; }
+.work-meta { color: var(--muted); max-width: 30em; }
+.work-source { font-size: var(--text-sm); }
+.work-shot {
+  position: relative; width: 100%; max-width: 520px; aspect-ratio: 16 / 10; margin-top: 10px;
+  overflow: hidden; border: 1px solid var(--line);
+  border-radius: var(--radius) 0 var(--radius) var(--radius);
+}
+.work-shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.work-shot::after {
+  content: ""; position: absolute; top: 0; right: 0; width: var(--fold); height: var(--fold);
+  background: linear-gradient(to top right, var(--kami) 50%, var(--paper) 50%);
+  border-bottom-left-radius: 6px;
+}
+@media (min-width: 861px) {
+  .work-row { padding-right: 50%; }
+  .work-title a { color: var(--muted); }
+  .work-row.is-active .work-title a { color: var(--ink); }
+  .work-shot {
+    position: absolute; top: clamp(24px, 3.4vw, 44px); right: 0; width: 44%; max-width: none; margin: 0;
+    opacity: 0; transform: translateY(14px) scale(0.98); pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .work-row.is-active .work-shot { opacity: 1; transform: none; }
+}
 
 /* ---------- 8. Tarjetas de proyecto y filtros ---------- */
 .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: clamp(24px, 3vw, 40px); }
@@ -493,7 +526,7 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 /* ---------- Adaptacion a pantallas pequenas ---------- */
 @media (max-width: 860px) {
   .hero-grid, .about-grid, .skill-group, .experience-grid, .contact-grid { grid-template-columns: minmax(0, 1fr); }
-  .hero-name span { display: block; }
+  .hero-name span + span { text-align: left; }
   .hero-art { order: -1; max-width: 460px; width: 100%; margin-inline: auto; }
   #constellation { height: clamp(260px, 68vw, 400px); }
   .about-aside, .experience-art { position: static; }

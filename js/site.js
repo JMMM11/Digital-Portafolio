@@ -192,10 +192,39 @@
     card.append(cover, body);
     return card;
   }
+  // Inicio: lista de titulos grandes. La captura de la fila activa se muestra a la derecha.
+  function workRow(project) {
+    const row = element("li", "work-row");
+    const title = element("h3", "work-title");
+    title.append(externalLink(project.title, project.demo || project.repo, ""));
+    row.append(title, element("p", "work-meta", `${project.kind}. ${project.stack.join(", ")}.`));
+    if (project.demo && project.repo) row.append(externalLink("Source code", project.repo, "link-strong work-source"));
+    if (project.image) {
+      const shot = element("div", "work-shot");
+      const image = element("img");
+      image.src = project.image;
+      image.alt = project.alt;
+      image.width = 1280;
+      image.height = 800;
+      image.loading = "lazy";
+      image.decoding = "async";
+      shot.append(image);
+      row.append(shot);
+    }
+    const activate = () => {
+      row.parentElement.querySelector(".is-active")?.classList.remove("is-active");
+      row.classList.add("is-active");
+    };
+    row.addEventListener("pointerenter", activate);
+    row.addEventListener("focusin", activate);
+    return row;
+  }
   document.querySelectorAll("[data-projects]").forEach((container) => {
     const list = (window.PROJECTS ?? []).filter((project) =>
       container.dataset.projects === "featured" ? project.featured : true);
-    container.replaceChildren(...list.map(projectCard));
+    const featured = container.dataset.projects === "featured";
+    container.replaceChildren(...list.map(featured ? workRow : projectCard));
+    if (featured) container.firstElementChild?.classList.add("is-active");
   });
 
   // Filtros de projects.html.
