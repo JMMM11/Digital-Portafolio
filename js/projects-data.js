@@ -73,6 +73,20 @@ window.PROJECTS = [
     note: ""
   },
   {
+    title: "FoodWizz",
+    kind: "Product website",
+    category: "website",
+    featured: false,
+    summary: "Official site for FoodWizz, inventory software for small restaurants and food trucks. It presents the features (real-time stock tracking, low-stock alerts, recipes and sales reports), compares pricing plans and offers the app for download.",
+    role: "Front-end development",
+    stack: ["HTML", "CSS", "JavaScript"],
+    image: "assets/images/projects/foodwizz.jpg",
+    alt: "FoodWizz home page: the headline Smarter inventory for small restaurants next to a burger with its layers floating over an orange circle.",
+    demo: "https://jmmm11.github.io/Foodwizz/",
+    repo: "https://github.com/JMMM11/Foodwizz",
+    note: ""
+  },
+  {
     title: "Hands",
     kind: "Gesture control web app",
     category: "app",
