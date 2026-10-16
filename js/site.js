@@ -154,6 +154,8 @@
   function projectCard(project) {
     const card = element("article", "project-card");
     card.dataset.category = project.category;
+    // Pestana de carpeta: muestra el tipo de proyecto.
+    card.append(element("span", "project-tab", project.kind));
 
     // Portada: captura real o, si no hay, el titulo sobre el color de marca.
     const cover = element("div", "project-cover");
@@ -172,7 +174,6 @@
     }
 
     const body = element("div", "project-body");
-    body.append(element("p", "project-kind", project.kind));
     body.append(element("h3", "project-title", project.title));
     body.append(element("p", "project-summary", project.summary));
 

@@ -244,26 +244,27 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 .header-tools { display: flex; align-items: center; gap: 8px; }
 .theme-toggle, .menu-toggle {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  min-width: 44px; height: 44px; padding: 0 10px;
+  width: 42px; height: 42px; padding: 0;
   background: transparent; border: 1px solid var(--line); border-radius: var(--radius-pill);
   transition: border-color 0.18s ease, transform 0.15s ease;
 }
 .theme-toggle:hover, .menu-toggle:hover { border-color: var(--ink); }
 .theme-toggle:active, .menu-toggle:active { transform: scale(0.95); }
-.theme-toggle svg { width: 20px; height: 20px; }
+.theme-toggle svg { width: 18px; height: 18px; }
 .theme-toggle .icon-sun { display: none; }
 :root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
 :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
-.menu-toggle { display: none; font-family: var(--font-display); font-weight: 600; padding: 0 14px; }
-.menu-toggle-bars { position: relative; width: 18px; height: 12px; }
+.menu-toggle { display: none; padding: 0; }
+.menu-toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.menu-toggle-bars { position: relative; width: 16px; height: 10px; }
 .menu-toggle-bars::before, .menu-toggle-bars::after {
   content: ""; position: absolute; left: 0; width: 100%; height: 2px; background: currentColor;
   transition: transform 0.22s ease;
 }
 .menu-toggle-bars::before { top: 0; }
 .menu-toggle-bars::after { bottom: 0; }
-.menu-toggle[aria-expanded="true"] .menu-toggle-bars::before { transform: translateY(5px) rotate(45deg); }
-.menu-toggle[aria-expanded="true"] .menu-toggle-bars::after { transform: translateY(-5px) rotate(-45deg); }
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars::before { transform: translateY(4px) rotate(45deg); }
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars::after { transform: translateY(-4px) rotate(-45deg); }
 
 @media (max-width: 860px) {
   html.js .menu-toggle { display: inline-flex; }
@@ -380,41 +381,58 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 }
 
 /* ---------- 8. Tarjetas de proyecto y filtros ---------- */
-.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: clamp(24px, 3vw, 40px); }
+.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: clamp(40px, 5vw, 64px) clamp(24px, 3vw, 40px); }
 .project-grid.is-wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); }
+/* Tarjeta en forma de carpeta: pestana arriba con el tipo de proyecto, cuerpo de color
+   segun la categoria y una inclinacion leve que se endereza al pasar el cursor.
+   Colores: cada tarjeta toma uno de seis colores en orden (reglas nth-child de abajo).
+   --folder es el color de la carpeta y --glow la mancha de luz. */
 .project-card {
+  --folder: var(--brand);
   position: relative;
   display: flex; flex-direction: column;
-  background: var(--surface); border: 1px solid var(--line);
-  /* Todas las esquinas redondeadas menos la doblada. */
-  border-radius: var(--radius) 0 var(--radius) var(--radius);
+  margin-top: 30px; /* espacio para la pestana */
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 78% 82%, var(--glow, rgb(255 255 255 / 0.16)), transparent 45%),
+    radial-gradient(circle at 10% 0%, rgb(0 0 0 / 0.14), transparent 50%),
+    var(--folder);
+  border-radius: 6px var(--radius) var(--radius) var(--radius);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
-/* Esquina doblada: la mitad naranja es el reverso del papel; la otra mitad
-   tapa la esquina de la tarjeta con el color del fondo. Crece al pasar el cursor. */
-.project-card::after {
-  content: ""; position: absolute; top: -1px; right: -1px;
-  width: var(--fold); height: var(--fold);
-  background: linear-gradient(to top right, var(--kami) 50%, var(--paper) 50%);
-  border-bottom-left-radius: 6px;
-  transform-origin: top right;
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+.project-card:nth-child(6n + 1) { --folder: #c2410c; --glow: #ff8a3db3; }
+.project-card:nth-child(6n + 2) { --folder: #1c7a4c; --glow: #3fd17fb3; }
+.project-card:nth-child(6n + 3) { --folder: #be185d; --glow: #ff5fa2b3; }
+.project-card:nth-child(6n + 4) { --folder: #0e6470; --glow: #2cc6d6b3; }
+.project-card:nth-child(6n + 5) { --folder: #6d28d9; --glow: #a78bfab3; }
+.project-card:nth-child(6n + 6) { --folder: #a16207; --glow: #f5b82eb3; }
+.project-card:nth-child(3n + 1) { --tilt: -1.2deg; }
+.project-card:nth-child(3n + 2) { --tilt: 0.8deg; }
+.project-card:nth-child(3n) { --tilt: -0.5deg; }
+.project-card:hover, .project-card:focus-within { transform: rotate(0deg) translateY(-4px); }
+.project-tab {
+  position: absolute; bottom: 100%; left: 0;
+  max-width: calc(100% - 40px); padding: 6px 18px 4px;
+  background: var(--folder);
+  border-radius: 12px 12px 0 0;
+  font-family: var(--font-display); font-weight: 600; font-size: 0.875rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.project-card:hover::after, .project-card:focus-within::after { transform: scale(1.7); }
-.project-cover { aspect-ratio: 16 / 10; overflow: hidden; border-radius: calc(var(--radius) - 1px) 0 0 0; border-bottom: 1px solid var(--line); background: var(--line); }
+.project-cover { aspect-ratio: 16 / 10; overflow: hidden; margin: 14px 14px 0; border-radius: 12px; background: rgb(0 0 0 / 0.2); }
 .project-cover img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
-.project-cover.is-typographic {
-  display: flex; align-items: flex-end; padding: 24px;
-  background: var(--brand-deep); color: #ffffff;
-}
+.project-cover.is-typographic { display: flex; align-items: flex-end; padding: 24px; background: rgb(0 0 0 / 0.22); }
 .project-cover-title { font-family: var(--font-display); font-weight: 700; font-size: clamp(3rem, 9vw, 5rem); line-height: 0.9; letter-spacing: -0.02em; }
-.project-body { display: flex; flex-direction: column; flex: 1; gap: 12px; padding: 24px; }
-.project-kind { font-size: var(--text-sm); color: var(--accent); font-weight: 600; }
+.project-body { display: flex; flex-direction: column; flex: 1; gap: 12px; padding: 20px 24px 24px; }
 .project-title { font-size: var(--text-xl); }
-.project-summary { color: var(--muted); }
+.project-summary { opacity: 0.9; }
 .project-facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; margin-top: 4px; font-size: var(--text-sm); }
-.project-facts dt { color: var(--muted); }
+.project-facts dt { opacity: 0.75; }
 .project-links { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: auto; padding-top: 12px; }
-.project-note { font-size: var(--text-sm); color: var(--muted); }
+.project-card .link-strong { color: #ffffff; text-decoration-color: rgb(255 255 255 / 0.6); }
+.project-card .link-strong:hover { color: #ffffff; text-decoration-color: #ffffff; }
+.project-card :focus-visible { outline-color: #ffffff; }
+.project-note { font-size: var(--text-sm); opacity: 0.8; }
 
 .filter-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-bottom: 32px; }
 .filters { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -537,6 +555,30 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 @media (max-width: 480px) {
   .hero-actions .button { width: 100%; }
 }
+
+/* ---------- WhatsApp: boton flotante ---------- */
+.whatsapp-fab {
+  position: fixed; right: 20px; bottom: 20px; z-index: 30; /* debajo del menu movil (z-index 40) */
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 52px; padding: 0 20px 0 16px;
+  background: #25d366; color: #0b2e1a;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 8px 24px rgb(19 37 28 / 0.22);
+  font-family: var(--font-display); font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.whatsapp-fab svg { width: 24px; height: 24px; flex: none; }
+.whatsapp-fab:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgb(19 37 28 / 0.28); }
+.whatsapp-fab:active { transform: scale(0.96); }
+.whatsapp-fab:focus-visible { outline-color: var(--ink); }
+html.menu-open .whatsapp-fab { visibility: hidden; }
+/* En el celular solo el icono, para no tapar el contenido. */
+@media (max-width: 600px) {
+  .whatsapp-fab { right: 16px; bottom: 16px; width: 52px; padding: 0; justify-content: center; }
+  .whatsapp-fab-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+
 
 /* ---------- 14. Movimiento reducido ---------- */
 @media (prefers-reduced-motion: reduce) {
