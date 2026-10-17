@@ -122,7 +122,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip, no hidden: hidden rompe la cabecera fija al abrir el menu movil */
 }
 h1, h2, h3, h4 {
   margin: 0;
@@ -157,6 +157,8 @@ button { cursor: pointer; }
 
 /* Entrada: site.js anima los [data-intro]. Solo se ocultan mientras "intro-pending" existe. */
 .intro-pending [data-intro] { opacity: 0; }
+/* Espanol: la pagina espera a que site.js traduzca, para no mostrar el ingles un instante. */
+.i18n-pending body { visibility: hidden; }
 
 /* ---------- 4. Piezas comunes ---------- */
 .wrap { width: min(100% - 2 * var(--gutter), var(--wrap)); margin-inline: auto; }
@@ -242,14 +244,15 @@ button { cursor: pointer; }
 html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: var(--on-kami); border-radius: var(--radius-pill); }
 
 .header-tools { display: flex; align-items: center; gap: 8px; }
-.theme-toggle, .menu-toggle {
+.lang-toggle, .theme-toggle, .menu-toggle {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   width: 42px; height: 42px; padding: 0;
   background: transparent; border: 1px solid var(--line); border-radius: var(--radius-pill);
   transition: border-color 0.18s ease, transform 0.15s ease;
 }
-.theme-toggle:hover, .menu-toggle:hover { border-color: var(--ink); }
-.theme-toggle:active, .menu-toggle:active { transform: scale(0.95); }
+.lang-toggle:hover, .theme-toggle:hover, .menu-toggle:hover { border-color: var(--ink); }
+.lang-toggle:active, .theme-toggle:active, .menu-toggle:active { transform: scale(0.95); }
+.lang-toggle { font-family: var(--font-display); font-weight: 600; font-size: 0.875rem; letter-spacing: 0.02em; }
 .theme-toggle svg { width: 18px; height: 18px; }
 .theme-toggle .icon-sun { display: none; }
 :root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
@@ -266,7 +269,8 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 .menu-toggle[aria-expanded="true"] .menu-toggle-bars::before { transform: translateY(4px) rotate(45deg); }
 .menu-toggle[aria-expanded="true"] .menu-toggle-bars::after { transform: translateY(-4px) rotate(-45deg); }
 
-@media (max-width: 860px) {
+/* Con siete enlaces (y los textos en espanol, mas largos) el menu completo necesita unos 1120 px. */
+@media (max-width: 1119px) {
   html.js .menu-toggle { display: inline-flex; }
   html.js .nav {
     position: fixed; inset: var(--header-height) 0 0 0; z-index: 40;
@@ -280,8 +284,8 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
   html.js .nav-list { flex-direction: column; align-items: stretch; }
   html.js .nav-tab { display: none; }
   html.js .nav-link {
-    padding: 14px 0 14px 24px;
-    font-size: clamp(1.75rem, 8vw, 2.5rem); font-weight: 600;
+    padding: 12px 0 12px 22px;
+    font-size: 1.375rem; font-weight: 600;
     border-bottom: 1px solid var(--line);
     color: var(--ink);
   }
@@ -453,6 +457,8 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 /* ---------- 9. Sobre mi ---------- */
 .about-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
 .prose { display: grid; gap: 20px; max-width: 38em; }
+/* Texto justificado; los guiones evitan espacios grandes entre palabras en el celular. */
+.prose p, .timeline-description { text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
 .prose h2 { font-size: var(--text-2xl); margin-top: 28px; }
 .prose h2:first-child { margin-top: 0; }
 .about-aside { position: sticky; top: calc(var(--header-height) + 32px); display: grid; gap: 28px; }
@@ -556,32 +562,78 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
   .hero-actions .button { width: 100%; }
 }
 
-/* ---------- WhatsApp: boton flotante ---------- */
-.whatsapp-fab {
-  position: fixed; right: 20px; bottom: 20px; z-index: 30; /* debajo del menu movil (z-index 40) */
-  display: inline-flex; align-items: center; gap: 10px;
-  min-height: 52px; padding: 0 20px 0 16px;
-  background: #25d366; color: #0b2e1a;
-  border-radius: var(--radius-pill);
-  box-shadow: 0 8px 24px rgb(19 37 28 / 0.22);
-  font-family: var(--font-display); font-weight: 600;
-  text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.whatsapp-fab svg { width: 24px; height: 24px; flex: none; }
-.whatsapp-fab:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgb(19 37 28 / 0.28); }
-.whatsapp-fab:active { transform: scale(0.96); }
-.whatsapp-fab:focus-visible { outline-color: var(--ink); }
-html.menu-open .whatsapp-fab { visibility: hidden; }
-/* En el celular solo el icono, para no tapar el contenido. */
-@media (max-width: 600px) {
-  .whatsapp-fab { right: 16px; bottom: 16px; width: 52px; padding: 0; justify-content: center; }
-  .whatsapp-fab-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* ---------- 15. Proyectos destacados (projects.html) ----------
+   Usan la misma carpeta de .project-card, en horizontal: captura y texto lado a lado. */
+.case-list { display: grid; gap: clamp(56px, 7vw, 88px); }
+.more-title { font-size: var(--text-2xl); margin-bottom: 24px; }
+.case-points { display: grid; gap: 4px; margin: 0; }
+.case-points dt { font-family: var(--font-display); font-weight: 600; font-size: var(--text-sm); opacity: 0.8; }
+.case-points dd { margin-bottom: 10px; }
+.case-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.case-tags li { padding: 4px 12px; border-radius: var(--radius-pill); background: rgb(255 255 255 / 0.16); font-size: 0.8125rem; font-weight: 600; }
+@media (min-width: 861px) {
+  .project-card.is-case { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; }
+  .project-card.is-case .project-cover { margin: 18px; }
+  .project-card.is-case .project-body { padding: 24px 28px 28px 8px; }
+  .project-card.is-case .project-title { font-size: var(--text-2xl); }
+  /* Uno si y uno no, la captura pasa a la derecha. */
+  .project-card.is-case:nth-child(even) .project-cover { order: 2; }
+  .project-card.is-case:nth-child(even) .project-body { padding: 24px 8px 28px 28px; }
 }
 
+/* ---------- 16. Servicios (services.html) ---------- */
+.service-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: clamp(40px, 5vw, 64px) clamp(24px, 3vw, 40px); }
+.service-title { font-size: var(--text-xl); }
+.service-list { display: grid; gap: 8px; padding-top: 4px; }
+.service-list li { position: relative; padding-left: 20px; }
+.service-list li::before { content: ""; position: absolute; left: 2px; top: 0.6em; width: 8px; height: 8px; border-radius: 50%; background: #ffffff; }
+.service-time { margin-top: auto; padding-top: 8px; font-size: var(--text-sm); opacity: 0.85; }
+.service-card .button { align-self: start; background: #ffffff; color: var(--on-kami); }
+.service-card .button:hover { background: var(--on-kami); color: #ffffff; }
+.process-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(24px, 3vw, 40px); }
+.process-list li { display: grid; align-content: start; gap: 8px; padding-top: 20px; border-top: 2px solid var(--line); }
+.process-number { font-family: var(--font-display); font-weight: 700; font-size: 2.5rem; line-height: 1; color: var(--accent); }
+.process-list h3 { font-size: var(--text-lg); }
+.process-list p { color: var(--muted); }
+@media (max-width: 960px) { .process-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .process-list { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- 17. Bloque "Now" (index.html) ---------- */
+.now {
+  position: relative;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 16px 48px; align-items: start;
+  margin-bottom: var(--space-section); padding: clamp(24px, 4vw, 40px);
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius) 0 var(--radius) var(--radius);
+}
+.now::after {
+  content: ""; position: absolute; top: -1px; right: -1px; width: var(--fold); height: var(--fold);
+  background: linear-gradient(to top right, var(--kami) 50%, var(--paper) 50%);
+  border-bottom-left-radius: 6px;
+}
+.now h2 { display: flex; align-items: center; gap: 12px; font-size: var(--text-2xl); }
+.now h2::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--kami); }
+.now-date { margin-top: 6px; font-size: var(--text-sm); color: var(--muted); }
+.now-list { display: grid; gap: 12px; font-size: var(--text-lg); }
+.now-list li { padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.now-list li:last-child { padding-bottom: 0; border-bottom: 0; }
+@media (max-width: 860px) { .now { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- 18. WhatsApp en Contacto ---------- */
+.button-whatsapp { justify-self: start; background: #25d366; color: #0b2e1a; }
+.button-whatsapp:hover { background: var(--ink); color: var(--paper); }
+
+/* ---------- 19. Transicion entre paginas ----------
+   Fundido corto al navegar entre las paginas del sitio (View Transitions API).
+   La cabecera tiene nombre propio: se queda quieta mientras
+   el contenido se funde. Navegadores sin soporte cambian de pagina normalmente. */
+@view-transition { navigation: auto; }
+.site-header { view-transition-name: site-header; }
+::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.25s; }
 
 /* ---------- 14. Movimiento reducido ---------- */
 @media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }

@@ -19,11 +19,12 @@
     <link rel="stylesheet" href="css/origami-journey.css">
     <script src="js/vendor/motion.js" defer></script>
     <script src="js/origami-journey.js" defer></script>
+    <script src="js/i18n-es.js" defer></script>
     <script src="js/site.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <!-- CABECERA: es igual en las seis paginas. Si cambias un enlace, cambialo en todas.
+    <!-- CABECERA: es igual en las siete paginas. Si cambias un enlace, cambialo en todas.
          aria-current="page" marca la pagina activa (la pestana naranja la sigue). -->
     <header class="site-header">
       <div class="wrap header-inner">
@@ -36,12 +37,15 @@
             <li><a class="nav-link" href="index.html">Home</a></li>
             <li><a class="nav-link" href="about.html">About</a></li>
             <li><a class="nav-link" href="projects.html">Projects</a></li>
+            <li><a class="nav-link" href="services.html">Services</a></li>
             <li><a class="nav-link" href="skills.html">Skills</a></li>
             <li><a class="nav-link" href="experience.html" aria-current="page">Experience</a></li>
             <li><a class="nav-link" href="contact.html">Contact</a></li>
           </ul>
         </nav>
         <div class="header-tools">
+          <!-- IDIOMA: cambia entre ingles y espanol. Los textos en espanol estan en js/i18n-es.js. -->
+          <button class="lang-toggle" type="button" hidden><span class="lang-toggle-code">ES</span></button>
           <button class="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false" hidden>
             <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13A8.6 8.6 0 0 1 11 3.5 8.7 8.7 0 1 0 20.5 13Z"/></svg>
             <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
@@ -360,18 +364,26 @@
           </figure>
         </div>
 
-        <!-- RECORRIDO: cada article es una entrada. La linea naranja la mueve site.js con el scroll.
-             TODO: faltan las fechas de Freelance y de los cursos de Superate.
-             Agrega <p class="timeline-date">...</p> como primera linea de su article. -->
+        <!-- RECORRIDO: cada article es una entrada. La linea naranja la mueve site.js con el scroll. -->
         <div class="timeline">
           <span class="timeline-progress" aria-hidden="true"></span>
 
           <section class="timeline-group" aria-labelledby="group-education">
             <h2 id="group-education">Education</h2>
             <article class="timeline-entry">
-              <p class="timeline-date">In progress</p>
-              <h3>Cybersecurity degree</h3>
-              <p class="timeline-place">Universidad Tecnológica de Panamá</p>
+              <p class="timeline-date">2026 to present</p>
+              <h3>Bachelor's degree in Cybersecurity</h3>
+              <p class="timeline-place">Universidad Tecnológica de Panamá (UTP)</p>
+            </article>
+            <article class="timeline-entry">
+              <p class="timeline-date">January 2023 to December 2025</p>
+              <h3>Specialized training in technology, English and values</h3>
+              <p class="timeline-place">Centro ¡Supérate! Fundación Alberto Motta, La Chorrera</p>
+            </article>
+            <article class="timeline-entry">
+              <p class="timeline-date">December 2025</p>
+              <h3>High school diploma in science</h3>
+              <p class="timeline-place">Centro Educativo Guillermo Endara Galimany, La Chorrera</p>
             </article>
           </section>
 
@@ -379,56 +391,66 @@
             <h2 id="group-work">Work experience</h2>
             <article class="timeline-entry">
               <p class="timeline-date">July 2026 to present</p>
-              <h3>Programming Teacher</h3>
+              <h3>Technology Instructor</h3>
               <p class="timeline-place">Centro ¡Supérate! Fundación Alberto Motta, La Chorrera</p>
-              <!-- TODO: agrega una frase sobre que ensenas (lenguajes, niveles, grupos). -->
+              <p class="timeline-description">I teach programming, web development and digital skills to freshman, junior and senior groups. I prepare hands-on exercises and guide students through their projects and the use of office tools.</p>
             </article>
             <article class="timeline-entry">
-              <p class="timeline-date">2024 to present</p>
-              <h3>Customer Service and Administrative Assistant</h3>
+              <p class="timeline-date">2026 to present</p>
+              <h3>Freelance Web Developer</h3>
+              <p class="timeline-place">Self-employed</p>
+              <p class="timeline-description">I design and build informational websites and digital invitations for private clients, including online RSVP confirmation with Supabase for event invitations. See the <a href="projects.html">projects</a>.</p>
+            </article>
+            <article class="timeline-entry">
+              <p class="timeline-date">July 2024 to present</p>
+              <h3>Administrative and Customer Service Assistant</h3>
               <p class="timeline-place">Ocean Blue Services, Panama</p>
-              <p class="timeline-description">Daily administrative support, including data entry and document management. I handle customer inquiries and work with the team to improve internal processes.</p>
+              <p class="timeline-description">I handle customer inquiries, quotes and follow-ups, organize documents and manage the company's administrative data.</p>
             </article>
             <article class="timeline-entry">
               <p class="timeline-date">November 2024 to January 2025</p>
-              <h3>Technology Assistant</h3>
+              <h3>Intern, Technology Assistant</h3>
               <p class="timeline-place">Banco Mercantil, Panama</p>
-              <p class="timeline-description">Provided hardware and software support, digitized documents and organized records. Maintained IT equipment, troubleshot issues and supported digital transformation initiatives.</p>
-            </article>
-            <article class="timeline-entry">
-              <h3>Freelance Web Developer</h3>
-              <p class="timeline-place">Self-employed</p>
-              <p class="timeline-description">Designed and built custom websites and web applications with responsive, accessible interfaces. Managed projects from concept to deployment.</p>
+              <p class="timeline-description">Provided technical support and resolved hardware and software issues. Supported the digitization and organization of internal documents alongside the technology team.</p>
             </article>
           </section>
 
           <section class="timeline-group" aria-labelledby="group-volunteering">
             <h2 id="group-volunteering">Volunteering</h2>
             <article class="timeline-entry">
-              <p class="timeline-date">2025</p>
-              <h3>Community Development Volunteer</h3>
-              <p class="timeline-place">TECHO Panamá</p>
-              <p class="timeline-description">Took part in community development projects, working with diverse teams on social impact initiatives.</p>
+              <p class="timeline-date">March 2025</p>
+              <h3>Volunteer</h3>
+              <p class="timeline-place">TECHO Panamá Foundation</p>
+              <p class="timeline-description">Helped build homes for low-income families.</p>
             </article>
           </section>
 
           <section class="timeline-group" aria-labelledby="group-courses">
-            <h2 id="group-courses">Courses and certifications</h2>
+            <h2 id="group-courses">Certifications</h2>
+            <article class="timeline-entry">
+              <p class="timeline-date">2026</p>
+              <h3>Python Essentials (PCEP)</h3>
+              <p class="timeline-place">Cisco Networking Academy</p>
+            </article>
             <article class="timeline-entry">
               <p class="timeline-date">2025</p>
-              <h3>Python Programming Certification</h3>
-              <p class="timeline-place">Cisco Networking Academy</p>
-              <p class="timeline-description">Intermediate-level Python programming certification.</p>
+              <h3>IT Specialist: Python</h3>
+              <p class="timeline-place">Certiport</p>
+            </article>
+            <article class="timeline-entry">
+              <p class="timeline-date">2025</p>
+              <h3>TOEIC Speaking</h3>
+              <p class="timeline-place">ETS</p>
+            </article>
+            <article class="timeline-entry">
+              <p class="timeline-date">2023 to 2025</p>
+              <h3>TOEIC Listening and Reading</h3>
+              <p class="timeline-place">ETS</p>
             </article>
             <article class="timeline-entry">
               <p class="timeline-date">2024</p>
-              <h3>Microsoft Office Specialist: Excel</h3>
-              <p class="timeline-place">Microsoft</p>
-            </article>
-            <article class="timeline-entry">
-              <h3>Advanced Technology Courses</h3>
-              <p class="timeline-place">Centro ¡Supérate! Fundación Alberto Motta</p>
-              <p class="timeline-description">Training in programming, web development, English and digital skills.</p>
+              <h3>Microsoft Office Specialist: Excel 2016</h3>
+              <p class="timeline-place">Certiport</p>
             </article>
           </section>
         </div>
@@ -438,18 +460,14 @@
     <!-- PIE DE PAGINA: igual en las seis paginas. -->
     <footer class="site-footer">
       <div class="wrap footer-inner">
-        <p class="footer-copy">&copy; <span data-year>2026</span> Jair M. Morales Magallon. Built by hand in Panama.</p>
+        <p class="footer-copy">&copy; <span data-year>2026</span> <span>Jair M. Morales Magallon. Built by hand in Panama.</span></p>
         <ul class="footer-links">
           <li><a href="mailto:jairm9010@gmail.com">Email</a></li>
           <li><a href="https://wa.me/50760028971?text=Hola%20Jair%2C%20vi%20tu%20portafolio%20y%20quiero%20hablar%20contigo%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
           <li><a href="https://github.com/JMMM11" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-          <li><a href="https://jmmm11.github.io/Digital-CV/" target="_blank" rel="noopener noreferrer">Digital CV</a></li>
+          <li><a href="assets/cv/Jair_Morales_CV_EN.pdf" download data-cv>CV (PDF)</a></li>
         </ul>
       </div>
     </footer>
-    <!-- WHATSAPP: boton flotante en todas las paginas. Cambia el numero y el mensaje en href. -->
-    <a class="whatsapp-fab" href="https://wa.me/50760028971?text=Hola%20Jair%2C%20vi%20tu%20portafolio%20y%20quiero%20hablar%20contigo%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a8.5 8.5 0 0 1-12.6 7.4L3.5 20l1.2-3.7A8.5 8.5 0 1 1 20 11.5Z"/><path d="M9 9.5c.3 1.8 1.8 3.6 3.6 4.3l1.2-1 1.7.8-.3 1.4c-2.9.3-6.5-2.7-6.8-5.6l1.3-.5.8 1.7-1 1"/></svg><span class="whatsapp-fab-label">WhatsApp</span>
-    </a>
   </body>
 </html>

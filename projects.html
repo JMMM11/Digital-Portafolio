@@ -18,11 +18,12 @@
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/vendor/motion.js" defer></script>
     <script src="js/projects-data.js" defer></script>
+    <script src="js/i18n-es.js" defer></script>
     <script src="js/site.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <!-- CABECERA: es igual en las seis paginas. Si cambias un enlace, cambialo en todas.
+    <!-- CABECERA: es igual en las siete paginas. Si cambias un enlace, cambialo en todas.
          aria-current="page" marca la pagina activa (la pestana naranja la sigue). -->
     <header class="site-header">
       <div class="wrap header-inner">
@@ -35,12 +36,15 @@
             <li><a class="nav-link" href="index.html">Home</a></li>
             <li><a class="nav-link" href="about.html">About</a></li>
             <li><a class="nav-link" href="projects.html" aria-current="page">Projects</a></li>
+            <li><a class="nav-link" href="services.html">Services</a></li>
             <li><a class="nav-link" href="skills.html">Skills</a></li>
             <li><a class="nav-link" href="experience.html">Experience</a></li>
             <li><a class="nav-link" href="contact.html">Contact</a></li>
           </ul>
         </nav>
         <div class="header-tools">
+          <!-- IDIOMA: cambia entre ingles y espanol. Los textos en espanol estan en js/i18n-es.js. -->
+          <button class="lang-toggle" type="button" hidden><span class="lang-toggle-code">ES</span></button>
           <button class="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false" hidden>
             <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13A8.6 8.6 0 0 1 11 3.5 8.7 8.7 0 1 0 20.5 13Z"/></svg>
             <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
@@ -58,15 +62,22 @@
         <p class="lead" data-intro>Things I have built and published. Each one has a live demo, its source code, or both.</p>
       </div>
 
+      <!-- DESTACADOS: los proyectos con "spotlight" en js/projects-data.js, con problema y reto. -->
+      <section class="wrap section-tight" aria-labelledby="spotlight-title" data-intro>
+        <h2 class="sr-only" id="spotlight-title">Featured projects</h2>
+        <div class="case-list" data-spotlight></div>
+      </section>
+
       <!-- PROYECTOS: el contenido sale de js/projects-data.js. No se edita aqui. -->
-      <section class="wrap section-tight" aria-label="All projects" data-intro>
+      <section class="wrap section-tight" aria-labelledby="more-title" data-intro>
+        <h2 class="more-title" id="more-title">More projects</h2>
         <div class="filter-bar">
           <!-- FILTROS: data-filter debe coincidir con "category" en projects-data.js. -->
           <div class="filters" role="group" aria-label="Filter projects by type">
-            <button class="filter" type="button" data-filter="all" aria-pressed="true">All <span class="filter-count"></span></button>
-            <button class="filter" type="button" data-filter="gift" aria-pressed="false">Invitations and gifts <span class="filter-count"></span></button>
-            <button class="filter" type="button" data-filter="website" aria-pressed="false">Websites <span class="filter-count"></span></button>
-            <button class="filter" type="button" data-filter="app" aria-pressed="false">Web apps <span class="filter-count"></span></button>
+            <button class="filter" type="button" data-filter="all" aria-pressed="true"><span>All</span> <span class="filter-count"></span></button>
+            <button class="filter" type="button" data-filter="gift" aria-pressed="false"><span>Invitations and gifts</span> <span class="filter-count"></span></button>
+            <button class="filter" type="button" data-filter="website" aria-pressed="false"><span>Websites</span> <span class="filter-count"></span></button>
+            <button class="filter" type="button" data-filter="app" aria-pressed="false"><span>Web apps</span> <span class="filter-count"></span></button>
           </div>
           <p class="filter-status" role="status" aria-live="polite" data-filter-status></p>
         </div>
@@ -79,18 +90,14 @@
     <!-- PIE DE PAGINA: igual en las seis paginas. -->
     <footer class="site-footer">
       <div class="wrap footer-inner">
-        <p class="footer-copy">&copy; <span data-year>2026</span> Jair M. Morales Magallon. Built by hand in Panama.</p>
+        <p class="footer-copy">&copy; <span data-year>2026</span> <span>Jair M. Morales Magallon. Built by hand in Panama.</span></p>
         <ul class="footer-links">
           <li><a href="mailto:jairm9010@gmail.com">Email</a></li>
           <li><a href="https://wa.me/50760028971?text=Hola%20Jair%2C%20vi%20tu%20portafolio%20y%20quiero%20hablar%20contigo%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
           <li><a href="https://github.com/JMMM11" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-          <li><a href="https://jmmm11.github.io/Digital-CV/" target="_blank" rel="noopener noreferrer">Digital CV</a></li>
+          <li><a href="assets/cv/Jair_Morales_CV_EN.pdf" download data-cv>CV (PDF)</a></li>
         </ul>
       </div>
     </footer>
-    <!-- WHATSAPP: boton flotante en todas las paginas. Cambia el numero y el mensaje en href. -->
-    <a class="whatsapp-fab" href="https://wa.me/50760028971?text=Hola%20Jair%2C%20vi%20tu%20portafolio%20y%20quiero%20hablar%20contigo%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a8.5 8.5 0 0 1-12.6 7.4L3.5 20l1.2-3.7A8.5 8.5 0 1 1 20 11.5Z"/><path d="M9 9.5c.3 1.8 1.8 3.6 3.6 4.3l1.2-1 1.7.8-.3 1.4c-2.9.3-6.5-2.7-6.8-5.6l1.3-.5.8 1.7-1 1"/></svg><span class="whatsapp-fab-label">WhatsApp</span>
-    </a>
   </body>
 </html>

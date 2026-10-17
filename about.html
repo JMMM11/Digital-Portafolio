@@ -17,11 +17,12 @@
     <script src="js/theme.js"></script>
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/vendor/motion.js" defer></script>
+    <script src="js/i18n-es.js" defer></script>
     <script src="js/site.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <!-- CABECERA: es igual en las seis paginas. Si cambias un enlace, cambialo en todas.
+    <!-- CABECERA: es igual en las siete paginas. Si cambias un enlace, cambialo en todas.
          aria-current="page" marca la pagina activa (la pestana naranja la sigue). -->
     <header class="site-header">
       <div class="wrap header-inner">
@@ -34,12 +35,15 @@
             <li><a class="nav-link" href="index.html">Home</a></li>
             <li><a class="nav-link" href="about.html" aria-current="page">About</a></li>
             <li><a class="nav-link" href="projects.html">Projects</a></li>
+            <li><a class="nav-link" href="services.html">Services</a></li>
             <li><a class="nav-link" href="skills.html">Skills</a></li>
             <li><a class="nav-link" href="experience.html">Experience</a></li>
             <li><a class="nav-link" href="contact.html">Contact</a></li>
           </ul>
         </nav>
         <div class="header-tools">
+          <!-- IDIOMA: cambia entre ingles y espanol. Los textos en espanol estan en js/i18n-es.js. -->
+          <button class="lang-toggle" type="button" hidden><span class="lang-toggle-code">ES</span></button>
           <button class="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false" hidden>
             <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 13A8.6 8.6 0 0 1 11 3.5 8.7 8.7 0 1 0 20.5 13Z"/></svg>
             <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
@@ -63,9 +67,13 @@
           <h2>The short version</h2>
           <p>I'm Jair M. Morales Magallon, a Cybersecurity student at Universidad Tecnológica de Panamá. Since July 2026 I also teach programming at Centro ¡Supérate! Fundación Alberto Motta in La Chorrera, and I build websites for myself and for other people.</p>
           <p>Most of what I build starts with a person or an occasion: a quinceañera that needed an invitation, a graduation gift, a Christmas greeting, a community project that needed a home online. I make pages in any style, from presentation letters and invitations to informational and fully functional sites.</p>
-          <!-- TODO: agrega aqui tu historia personal (como empezaste, por que ciberseguridad). Pendiente: Jair la va a escribir. -->
+
+          <h2>How I got here</h2>
+          <p>I started programming in the technology courses at Centro ¡Supérate!, and what began as a class quickly turned into the thing I wanted to do every day. Today I'm back there on the other side of the room, teaching programming, web development and digital skills to younger students.</p>
+          <p>I chose cybersecurity after discovering it in class. It's one of the fastest-growing fields in tech, and the more I learned, the more I realized that building something and protecting it are two halves of the same job. I'm now studying it at the Universidad Tecnológica de Panamá.</p>
 
           <h2>What motivates me</h2>
+          <p>My goal is secure web development: building sites and apps that look good and are hard to break. Outside of class, I'm always improving my projects, customizing things to work exactly how I want, and exploring how AI works and how to get the most out of it.</p>
           <blockquote class="motto">I want to build software that feels finished.</blockquote>
           <p>I don't add technology to a project just because it is popular. Every tool should have a purpose, and the result should be clean code, thoughtful design and useful functionality.</p>
           <ul class="principles">
@@ -76,12 +84,11 @@
           </ul>
 
           <h2>Education</h2>
-          <!-- TODO: agrega el ano de inicio de la carrera si quieres mostrarlo. -->
           <ul class="principles">
-            <li><strong>In progress</strong><span>Cybersecurity degree, Universidad Tecnológica de Panamá.</span></li>
-            <li><strong>Courses</strong><span>Advanced technology courses at Centro ¡Supérate! Fundación Alberto Motta: programming, web development, English and digital skills.</span></li>
-            <li><strong>2025</strong><span>Python programming certification, Cisco Networking Academy.</span></li>
-            <li><strong>2024</strong><span>Microsoft Office Specialist: Excel.</span></li>
+            <li><strong>2026 to now</strong><span>Bachelor's degree in Cybersecurity, Universidad Tecnológica de Panamá.</span></li>
+            <li><strong>2023 to 2025</strong><span>Specialized training in technology, English and values at Centro ¡Supérate! Fundación Alberto Motta.</span></li>
+            <li><strong>2025</strong><span>High school diploma in science, Centro Educativo Guillermo Endara Galimany.</span></li>
+            <li><strong>Languages</strong><span>Spanish, native. English, upper-intermediate (B2, TOEIC).</span></li>
           </ul>
           <p><a class="link-strong" href="experience.html">Full experience and certifications</a></p>
         </div>
@@ -92,10 +99,11 @@
           <dl class="fact-list">
             <div><dt>Based in</dt><dd>La Chorrera, Panama</dd></div>
             <div><dt>Studying</dt><dd>Cybersecurity, UTP</dd></div>
-            <div><dt>Teaching</dt><dd>Programming at Centro ¡Supérate! Fundación Alberto Motta</dd></div>
+            <div><dt>Teaching</dt><dd>Technology at Centro ¡Supérate! Fundación Alberto Motta</dd></div>
             <div><dt>Builds</dt><dd>Invitations, digital gifts, informational sites, web apps</dd></div>
           </dl>
           <a class="button" href="contact.html">Get in touch</a>
+          <a class="link-strong" href="assets/cv/Jair_Morales_CV_EN.pdf" download data-cv>Download my CV</a>
         </aside>
       </div>
     </main>
@@ -103,18 +111,14 @@
     <!-- PIE DE PAGINA: igual en las seis paginas. -->
     <footer class="site-footer">
       <div class="wrap footer-inner">
-        <p class="footer-copy">&copy; <span data-year>2026</span> Jair M. Morales Magallon. Built by hand in Panama.</p>
+        <p class="footer-copy">&copy; <span data-year>2026</span> <span>Jair M. Morales Magallon. Built by hand in Panama.</span></p>
         <ul class="footer-links">
           <li><a href="mailto:jairm9010@gmail.com">Email</a></li>
           <li><a href="https://wa.me/50760028971?text=Hola%20Jair%2C%20vi%20tu%20portafolio%20y%20quiero%20hablar%20contigo%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
           <li><a href="https://github.com/JMMM11" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-          <li><a href="https://jmmm11.github.io/Digital-CV/" target="_blank" rel="noopener noreferrer">Digital CV</a></li>
+          <li><a href="assets/cv/Jair_Morales_CV_EN.pdf" download data-cv>CV (PDF)</a></li>
         </ul>
       </div>
     </footer>
-    <!-- WHATSAPP: boton flotante en todas las paginas. Cambia el numero y el mensaje en href. -->
-    <a class="whatsapp-fab" href="https://wa.me/50760028971?text=Hola%20Jair%2C%20vi%20tu%20portafolio%20y%20quiero%20hablar%20contigo%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a8.5 8.5 0 0 1-12.6 7.4L3.5 20l1.2-3.7A8.5 8.5 0 1 1 20 11.5Z"/><path d="M9 9.5c.3 1.8 1.8 3.6 3.6 4.3l1.2-1 1.7.8-.3 1.4c-2.9.3-6.5-2.7-6.8-5.6l1.3-.5.8 1.7-1 1"/></svg><span class="whatsapp-fab-label">WhatsApp</span>
-    </a>
   </body>
 </html>

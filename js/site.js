@@ -5,7 +5,8 @@
  *   2. Navegacion: pestana que se desliza, menu movil
  *   3. Tarjetas de proyectos y filtros
  *   4. Formulario de contacto
- *   5. Animaciones con Motion (js/vendor/motion.js, global "Motion")
+ *   5. Idioma ingles / espanol (textos en js/i18n-es.js)
+ *   6. Animaciones con Motion (js/vendor/motion.js, global "Motion")
  * Todas las animaciones usan solo transform y opacity y se desactivan
  * con "movimiento reducido" o si Motion no carga.
  */
@@ -16,6 +17,16 @@
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const canAnimate = () => Boolean(M) && !reduceMotion.matches;
   const EASE_OUT = [0.22, 1, 0.36, 1];
+  // Idioma: theme.js ya lo puso en <html lang>. Sin js/i18n-es.js el sitio queda en ingles.
+  const I18N = window.I18N;
+  let lang = I18N && root.lang === "es" ? "es" : "en";
+  const FALLBACK_UI = {
+    menu: "Menu", close: "Close", role: "My role", builtWith: "Built with", demo: "Live demo", source: "Source code",
+    shown: (n) => `${n} ${n === 1 ? "project" : "projects"} shown`, messageFrom: "message from",
+    cv: "assets/cv/Jair_Morales_CV_EN.pdf", whatsapp: "", quote: "",
+    problem: "Problem", challenge: "Challenge", result: "Result"
+  };
+  const ui = () => I18N?.ui[lang] ?? FALLBACK_UI;
 
   /* ---------- 1. Tema ---------- */
   const themeToggle = document.querySelector(".theme-toggle");
@@ -45,7 +56,7 @@
   const navList = document.querySelector(".nav-list");
   const navLinks = [...document.querySelectorAll(".nav-link")];
   const menuToggle = document.querySelector(".menu-toggle");
-  const desktopNav = matchMedia("(min-width: 861px)");
+  const desktopNav = matchMedia("(min-width: 1120px)"); // Igual que el @media del menu en styles.css.
   const currentLink = navLinks.find((link) => link.getAttribute("aria-current") === "page");
 
   // Pestana naranja: un solo elemento que se desliza detras del enlace activo.
@@ -104,7 +115,7 @@
   // Menu movil: una hoja que se despliega bajo la cabecera.
   function setMenu(open, returnFocus = false) {
     menuToggle.setAttribute("aria-expanded", String(open));
-    menuToggle.querySelector(".menu-toggle-label").textContent = open ? "Close" : "Menu";
+    menuToggle.querySelector(".menu-toggle-label").textContent = open ? ui().close : ui().menu;
     root.classList.toggle("menu-open", open);
     if (open) {
       nav.classList.add("is-open");
@@ -179,14 +190,14 @@
 
     const facts = element("dl", "project-facts");
     if (project.role) {
-      facts.append(element("dt", "", "My role"), element("dd", "", project.role));
+      facts.append(element("dt", "", ui().role), element("dd", "", project.role));
     }
-    facts.append(element("dt", "", "Built with"), element("dd", "", project.stack.join(", ")));
+    facts.append(element("dt", "", ui().builtWith), element("dd", "", project.stack.join(", ")));
     body.append(facts);
 
     const links = element("div", "project-links");
-    if (project.demo) links.append(externalLink("Live demo", project.demo, "link-strong"));
-    if (project.repo) links.append(externalLink("Source code", project.repo, "link-strong"));
+    if (project.demo) links.append(externalLink(ui().demo, project.demo, "link-strong"));
+    if (project.repo) links.append(externalLink(ui().source, project.repo, "link-strong"));
     body.append(links);
     if (project.note) body.append(element("p", "project-note", project.note));
 
@@ -199,7 +210,7 @@
     const title = element("h3", "work-title");
     title.append(externalLink(project.title, project.demo || project.repo, ""));
     row.append(title, element("p", "work-meta", `${project.kind}. ${project.stack.join(", ")}.`));
-    if (project.demo && project.repo) row.append(externalLink("Source code", project.repo, "link-strong work-source"));
+    if (project.demo && project.repo) row.append(externalLink(ui().source, project.repo, "link-strong work-source"));
     if (project.image) {
       const shot = element("div", "work-shot");
       const image = element("img");
@@ -220,38 +231,70 @@
     row.addEventListener("focusin", activate);
     return row;
   }
-  document.querySelectorAll("[data-projects]").forEach((container) => {
-    const list = (window.PROJECTS ?? []).filter((project) =>
-      container.dataset.projects === "featured" ? project.featured : true);
-    const featured = container.dataset.projects === "featured";
-    container.replaceChildren(...list.map(featured ? workRow : projectCard));
-    if (featured) container.firstElementChild?.classList.add("is-active");
-  });
+  // Projects: destacado grande con problema, reto y resultado (campo spotlight en projects-data.js).
+  function caseCard(project) {
+    const card = projectCard(project);
+    card.classList.add("is-case");
+    const body = card.querySelector(".project-body");
+    body.querySelector(".project-summary").remove();
+    body.querySelector(".project-facts").remove();
+    const points = element("dl", "case-points");
+    [["problem", project.problem], ["challenge", project.challenge], ["result", project.result]]
+      .filter(([, text]) => text)
+      .forEach(([label, text]) => points.append(element("dt", "", ui()[label]), element("dd", "", text)));
+    const tags = element("ul", "case-tags");
+    tags.setAttribute("aria-label", ui().builtWith);
+    (project.tags ?? project.stack).forEach((tag) => tags.append(element("li", "", tag)));
+    body.querySelector(".project-title").after(points, tags);
+    return card;
+  }
+  // Dibuja las tarjetas en el idioma actual. Los textos en espanol estan en project.es.
+  function renderProjects() {
+    const all = (window.PROJECTS ?? [])
+      .map((project) => (lang === "es" && project.es ? { ...project, ...project.es } : project));
+    document.querySelectorAll("[data-projects]").forEach((container) => {
+      const featured = container.dataset.projects === "featured";
+      // Si la pagina tiene destacados, la cuadricula muestra solo el resto.
+      const skipSpotlight = Boolean(document.querySelector("[data-spotlight]"));
+      const list = all.filter((project) => (featured ? project.featured : !(skipSpotlight && project.spotlight)));
+      container.replaceChildren(...list.map(featured ? workRow : projectCard));
+      if (featured) container.firstElementChild?.classList.add("is-active");
+    });
+    document.querySelectorAll("[data-spotlight]").forEach((container) => {
+      const list = all.filter((project) => project.spotlight).sort((a, b) => a.spotlight - b.spotlight);
+      container.replaceChildren(...list.map(caseCard));
+    });
+  }
 
   // Filtros de projects.html.
   const filters = [...document.querySelectorAll("[data-filter]")];
   const filterStatus = document.querySelector("[data-filter-status]");
-  if (filters.length) {
-    const cards = [...document.querySelectorAll("[data-projects='all'] .project-card")];
-    filters.forEach((button) => {
-      const total = button.dataset.filter === "all" ? cards.length
-        : cards.filter((card) => card.dataset.category === button.dataset.filter).length;
-      button.querySelector(".filter-count").textContent = String(total);
-      button.addEventListener("click", () => {
-        if (button.getAttribute("aria-pressed") === "true") return;
-        filters.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
-        const shown = cards.filter((card) => {
-          const match = button.dataset.filter === "all" || card.dataset.category === button.dataset.filter;
-          card.hidden = !match;
-          return match;
-        });
-        if (filterStatus) filterStatus.textContent = `${shown.length} ${shown.length === 1 ? "project" : "projects"} shown`;
-        if (canAnimate()) {
-          M.animate(shown, { opacity: [0, 1], y: [14, 0] }, { delay: M.stagger(0.05), duration: 0.4, ease: EASE_OUT });
-        }
-      });
+  const projectCards = () => [...document.querySelectorAll("[data-projects='all'] .project-card")];
+  function applyFilter(animated) {
+    const active = filters.find((item) => item.getAttribute("aria-pressed") === "true")?.dataset.filter ?? "all";
+    const shown = projectCards().filter((card) => {
+      const match = active === "all" || card.dataset.category === active;
+      card.hidden = !match;
+      return match;
     });
+    if (filterStatus && active !== "all") filterStatus.textContent = ui().shown(shown.length);
+    else if (filterStatus) filterStatus.textContent = "";
+    if (animated && canAnimate()) {
+      M.animate(shown, { opacity: [0, 1], y: [14, 0] }, { delay: M.stagger(0.05), duration: 0.4, ease: EASE_OUT });
+    }
   }
+  renderProjects();
+  filters.forEach((button) => {
+    const cards = projectCards();
+    const total = button.dataset.filter === "all" ? cards.length
+      : cards.filter((card) => card.dataset.category === button.dataset.filter).length;
+    button.querySelector(".filter-count").textContent = String(total);
+    button.addEventListener("click", () => {
+      if (button.getAttribute("aria-pressed") === "true") return;
+      filters.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+      applyFilter(true);
+    });
+  });
 
   /* ---------- 4. Contacto ---------- */
   // El sitio es estatico: el formulario prepara un correo en la app del visitante.
@@ -262,7 +305,7 @@
       event.preventDefault();
       if (!contactForm.reportValidity()) return;
       const data = new FormData(contactForm);
-      const subject = `${data.get("topic")}: message from ${data.get("name")}`;
+      const subject = `${data.get("topic")}: ${ui().messageFrom} ${data.get("name")}`;
       const body = `${data.get("message")}\n\n${data.get("name")}\n${data.get("email")}`;
       location.href = `mailto:${contactForm.dataset.to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       status.hidden = false;
@@ -270,7 +313,80 @@
     });
   }
 
-  /* ---------- 5. Animaciones de pagina ---------- */
+  /* ---------- 5. Idioma ---------- */
+  // Cada texto de la pagina se busca en I18N.es ("ingles exacto": "espanol").
+  // Se guarda el original para poder volver al ingles sin recargar.
+  const norm = (text) => text.replace(/\s+/g, " ").trim();
+  const originals = new Map();
+  const ATTRS = ["aria-label", "alt", "content"];
+  function translatePage() {
+    originals.forEach((saved, node) => {
+      if (saved.html !== undefined) node.innerHTML = saved.html;
+      Object.entries(saved.attrs).forEach(([name, value]) => node.setAttribute(name, value));
+    });
+    originals.clear();
+    if (lang !== "es") return;
+    const dict = I18N.es;
+    const saved = (node) => {
+      if (!originals.has(node)) originals.set(node, { attrs: {} });
+      return originals.get(node);
+    };
+    const walk = (node) => {
+      for (const name of ATTRS) {
+        const value = node.getAttribute(name);
+        if (value && dict[norm(value)] !== undefined) {
+          saved(node).attrs[name] = value;
+          node.setAttribute(name, dict[norm(value)]);
+        }
+      }
+      // Las tarjetas de proyectos se dibujan aparte (renderProjects) y los SVG no tienen texto visible.
+      if (node.matches("svg, script, noscript, [data-projects], [data-spotlight]")) return;
+      const key = norm(node.innerHTML);
+      if (key && dict[key] !== undefined) {
+        saved(node).html = node.innerHTML;
+        node.innerHTML = dict[key];
+        return;
+      }
+      [...node.children].forEach(walk);
+    };
+    [document.querySelector("title"), document.querySelector('meta[name="description"]'), document.body]
+      .filter(Boolean).forEach(walk);
+  }
+  const langToggle = document.querySelector(".lang-toggle");
+  function applyLanguage() {
+    root.lang = lang;
+    translatePage();
+    renderProjects();
+    applyFilter(false);
+    // CV en el idioma elegido, mensaje de WhatsApp y textos de botones.
+    document.querySelectorAll("[data-cv]").forEach((link) => { link.href = ui().cv; });
+    // data-wa="quote" pide cotizacion; el resto de enlaces lleva el saludo general.
+    document.querySelectorAll('a[href^="https://wa.me/"]').forEach((link) => {
+      const message = link.dataset.wa === "quote" ? ui().quote : ui().whatsapp;
+      if (!message) return;
+      const url = new URL(link.href);
+      link.href = `${url.origin}${url.pathname}?text=${encodeURIComponent(message)}`;
+    });
+    menuToggle.querySelector(".menu-toggle-label").textContent =
+      menuToggle.getAttribute("aria-expanded") === "true" ? ui().close : ui().menu;
+    if (langToggle && I18N) {
+      langToggle.querySelector(".lang-toggle-code").textContent = ui().langButton;
+      langToggle.setAttribute("aria-label", ui().langLabel);
+      langToggle.lang = lang === "es" ? "en" : "es";
+      langToggle.hidden = false;
+    }
+    // Los enlaces del menu cambian de ancho: la pestana naranja se recoloca.
+    if (desktopNav.matches && currentLink) moveTab(currentLink, false);
+    root.classList.remove("i18n-pending");
+  }
+  langToggle?.addEventListener("click", () => {
+    lang = lang === "es" ? "en" : "es";
+    try { localStorage.setItem("jair-portfolio-lang", lang); } catch { /* Funciona sin guardar. */ }
+    applyLanguage();
+  });
+  applyLanguage();
+
+  /* ---------- 6. Animaciones de pagina ---------- */
   // Entrada: una sola secuencia por pagina, sobre los elementos con data-intro.
   const introItems = [...document.querySelectorAll("[data-intro]")];
   if (canAnimate() && introItems.length) {

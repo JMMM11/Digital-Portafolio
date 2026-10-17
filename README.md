@@ -22,9 +22,10 @@ Para publicar, haz `git push` a `main`. GitHub Pages sirve los archivos tal como
 ## Estructura
 
 ```
-index.html          Inicio: presentación, proyectos destacados
+index.html          Inicio: presentación, proyectos recientes y bloque Now
 about.html          Sobre mí: historia, motivación, formación
-projects.html       Todos los proyectos, con filtros
+projects.html       Proyectos destacados (problema y reto) y el resto con filtros
+services.html       Servicios con cotización por WhatsApp y el proceso de trabajo
 skills.html         Habilidades agrupadas por área
 experience.html     Experiencia, voluntariado y certificaciones
 contact.html        Correo, enlaces y formulario
@@ -32,8 +33,9 @@ contact.html        Correo, enlaces y formulario
 css/styles.css            Estilos de todo el sitio (variables al inicio)
 css/origami-journey.css   Solo la animación del ave en experience.html
 
-js/theme.js           Tema claro/oscuro (se carga primero)
-js/site.js            Navegación, filtros, formulario y animaciones
+js/theme.js           Tema claro/oscuro e idioma inicial (se carga primero)
+js/site.js            Navegación, filtros, formulario, idioma y animaciones
+js/i18n-es.js         Textos en español (inglés exacto -> español)
 js/projects-data.js   Datos de los proyectos
 js/brain.js           Cerebro de triángulos del inicio
 js/origami-journey.js Animación del ave de origami
@@ -41,6 +43,7 @@ js/vendor/motion.js   Librería Motion (copia de node_modules)
 
 assets/fonts/     Chakra Petch y Hanken Grotesk
 assets/images/    Favicon, cerebro de respaldo y capturas de proyectos
+assets/cv/        CV en PDF, en inglés (_EN) y en español (_ES)
 scripts/          Utilidad para actualizar Motion
 ```
 
@@ -52,11 +55,15 @@ scripts/          Utilidad para actualizar Motion
 | Agregar o editar un proyecto | `js/projects-data.js`. Copia un bloque `{ ... }`; las instrucciones están al inicio del archivo. |
 | Captura de un proyecto | Guárdala en `assets/images/projects/` (1280x800) y pon su ruta en `image`. |
 | Colores, tipografía, espaciado | Variables de `:root` en `css/styles.css` (tema claro) y `:root[data-theme="dark"]` (oscuro). |
-| El menú | La cabecera se repite en las seis páginas: cambia el enlace en todas. `aria-current="page"` marca la página activa. |
+| El menú | La cabecera se repite en las siete páginas: cambia el enlace en todas. `aria-current="page"` marca la página activa. |
 | Correo de contacto | `contact.html` (enlace y `data-to` del formulario) y el pie de cada página. |
+| Bloque Now del inicio | Busca `AHORA` en `index.html`: cambia los puntos, la fecha y su `datetime`, y las mismas líneas en `js/i18n-es.js`. |
+| Proyectos destacados de Projects | Campo `spotlight` (1, 2, 3) en `js/projects-data.js`, con `problem`, `challenge` y `result`. |
+| Textos en español | `js/i18n-es.js`. Si cambias un texto en inglés en un `.html`, cambia también su línea ahí; si no coincide, se queda en inglés. Los proyectos se traducen en el campo `es` de `js/projects-data.js`. |
+| El CV | Reemplaza los PDF de `assets/cv/` con el mismo nombre. El botón ES/EN elige cuál se descarga. |
 | Colores y cantidad de triángulos del cerebro | Atributos `data-*` del `<body>` y del `<canvas>` en `index.html`. |
 
-Busca `TODO` en el proyecto para ver los datos que faltan por completar (rol en cada proyecto, fechas de trabajos, historia personal).
+Busca `TODO` en el proyecto para ver los datos que faltan por completar.
 
 ## Diseño
 
