@@ -14,7 +14,7 @@
   root.dataset.theme = theme;
   root.classList.add("js");
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.content = theme === "dark" ? "#0c1912" : "#f3f6f1";
+  if (meta) meta.content = theme === "dark" ? "#121210" : "#ffffeb";
 
   // IDIOMA: el que eligio el visitante; si es su primera visita, el de su navegador.
   // En espanol la pagina se oculta un instante hasta que site.js traduce los textos.

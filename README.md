@@ -41,7 +41,7 @@ js/brain.js           Cerebro de triángulos del inicio
 js/origami-journey.js Animación del ave de origami
 js/vendor/motion.js   Librería Motion (copia de node_modules)
 
-assets/fonts/     Chakra Petch y Hanken Grotesk
+assets/fonts/     EB Garamond y Figtree
 assets/images/    Favicon, cerebro de respaldo y capturas de proyectos
 assets/cv/        CV en PDF, en inglés (_EN) y en español (_ES)
 scripts/          Utilidad para actualizar Motion
@@ -67,9 +67,10 @@ Busca `TODO` en el proyecto para ver los datos que faltan por completar.
 
 ## Diseño
 
-La idea visual es el papel de origami, por el ave que uso como marca: una cara verde y otra naranja. El naranja aparece solo donde algo está "doblado": la pestaña del menú, la esquina de las tarjetas y los botones.
+Papel crema con aire de periódico y salas oscuras redondeadas (el cierre del inicio, el proceso de Servicios y el pie). Los títulos van en serif a peso normal y mandan por tamaño; todo se separa con bordes de 2px en tinta, sin sombras ni degradados.
 
-- Tipografías: Chakra Petch para títulos y Hanken Grotesk para texto.
+- Colores: crema `#ffffeb`, tinta `#1a1a1a`, menta `#cdeedf` solo para la acción principal, y del ave de origami el teal `#034f46` y el naranja `#ffa946` (lo "doblado" o activo: pestaña del menú, esquinas, puntos).
+- Tipografías: EB Garamond para títulos y Figtree para texto, botones y menú.
 - Tema claro por defecto y tema oscuro con el botón de la cabecera. La elección se guarda en el navegador.
 
 ## Animaciones
@@ -94,5 +95,5 @@ npm run vendor
 ## Créditos
 
 - Logos del origami: [Devicon](https://github.com/devicons/devicon) v2.16.0, licencia MIT (`assets/licenses/devicon-MIT.txt`). El símbolo de Cursor proviene de sus recursos oficiales de marca y pertenece a Anysphere.
-- Fuentes: Chakra Petch y Hanken Grotesk, SIL Open Font License 1.1, descargadas de Google Fonts.
+- Fuentes: EB Garamond y Figtree, SIL Open Font License 1.1, descargadas de Google Fonts.
 - Motion: licencia MIT.

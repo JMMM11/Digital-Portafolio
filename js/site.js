@@ -34,7 +34,7 @@
     const selected = theme === "dark" ? "dark" : "light";
     root.dataset.theme = selected;
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = selected === "dark" ? "#0c1912" : "#f3f6f1";
+    if (meta) meta.content = selected === "dark" ? "#121210" : "#ffffeb";
     if (themeToggle) {
       themeToggle.setAttribute("aria-pressed", String(selected === "dark"));
       themeToggle.hidden = false;

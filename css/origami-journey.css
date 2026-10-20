@@ -5,11 +5,11 @@
  * Los nombres oj-* están encapsulados; no afectan al resto de la página.
  */
 .origami-journey {
-  --oj-ink: #1c7a4c;
+  --oj-ink: #034f46;
   --oj-orbit-opacity: .26;
   --oj-connection-opacity: .42;
   --oj-logo-edge: #806b25;
-  --oj-neutral: #13251c;
+  --oj-neutral: #1a1a1a;
   --oj-size: 480px;
   box-sizing: border-box;
   width: 100%;
@@ -18,11 +18,11 @@
   color: var(--oj-ink);
 }
 html[data-theme="dark"] .origami-journey {
-  --oj-ink: #6fd39c;
+  --oj-ink: #7fd1c0;
   --oj-orbit-opacity: .23;
   --oj-connection-opacity: .45;
   --oj-logo-edge: transparent;
-  --oj-neutral: #e9f2ec;
+  --oj-neutral: #ffffeb;
 }
 .origami-journey .oj-art {
   display: block;
