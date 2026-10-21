@@ -17,13 +17,6 @@
   margin: 24px 0 0;
   color: var(--oj-ink);
 }
-html[data-theme="dark"] .origami-journey {
-  --oj-ink: #7fd1c0;
-  --oj-orbit-opacity: .23;
-  --oj-connection-opacity: .45;
-  --oj-logo-edge: transparent;
-  --oj-neutral: #ffffeb;
-}
 .origami-journey .oj-art {
   display: block;
   width: 100%;

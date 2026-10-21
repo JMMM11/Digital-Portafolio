@@ -33,7 +33,7 @@ contact.html        Correo, enlaces y formulario
 css/styles.css            Estilos de todo el sitio (variables al inicio)
 css/origami-journey.css   Solo la animación del ave en experience.html
 
-js/theme.js           Tema claro/oscuro e idioma inicial (se carga primero)
+js/theme.js           Idioma inicial y entrada (se carga primero)
 js/site.js            Navegación, filtros, formulario, idioma y animaciones
 js/i18n-es.js         Textos en español (inglés exacto -> español)
 js/projects-data.js   Datos de los proyectos
@@ -54,7 +54,7 @@ scripts/          Utilidad para actualizar Motion
 | Textos de una página | En su `.html`. Cada bloque tiene un comentario en mayúsculas que dice qué es. |
 | Agregar o editar un proyecto | `js/projects-data.js`. Copia un bloque `{ ... }`; las instrucciones están al inicio del archivo. |
 | Captura de un proyecto | Guárdala en `assets/images/projects/` (1280x800) y pon su ruta en `image`. |
-| Colores, tipografía, espaciado | Variables de `:root` en `css/styles.css` (tema claro) y `:root[data-theme="dark"]` (oscuro). |
+| Colores, tipografía, espaciado | Variables de `:root` en `css/styles.css`. |
 | El menú | La cabecera se repite en las siete páginas: cambia el enlace en todas. `aria-current="page"` marca la página activa. |
 | Correo de contacto | `contact.html` (enlace y `data-to` del formulario) y el pie de cada página. |
 | Bloque Now del inicio | Busca `AHORA` en `index.html`: cambia los puntos, la fecha y su `datetime`, y las mismas líneas en `js/i18n-es.js`. |
@@ -71,7 +71,6 @@ Papel crema con aire de periódico y salas oscuras redondeadas (el cierre del in
 
 - Colores: crema `#ffffeb`, tinta `#1a1a1a`, menta `#cdeedf` solo para la acción principal, y del ave de origami el teal `#034f46` y el naranja `#ffa946` (lo "doblado" o activo: pestaña del menú, esquinas, puntos).
 - Tipografías: EB Garamond para títulos y Figtree para texto, botones y menú.
-- Tema claro por defecto y tema oscuro con el botón de la cabecera. La elección se guarda en el navegador.
 
 ## Animaciones
 

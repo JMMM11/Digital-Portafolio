@@ -3,7 +3,7 @@
  * Dibuja el canvas #constellation: una esfera de triangulos que se convierte en cerebro.
  * Todo lo editable esta en el HTML:
  *   - canvas: data-count, data-mobile-count, data-reveal-duration, data-orbit-count
- *   - body:   data-triangle-colors (oscuro), data-triangle-colors-light (claro), data-accent-ratio
+ *   - body:   data-triangle-colors, data-accent-ratio
  * Corre siempre; solo se detiene fuera de pantalla, con la pestana oculta y con "movimiento reducido".
  */
 (() => {
@@ -16,9 +16,7 @@ function startParticles() {
 
   // All visual settings that you may want to change are HTML data attributes.
   function readPalette() {
-    const colors = document.documentElement.dataset.theme === "light"
-      ? document.body.dataset.triangleColorsLight : document.body.dataset.triangleColors;
-    return colors.split(",").map((hex) => {
+    return document.body.dataset.triangleColors.split(",").map((hex) => {
       const color = hex.trim().replace("#", "");
       return /^[0-9a-f]{6}$/i.test(color)
         ? [0, 2, 4].map((index) => parseInt(color.slice(index, index + 2), 16)).join(",")
@@ -379,11 +377,6 @@ function startParticles() {
     sync();
   }, { threshold: 0 }).observe(document.getElementById("home"));
   document.addEventListener("visibilitychange", sync);
-  window.addEventListener("themechange", () => {
-    palette = readPalette();
-    buildBrain();
-    drawBrain();
-  });
   motionQuery.addEventListener("change", (event) => {
     reducedMotion = event.matches;
     smoothed.x = 0; smoothed.y = 0;

@@ -235,7 +235,7 @@ window.PROJECTS = [
     kind: "Personal website",
     category: "website",
     featured: false,
-    summary: "The site you are reading. Six hand-written pages that share one stylesheet, light and dark themes, two languages and a small set of animations.",
+    summary: "The site you are reading. Seven hand-written pages that share one stylesheet, two languages and a small set of animations.",
     role: "Front-end development",
     stack: ["HTML", "CSS", "JavaScript", "Motion"],
     image: "assets/images/projects/digital-portfolio.jpg",
@@ -245,7 +245,7 @@ window.PROJECTS = [
     note: "",
     es: {
       kind: "Sitio personal",
-      summary: "El sitio que estás leyendo. Seis páginas escritas a mano que comparten una hoja de estilos, tema claro y oscuro, dos idiomas y unas pocas animaciones.",
+      summary: "El sitio que estás leyendo. Siete páginas escritas a mano que comparten una hoja de estilos, dos idiomas y unas pocas animaciones.",
       role: "Desarrollo front-end",
       alt: "Página de inicio de este portafolio con el nombre Jair M. Morales Magallon y un cerebro hecho de triángulos.",
       note: "",

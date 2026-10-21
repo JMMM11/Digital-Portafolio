@@ -50,7 +50,7 @@
 
 /* ---------- 2. Variables ---------- */
 :root {
-  /* Colores, tema claro */
+  /* Colores */
   --paper: #ffffeb;      /* fondo crema de la pagina */
   --surface: #ffffeb;    /* tarjetas y campos (se separan con borde, no con color) */
   --stone: #e4e4d0;      /* rellenos suaves: fondo de campos, etiquetas */
@@ -62,7 +62,7 @@
   --kami: #ffa946;       /* naranja: lo doblado o activo, solo rellenos */
   --accent: #034f46;     /* enlaces y fechas dentro del texto */
   --soft: #cdeedf;       /* menta: accion principal y tarjetas destacadas */
-  --on-kami: #1a1a1a;    /* texto sobre naranja o menta, en ambos temas */
+  --on-kami: #1a1a1a;    /* texto sobre naranja o menta */
   --chamber: #1a1a1a;    /* salas oscuras: cierre, proceso, pie */
   --on-chamber: #ffffeb;
   --focus: #034f46;
@@ -87,27 +87,12 @@
   --radius: 32px;        /* tarjetas */
   --radius-room: clamp(32px, 6vw, 72px); /* salas oscuras */
   --radius-pill: 999px;  /* menu, filtros y etiquetas */
-  --header-height: 88px; /* cabecera completa: pastilla de 64px + margenes */
   color-scheme: light;
-}
-:root[data-theme="dark"] {
-  --paper: #121210;
-  --surface: #1a1a17;
-  --stone: #2a2a25;
-  --ink: #ffffeb;
-  --muted: #bdbdac;
-  --line: #34342d;
-  --edge: #e4e4d0;
-  --brand: #7fd1c0;
-  --accent: #ffa946;
-  --chamber: #034f46;
-  --focus: #cdeedf;
-  color-scheme: dark;
 }
 
 /* ---------- 3. Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-height) + 16px); }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
 body {
   margin: 0;
   background: var(--paper);
@@ -197,17 +182,14 @@ button { cursor: pointer; }
 .prose a { color: var(--accent); text-underline-offset: 3px; }
 
 /* ---------- 5. Cabecera y navegacion ---------- */
-/* La cabecera es una pastilla crema con borde que flota sobre la pagina. */
+/* La cabecera se queda arriba: al bajar se va con la pagina. */
 .site-header {
-  position: sticky; top: 0; z-index: 50;
+  position: relative; z-index: 50;
   padding-block: 12px;
 }
 .header-inner {
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
-  min-height: 64px; padding: 6px 8px 6px 20px;
-  background: var(--paper);
-  border: 2px solid var(--edge);
-  border-radius: var(--radius-pill);
+  min-height: 64px;
 }
 .brand {
   display: inline-flex; align-items: center; gap: 10px;
@@ -242,19 +224,15 @@ button { cursor: pointer; }
 html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: var(--on-kami); border-radius: var(--radius-pill); }
 
 .header-tools { display: flex; align-items: center; gap: 6px; }
-.lang-toggle, .theme-toggle, .menu-toggle {
+.lang-toggle, .menu-toggle {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   width: 44px; height: 44px; padding: 0;
   background: transparent; border: 2px solid var(--line); border-radius: var(--radius-pill);
   transition: border-color 0.18s ease, transform 0.15s ease;
 }
-.lang-toggle:hover, .theme-toggle:hover, .menu-toggle:hover { border-color: var(--edge); }
-.lang-toggle:active, .theme-toggle:active, .menu-toggle:active { transform: scale(0.95); }
+.lang-toggle:hover, .menu-toggle:hover { border-color: var(--edge); }
+.lang-toggle:active, .menu-toggle:active { transform: scale(0.95); }
 .lang-toggle { font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.04em; }
-.theme-toggle svg { width: 18px; height: 18px; }
-.theme-toggle .icon-sun { display: none; }
-:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
-:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 .menu-toggle { display: none; padding: 0; }
 .menu-toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .menu-toggle-bars { position: relative; width: 16px; height: 10px; }
@@ -269,10 +247,10 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 
 /* Con siete enlaces (y los textos en espanol, mas largos) el menu completo necesita unos 1120 px. */
 @media (max-width: 1119px) {
-  .header-inner { padding-left: 14px; }
   html.js .menu-toggle { display: inline-flex; }
   html.js .nav {
-    position: fixed; inset: var(--header-height) 0 0 0; z-index: 40;
+    /* Debajo de la cabecera y tan alto como la pantalla. */
+    position: absolute; top: 100%; left: 0; right: 0; height: 100dvh; z-index: 40;
     display: none;
     padding: 16px var(--gutter) 40px;
     background: var(--paper);
@@ -296,7 +274,7 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
   }
   html.menu-open { overflow: hidden; }
   /* Sin JavaScript: los enlaces quedan visibles en una fila que se desplaza. */
-  html:not(.js) .header-inner { flex-wrap: wrap; padding-block: 12px; border-radius: var(--radius); }
+  html:not(.js) .header-inner { flex-wrap: wrap; }
   html:not(.js) .nav { order: 3; width: 100%; overflow-x: auto; }
 }
 
@@ -333,8 +311,7 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 
 .hero-art { position: relative; }
 #constellation { width: 100%; height: clamp(340px, 38vw, 520px); }
-.brain-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-:root[data-theme="light"] .brain-fallback { filter: brightness(0.3); }
+.brain-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: brightness(0.3); }
 .has-particles .brain-fallback { display: none; }
 
 /* Sala oscura de cierre con la llamada a contacto. */
@@ -463,7 +440,7 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 .prose p, .timeline-description { text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
 .prose h2 { font-size: var(--text-2xl); margin-top: 32px; }
 .prose h2:first-child { margin-top: 0; }
-.about-aside { position: sticky; top: calc(var(--header-height) + 32px); display: grid; gap: 28px; }
+.about-aside { position: sticky; top: 32px; display: grid; gap: 28px; }
 .about-mark { width: min(100%, 300px); color: var(--brand); }
 .about-mark path { fill: none; stroke: currentColor; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
 .fact-list { display: grid; gap: 14px; padding-top: 24px; border-top: 2px solid var(--edge); font-size: var(--text-sm); }
@@ -500,7 +477,7 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 
 /* ---------- 11. Experiencia ---------- */
 .experience-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
-.experience-art { position: sticky; top: calc(var(--header-height) + 24px); }
+.experience-art { position: sticky; top: 24px; }
 .experience-art figcaption { margin-top: 12px; font-size: var(--text-sm); color: var(--muted); max-width: 30em; }
 .timeline { position: relative; display: grid; gap: 48px; padding-left: 28px; }
 .timeline::before, .timeline-progress { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px; }

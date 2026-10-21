@@ -51,7 +51,6 @@ window.I18N = {
     "Experience": "Experiencia",
     "Contact": "Contacto",
     "Services": "Servicios",
-    "Dark mode": "Modo oscuro",
     "Jair M. Morales Magallon. Built by hand in Panama.": "Jair M. Morales Magallon. Hecho a mano en Panamá.",
     "Chat on WhatsApp": "Escribir por WhatsApp",
     "Get in touch": "Contáctame",

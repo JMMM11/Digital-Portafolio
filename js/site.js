@@ -1,12 +1,11 @@
 /*
  * COMPORTAMIENTO COMPARTIDO POR TODAS LAS PAGINAS.
  * El contenido vive en los .html y en js/projects-data.js; aqui solo hay interaccion:
- *   1. Tema claro / oscuro
- *   2. Navegacion: pestana que se desliza, menu movil
- *   3. Tarjetas de proyectos y filtros
- *   4. Formulario de contacto
- *   5. Idioma ingles / espanol (textos en js/i18n-es.js)
- *   6. Animaciones con Motion (js/vendor/motion.js, global "Motion")
+ *   1. Navegacion: pestana que se desliza, menu movil
+ *   2. Tarjetas de proyectos y filtros
+ *   3. Formulario de contacto
+ *   4. Idioma ingles / espanol (textos en js/i18n-es.js)
+ *   5. Animaciones con Motion (js/vendor/motion.js, global "Motion")
  * Todas las animaciones usan solo transform y opacity y se desactivan
  * con "movimiento reducido" o si Motion no carga.
  */
@@ -28,30 +27,7 @@
   };
   const ui = () => I18N?.ui[lang] ?? FALLBACK_UI;
 
-  /* ---------- 1. Tema ---------- */
-  const themeToggle = document.querySelector(".theme-toggle");
-  function applyTheme(theme, persist = false) {
-    const selected = theme === "dark" ? "dark" : "light";
-    root.dataset.theme = selected;
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = selected === "dark" ? "#121210" : "#ffffeb";
-    if (themeToggle) {
-      themeToggle.setAttribute("aria-pressed", String(selected === "dark"));
-      themeToggle.hidden = false;
-    }
-    if (persist) {
-      try { localStorage.setItem("jair-portfolio-theme", selected); } catch { /* Sigue funcionando sin guardar. */ }
-    }
-    // js/brain.js escucha este evento para volver a pintar con los colores del tema.
-    window.dispatchEvent(new CustomEvent("themechange", { detail: { theme: selected } }));
-  }
-  applyTheme(root.dataset.theme);
-  themeToggle?.addEventListener("click", () => {
-    applyTheme(root.dataset.theme === "dark" ? "light" : "dark", true);
-  });
-
-  /* ---------- 2. Navegacion ---------- */
-  const header = document.querySelector(".site-header");
+  /* ---------- 1. Navegacion ---------- */
   const nav = document.querySelector(".nav");
   const navList = document.querySelector(".nav-list");
   const navLinks = [...document.querySelectorAll(".nav-link")];
@@ -143,12 +119,7 @@
     if (event.matches) { setMenu(false); placeTab(); }
   });
 
-  // Linea bajo la cabecera cuando la pagina ya se desplazo.
-  const markScrolled = () => header.classList.toggle("is-scrolled", window.scrollY > 8);
-  window.addEventListener("scroll", markScrolled, { passive: true });
-  markScrolled();
-
-  /* ---------- 3. Proyectos ---------- */
+  /* ---------- 2. Proyectos ---------- */
   function element(tag, className, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -296,7 +267,7 @@
     });
   });
 
-  /* ---------- 4. Contacto ---------- */
+  /* ---------- 3. Contacto ---------- */
   // El sitio es estatico: el formulario prepara un correo en la app del visitante.
   const contactForm = document.querySelector("[data-contact-form]");
   if (contactForm) {
@@ -313,7 +284,7 @@
     });
   }
 
-  /* ---------- 5. Idioma ---------- */
+  /* ---------- 4. Idioma ---------- */
   // Cada texto de la pagina se busca en I18N.es ("ingles exacto": "espanol").
   // Se guarda el original para poder volver al ingles sin recargar.
   const norm = (text) => text.replace(/\s+/g, " ").trim();
@@ -386,7 +357,7 @@
   });
   applyLanguage();
 
-  /* ---------- 6. Animaciones de pagina ---------- */
+  /* ---------- 5. Animaciones de pagina ---------- */
   // Entrada: una sola secuencia por pagina, sobre los elementos con data-intro.
   const introItems = [...document.querySelectorAll("[data-intro]")];
   if (canAnimate() && introItems.length) {
