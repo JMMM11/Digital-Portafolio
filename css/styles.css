@@ -549,7 +549,7 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 
 /* ---------- 15. Proyectos destacados (projects.html) ----------
    Usan la misma carpeta de .project-card, en horizontal: captura y texto lado a lado. */
-.case-list { display: grid; gap: clamp(56px, 7vw, 88px); }
+.case-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(56px, 7vw, 88px); }
 .more-title { font-size: var(--text-2xl); margin-bottom: 24px; }
 .case-points { display: grid; gap: 4px; margin: 0; }
 .case-points dt { font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.75; }
