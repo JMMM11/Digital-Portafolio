@@ -22,6 +22,27 @@
  */
 window.PROJECTS = [
   {
+    title: "FLUYA",
+    kind: "Community alert platform",
+    category: "app",
+    featured: true,
+    summary: "A collaborative alert platform for Villa del Campo, Valle Dorado, Nicolás Solano and Martín Sánchez in La Chorrera. Neighbors report river floods, water cuts, closed roads and hospital transport needs, and an alert is only shared once other neighbors confirm it, which stops rumors. It complements SINAPROC and IDAAN, it does not replace them.",
+    role: "Front-end and back-end development",
+    stack: ["React", "Vite", "Supabase", "PostgreSQL", "Motion"],
+    image: "assets/images/projects/fluya.jpg",
+    alt: "FLUYA home page: a rainy street with the headline Your community, informed in time, and a sample flood alert confirmed by three neighbors.",
+    demo: "https://jmmm11.github.io/FLUYA/",
+    repo: "https://github.com/JMMM11/FLUYA",
+    note: "",
+    es: {
+      kind: "Plataforma de alertas comunitarias",
+      summary: "Una plataforma de alerta colaborativa para Villa del Campo, Valle Dorado, Nicolás Solano y Martín Sánchez, en La Chorrera. Los vecinos reportan crecidas de ríos, cortes de agua, vías cerradas y necesidades de traslado al hospital, y un aviso solo se difunde cuando otros vecinos lo confirman, así se frenan los rumores. Complementa a SINAPROC y al IDAAN, no los sustituye.",
+      role: "Desarrollo front-end y back-end",
+      alt: "Inicio de FLUYA: una calle bajo la lluvia con el titular Tu comunidad, informada a tiempo, y una alerta de ejemplo de crecida confirmada por tres vecinos.",
+      note: "",
+    }
+  },
+  {
     title: "La Gran Noche",
     kind: "Quinceañera invitation",
     category: "gift",

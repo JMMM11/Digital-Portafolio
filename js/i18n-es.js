@@ -72,7 +72,7 @@ window.I18N = {
     "Panama": "Panamá",
     "A slowly rotating brain made of small outlined triangles": "Un cerebro hecho de pequeños triángulos que gira lentamente",
     "Recent work": "Trabajo reciente",
-    "Three projects that show the range: a quinceañera invitation, a site for a community initiative and an app you control with your hands.": "Tres proyectos que muestran lo que hago: una invitación de quinceaños, un sitio para una iniciativa comunitaria y una app que controlas con las manos.",
+    "Four projects that show the range: a community alert platform, a quinceañera invitation, a site for a community initiative and an app you control with your hands.": "Cuatro proyectos que muestran lo que hago: una plataforma de alertas comunitarias, una invitación de quinceaños, un sitio para una iniciativa comunitaria y una app que controlas con las manos.",
     "See all projects": "Ver todos los proyectos",
     "Now": "Ahora",
     "Updated <time datetime=\"2026-10\">October 2026</time>": "Actualizado <time datetime=\"2026-10\">octubre 2026</time>",
