@@ -59,7 +59,8 @@
       <section class="hero" id="home" aria-labelledby="hero-name">
         <div class="wrap">
           <!-- Cada span es una linea del nombre. En escritorio la segunda va alineada a la derecha. -->
-          <h1 class="hero-name" id="hero-name" data-intro><span>Jair M. Morales</span> <span>Magallon</span></h1>
+          <p class="mono-label hero-eyebrow" data-intro>Portfolio / Panama</p>
+          <h1 class="hero-name" id="hero-name"><span>Jair M. Morales</span> <span>Magallon</span></h1>
           <div class="hero-grid">
             <div class="hero-copy">
               <p class="hero-role" data-intro>Cybersecurity student and web developer in Panama.</p>
@@ -67,7 +68,7 @@
               <div class="hero-actions" data-intro>
                 <a class="button" href="projects.html">See my projects</a>
                 <a class="link-strong" href="contact.html">Get in touch</a>
-                <a class="link-strong" href="assets/cv/Jair_Morales_CV_EN.pdf" download data-cv>Download CV</a>
+                <a class="link-strong" href="cv.html">View CV</a>
               </div>
               <dl class="hero-facts" data-intro>
                 <dt>Studying</dt><dd>Cybersecurity, Universidad Tecnológica de Panamá</dd>
@@ -86,6 +87,9 @@
           </div>
         </div>
       </section>
+
+      <!-- CINTA: los nombres de los proyectos pasan en bucle (los dibuja js/site.js desde projects-data.js). -->
+      <div class="marquee" aria-hidden="true"><div class="marquee-track" data-marquee></div></div>
 
       <!-- PROYECTOS DESTACADOS: salen de js/projects-data.js (los que tienen featured: true). -->
       <section class="section" aria-labelledby="work-title">
@@ -134,7 +138,7 @@
           <li><a href="mailto:jairm9010@gmail.com">Email</a></li>
           <li><a href="https://wa.me/50760028971?text=Hola%20Jair%2C%20vi%20tu%20portafolio%20y%20quiero%20hablar%20contigo%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
           <li><a href="https://github.com/JMMM11" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-          <li><a href="assets/cv/Jair_Morales_CV_EN.pdf" download data-cv>CV (PDF)</a></li>
+          <li><a href="cv.html">CV</a></li>
         </ul>
       </div>
     </footer>

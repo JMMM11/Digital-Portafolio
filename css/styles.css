@@ -70,6 +70,7 @@
   /* Tipografia */
   --font-display: "EB Garamond", Garamond, Georgia, serif;
   --font-body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
   --text-sm: 0.875rem;
   --text-base: 1.0625rem;
   --text-lg: 1.25rem;
@@ -290,9 +291,31 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
   font-size: clamp(3.25rem, 11.5vw, 7.5rem);
   line-height: 0.85; letter-spacing: -0.04em;
 }
-.hero-name span { display: block; }
+.hero-eyebrow { margin-bottom: clamp(12px, 2vw, 24px); color: var(--muted); }
+.hero-name > span { display: block; }
 /* Nombre escalonado: la segunda linea va a la derecha, en cursiva teal. */
-.hero-name span + span { text-align: right; font-style: italic; color: var(--brand); }
+.hero-name > span + span { text-align: right; font-style: italic; color: var(--brand); }
+/* site.js parte el nombre en letras (.ch) que suben desde una mascara (.word). */
+.hero-name .word { display: inline-block; overflow: hidden; padding: 0 0.06em 0.24em; margin: 0 -0.06em -0.24em; vertical-align: top; }
+.hero-name .ch { display: inline-block; will-change: transform; }
+/* Al bajar, cada linea se achica y se separa hacia su lado (--hp lo escribe site.js). */
+.hero-name > span { scale: calc(1 - var(--hp, 0) * 0.3); transform-origin: left top; translate: calc(var(--hp, 0) * -7vw) 0; }
+.hero-name > span + span { transform-origin: right top; translate: calc(var(--hp, 0) * 7vw) 0; }
+.intro-pending .hero-name { opacity: 0; }
+.hero-art { translate: 0 calc(var(--hp, 0) * 70px); }
+.hero-copy { translate: 0 calc(var(--hp, 0) * -24px); }
+.page-head h1 { scale: calc(1 - var(--hp, 0) * 0.18); transform-origin: left top; }
+.page-head .lead { translate: 0 calc(var(--hp, 0) * 30px); }
+
+/* Cinta de proyectos: sus nombres pasan en bucle. site.js repite la lista dos veces. */
+.marquee { overflow: hidden; padding-block: clamp(12px, 2vw, 20px); border-block: 2px solid var(--edge); margin-bottom: var(--space-section); }
+.marquee-track { display: flex; width: max-content; align-items: center; gap: clamp(20px, 3vw, 40px); padding-right: clamp(20px, 3vw, 40px); animation: marquee 38s linear infinite; }
+.marquee-track:empty { display: none; }
+.marquee-track span { font-family: var(--font-display); font-size: clamp(2.25rem, 1rem + 4.2vw, 4.875rem); line-height: 1.1; white-space: nowrap; letter-spacing: var(--tracking-display); }
+.marquee-track span:nth-of-type(even) { font-style: italic; color: var(--brand); }
+.marquee-track i { font-style: normal; color: var(--kami); font-size: 1.5rem; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
 .hero-grid {
   display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
   gap: clamp(24px, 4vw, 64px); align-items: center;
@@ -330,92 +353,100 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 .closing .button:hover { background: var(--on-chamber); color: var(--on-kami); }
 .closing :focus-visible { outline-color: var(--soft); }
 
-/* Lista de trabajos del inicio: titulos grandes a la izquierda y, a la derecha,
-   la captura del proyecto activo (el que tiene el cursor o el foco). */
-.work-list { position: relative; border-bottom: 2px solid var(--edge); }
-.work-row { display: grid; justify-items: start; gap: 10px; padding-block: clamp(24px, 3.4vw, 44px); border-top: 2px solid var(--edge); }
-.work-title { font-family: var(--font-display); font-size: clamp(2.5rem, 1rem + 5.4vw, 5rem); font-weight: 400; line-height: 0.95; letter-spacing: var(--tracking-display); }
-.work-title a { text-decoration: none; transition: color 0.25s ease; }
-.work-meta { color: var(--muted); max-width: 30em; }
-.work-source { font-size: var(--text-sm); }
-.work-shot {
-  position: relative; width: 100%; max-width: 520px; aspect-ratio: 16 / 10; margin-top: 10px;
-  overflow: hidden; border: 2px solid var(--edge);
-  border-radius: var(--radius) 0 var(--radius) var(--radius);
+/* (Lista de trabajos del inicio: ver seccion 8, ".work-list" y ".work-card".) */
+
+/* ---------- 8. Proyectos: galeria editorial ----------
+   Tres piezas, todas con la captura grande y parallax (.px):
+     .work-card  captura + panel de color. En el inicio se apilan al bajar (.work-list).
+     .tile       captura grande y texto debajo, sin caja (cuadricula de projects.html).
+     .project-card  solo lo usa services.html: panel plano con etiqueta. */
+.mono-label {
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3;
 }
-.work-shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
-/* Esquina doblada: mitad naranja, mitad color de la pagina. */
-.work-shot::after {
-  content: ""; position: absolute; top: 0; right: 0; width: var(--fold); height: var(--fold);
-  background: linear-gradient(to top right, var(--kami) 50%, var(--paper) 50%);
-  border-bottom-left-radius: 6px;
+/* Marco con parallax: la imagen es mas alta que el marco y site.js la desplaza al bajar. */
+.px { position: relative; display: block; overflow: hidden; background: var(--stone); }
+.px img { position: absolute; left: 0; top: -10%; width: 100%; height: 120%; object-fit: cover; object-position: top center; }
+.px.is-typographic { display: grid; align-items: end; padding: 24px; }
+.media-title { position: relative; font-family: var(--font-display); font-size: clamp(3rem, 8vw, 5rem); line-height: 0.85; letter-spacing: var(--tracking-display); }
+
+.work-list { display: grid; gap: clamp(24px, 4vw, 40px); }
+.work-card {
+  --p: 0; /* site.js: cuanto la cubre la tarjeta siguiente (0 a 1). */
+  --panel: var(--brand); --on-panel: #ffffeb;
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  min-height: clamp(440px, 74vh, 620px);
+  background: var(--panel); color: var(--on-panel);
+  border-radius: 24px;
+  transform-origin: center top;
+  scale: calc(1 - var(--p) * 0.07);
 }
+.work-card.tone-1 { --panel: var(--chamber); }
+.work-card.tone-2 { --panel: var(--kami); --on-panel: #1a1a1a; }
+/* Al quedar cubierta, la tarjeta se oscurece (color plano, sin degradado). */
+.work-card::after { content: ""; position: absolute; inset: 0; background: #1a1a1a; opacity: calc(var(--p) * 0.4); pointer-events: none; }
+.work-media { min-height: 260px; }
+.work-panel { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; padding: clamp(24px, 4vw, 48px); }
+.work-name { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.5rem, 1.2rem + 3.8vw, 4.5rem); line-height: 0.92; letter-spacing: var(--tracking-display); }
+.work-name a { text-decoration: none; }
+.work-summary { max-width: 28em; opacity: 0.9; }
+.work-panel .project-links { margin-top: auto; }
+.project-links { display: flex; flex-wrap: wrap; gap: 10px 24px; }
+/* Enlace con flecha: etiqueta mono y flecha que se adelanta al pasar el cursor. */
+.arrow-link {
+  font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
+  text-decoration: none; border-bottom: 1.5px solid currentColor; padding-bottom: 2px;
+}
+.arrow-link::after { content: " \2197"; display: inline-block; transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1); }
+.arrow-link:hover::after { transform: translate(3px, -3px); }
+.work-card :focus-visible, .tile :focus-visible { outline-color: currentColor; }
+.project-note { font-size: var(--text-sm); opacity: 0.8; }
+.work-card .px img { transition: scale 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+.work-card:hover .px img { scale: 1.05; }
+
 @media (min-width: 861px) {
-  .work-row { padding-right: 50%; }
-  .work-title a { color: var(--muted); }
-  .work-row.is-active .work-title a { color: var(--ink); }
-  .work-shot {
-    position: absolute; top: clamp(24px, 3.4vw, 44px); right: 0; width: 44%; max-width: none; margin: 0;
-    opacity: 0; transform: translateY(14px) scale(0.98); pointer-events: none;
-    transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .work-row.is-active .work-shot { opacity: 1; transform: none; }
+  /* Pila: cada tarjeta se queda arriba y la siguiente sube por encima. */
+  .work-list { display: block; }
+  .work-item { position: sticky; top: 24px; margin-bottom: clamp(24px, 6vh, 56px); }
+  .work-item:last-child { margin-bottom: 0; }
+  .work-media { min-height: 0; }
+}
+@media (max-width: 860px) {
+  .work-card { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .work-media { aspect-ratio: 16 / 11; }
 }
 
-/* ---------- 8. Tarjetas de proyecto y filtros ---------- */
-.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: clamp(48px, 5vw, 64px) clamp(24px, 3vw, 40px); }
-.project-grid.is-wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); }
-/* Tarjeta en forma de carpeta: pestana arriba con el tipo de proyecto, cuerpo de color
-   plano con borde de tinta y una inclinacion leve que se endereza al pasar el cursor.
-   Colores: cada tarjeta toma uno de seis en orden (reglas nth-child de abajo).
-   --folder es el color de la carpeta y --on-folder el del texto. */
+/* Cuadricula de projects.html */
+.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: clamp(40px, 5vw, 64px) clamp(20px, 3vw, 32px); }
+.project-grid.is-wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr)); }
+.tile { display: grid; gap: 18px; align-content: start; }
+.tile-media { aspect-ratio: 4 / 3; border-radius: 24px; }
+.tile-media img { transition: scale 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+.tile:hover .tile-media img { scale: 1.06; }
+.tile-body { display: grid; gap: 10px; padding-inline: 4px; }
+.tile-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem); line-height: 1; letter-spacing: -0.02em; }
+.tile-title a { text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat; transition: background-size 0.35s ease; }
+.tile:hover .tile-title a, .tile-title a:focus-visible { background-size: 100% 2px; }
+.tile-summary { color: var(--muted); }
+.tile-stack { color: var(--muted); }
+.tile .project-links { padding-top: 4px; }
+
+/* Servicios: panel plano con etiqueta mono (antes carpeta). */
 .project-card {
-  --folder: var(--kami);
-  --on-folder: #1a1a1a;
-  position: relative;
-  display: flex; flex-direction: column;
-  margin-top: 32px; /* espacio para la pestana */
-  color: var(--on-folder);
-  background: var(--folder);
-  border: 2px solid var(--edge);
-  border-radius: 0 var(--radius) var(--radius) var(--radius);
-  transform: rotate(var(--tilt, 0deg));
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  --folder: var(--kami); --on-folder: #1a1a1a;
+  display: flex; flex-direction: column; gap: 14px; padding: clamp(24px, 3vw, 32px);
+  background: var(--folder); color: var(--on-folder); border-radius: 24px;
+  transition: translate 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .project-card:nth-child(6n + 1) { --folder: #ffa946; }
 .project-card:nth-child(6n + 2) { --folder: #034f46; --on-folder: #ffffeb; }
 .project-card:nth-child(6n + 3) { --folder: #ffe2bd; }
-.project-card:nth-child(6n + 4) { --folder: #1a1a1a; --on-folder: #ffffeb; }
-.project-card:nth-child(6n + 5) { --folder: #bfe3d8; }
-.project-card:nth-child(6n + 6) { --folder: #e4e4d0; }
-.project-card:nth-child(3n + 1) { --tilt: -1.2deg; }
-.project-card:nth-child(3n + 2) { --tilt: 0.8deg; }
-.project-card:nth-child(3n) { --tilt: -0.5deg; }
-.project-card:hover, .project-card:focus-within { transform: rotate(0deg) translateY(-4px); }
-/* left: -2px y sin borde abajo: la pestana tapa el borde superior de la tarjeta y parece una sola pieza. */
-.project-tab {
-  position: absolute; bottom: 100%; left: -2px;
-  max-width: calc(100% - 40px); padding: 6px 18px 4px;
-  background: var(--folder);
-  border: 2px solid var(--edge); border-bottom: 0;
-  border-radius: 14px 14px 0 0;
-  font-weight: 600; font-size: 0.875rem;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.project-cover { aspect-ratio: 16 / 10; overflow: hidden; margin: 14px 14px 0; border: 2px solid var(--edge); border-radius: 20px; background: rgb(0 0 0 / 0.12); }
-.project-cover img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
-.project-cover.is-typographic { display: flex; align-items: flex-end; padding: 24px; }
-.project-cover-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(3.25rem, 9vw, 5.5rem); line-height: 0.85; letter-spacing: var(--tracking-display); }
-.project-body { display: flex; flex-direction: column; flex: 1; gap: 12px; padding: 20px 24px 28px; }
-.project-title { font-family: var(--font-display); font-weight: 400; font-size: var(--text-xl); line-height: 1; letter-spacing: -0.02em; }
+.project-card:hover, .project-card:focus-within { translate: 0 -6px; }
+.project-tab { align-self: flex-start; padding: 5px 12px; border: 1.5px solid currentColor; border-radius: var(--radius-pill); font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.project-body { display: flex; flex-direction: column; flex: 1; gap: 12px; }
 .project-summary { opacity: 0.9; }
-.project-facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; margin-top: 4px; font-size: var(--text-sm); }
-.project-facts dt { opacity: 0.75; }
-.project-links { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: auto; padding-top: 12px; }
-.project-card .link-strong { color: inherit; text-decoration-color: currentColor; }
-.project-card .link-strong:hover { color: inherit; }
 .project-card :focus-visible { outline-color: currentColor; }
-.project-note { font-size: var(--text-sm); opacity: 0.8; }
 
 .filter-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-bottom: 32px; }
 .filters { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -536,7 +567,7 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 /* ---------- Adaptacion a pantallas pequenas ---------- */
 @media (max-width: 860px) {
   .hero-grid, .about-grid, .skill-group, .experience-grid, .contact-grid { grid-template-columns: minmax(0, 1fr); }
-  .hero-name span + span { text-align: left; }
+  .hero-name > span + span { text-align: left; }
   .hero-art { order: -1; max-width: 460px; width: 100%; margin-inline: auto; }
   #constellation { height: clamp(260px, 68vw, 400px); }
   .about-aside, .experience-art { position: static; }
@@ -548,22 +579,20 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 }
 
 /* ---------- 15. Proyectos destacados (projects.html) ----------
-   Usan la misma carpeta de .project-card, en horizontal: captura y texto lado a lado. */
-.case-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(56px, 7vw, 88px); }
+   Misma .work-card, sin pila: una bajo otra, con problema, reto y resultado. */
+.case-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(24px, 4vw, 40px); }
+.case-list .work-card { min-height: 0; }
 .more-title { font-size: var(--text-2xl); margin-bottom: 24px; }
 .case-points { display: grid; gap: 4px; margin: 0; }
-.case-points dt { font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.75; }
-.case-points dd { margin-bottom: 10px; }
+.case-points dt { opacity: 0.75; }
+.case-points dd { margin-bottom: 12px; }
 .case-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-.case-tags li { padding: 4px 12px; border: 1.5px solid currentColor; border-radius: var(--radius-pill); font-size: 0.8125rem; font-weight: 600; }
+.case-tags li { padding: 4px 12px; border: 1.5px solid currentColor; border-radius: var(--radius-pill); font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; }
 @media (min-width: 861px) {
-  .project-card.is-case { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; }
-  .project-card.is-case .project-cover { margin: 18px; }
-  .project-card.is-case .project-body { padding: 24px 28px 28px 8px; }
-  .project-card.is-case .project-title { font-size: var(--text-2xl); }
   /* Uno si y uno no, la captura pasa a la derecha. */
-  .project-card.is-case:nth-child(even) .project-cover { order: 2; }
-  .project-card.is-case:nth-child(even) .project-body { padding: 24px 8px 28px 28px; }
+  .case-list .work-card:nth-child(even) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  .case-list .work-card:nth-child(even) .work-media { order: 2; }
+  .case-list .work-media { min-height: 420px; }
 }
 
 /* ---------- 16. Servicios (services.html) ---------- */
@@ -622,9 +651,17 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--kami); color: v
 .site-header { view-transition-name: site-header; }
 ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.25s; }
 
+/* ---------- 21. CV en linea (cv.html) ---------- */
+.cv-bar { display: flex; justify-content: flex-end; margin-bottom: 16px; }
+.cv-frame { display: block; width: 100%; height: min(86vh, 1100px); min-height: 520px; border: 2px solid var(--edge); border-radius: 24px; background: var(--stone); }
+.cv-fallback { margin-top: 16px; font-size: var(--text-sm); }
+.cv-section { padding-bottom: var(--space-section); }
+
 /* ---------- 14. Movimiento reducido ---------- */
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
   html { scroll-behavior: auto; }
+  .marquee-track { animation: none; }
+  .work-card, .hero-name > span, .hero-art, .hero-copy, .page-head h1, .page-head .lead { scale: none; translate: none; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }

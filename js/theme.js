@@ -7,9 +7,9 @@
   const root = document.documentElement;
   root.classList.add("js");
 
-  // IDIOMA: el que eligio el visitante; si es su primera visita, el de su navegador.
+  // IDIOMA: el ingles es la base. Solo se usa espanol si el visitante lo eligio antes.
   // En espanol la pagina se oculta un instante hasta que site.js traduce los textos.
-  let lang = (navigator.language || "").toLowerCase().startsWith("es") ? "es" : "en";
+  let lang = "en";
   try {
     const saved = localStorage.getItem("jair-portfolio-lang");
     if (saved === "es" || saved === "en") lang = saved;
