@@ -77,7 +77,7 @@ window.I18N = {
     "Now": "Ahora",
     "Updated <time datetime=\"2026-10\">October 2026</time>": "Actualizado <time datetime=\"2026-10\">octubre 2026</time>",
     "Learning Data Structures at Universidad Tecnológica de Panamá": "Aprendiendo Estructuras de Datos en la Universidad Tecnológica de Panamá",
-    "Teaching HTML &amp; CSS and Python at Centro ¡Supérate!": "Enseñando HTML &amp; CSS y Python en el Centro ¡Supérate!",
+    "Teaching HTML &amp; CSS, Python and Excel at Centro ¡Supérate!": "Enseñando HTML &amp; CSS, Python y Excel en el Centro ¡Supérate!",
     "Need an invitation, a landing page or a full site?": "¿Necesitas una invitación, una landing page o un sitio completo?",
     "Tell me what you have in mind and who it is for. I answer by email.": "Cuéntame qué tienes en mente y para quién es. Te respondo por correo o WhatsApp.",
     "Write to me": "Escríbeme",

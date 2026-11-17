@@ -5,9 +5,11 @@
   "description": "Portafolio personal de Jair M. Morales Magallon. Sitio estatico: HTML, CSS y JavaScript.",
   "scripts": {
     "start": "npx --yes serve . -l 4173",
-    "vendor": "node scripts/copy-vendor.mjs"
+    "vendor": "node scripts/copy-vendor.mjs",
+    "build:quill": "npx --yes esbuild@0.28.2 src/quill3d.js --bundle --minify --format=iife --outfile=js/quill3d.js"
   },
   "dependencies": {
-    "motion": "^14.1.0"
+    "motion": "^14.1.0",
+    "three": "^0.187.0"
   }
 }

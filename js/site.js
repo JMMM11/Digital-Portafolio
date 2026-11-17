@@ -383,14 +383,62 @@
     root.classList.remove("intro-pending");
   }
 
-  // Nombre del inicio: cada letra sube desde una mascara, una tras otra.
+  // Pluma de ave dibujada con codigo (SVG), color chocolate. La punta (la plumilla) queda en (9, 358).
+  // Las barbas salen del raquis con un generador de numeros fijo: siempre sale la misma pluma.
+  const QUILL = { w: 170, h: 362, tipX: 9, tipY: 358 };
+  function quillSvg() {
+    let seed = 11;
+    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const P0 = [46, 238], P1 = [66, 118], P2 = [144, 8]; // Curva del raquis (el eje central).
+    const at = (t) => { const u = 1 - t; return [0, 1].map((k) => u * u * P0[k] + 2 * u * t * P1[k] + t * t * P2[k]); };
+    const tangent = (t) => {
+      const u = 1 - t;
+      const d = [0, 1].map((k) => 2 * u * (P1[k] - P0[k]) + 2 * t * (P2[k] - P1[k]));
+      const len = Math.hypot(d[0], d[1]);
+      return [d[0] / len, d[1] / len];
+    };
+    const N = 52, upper = [], lower = [];
+    let barbs = "";
+    for (let i = 0; i <= N; i++) {
+      const t = i / N, [x, y] = at(t), [tx, ty] = tangent(t), nx = ty, ny = -tx; // n: lado de arriba a la izquierda
+      const shape = Math.sin(Math.PI * Math.pow(t, 0.7));
+      const wa = 2 + 41 * shape * (0.88 + rnd() * 0.24), wb = 2 + 33 * shape * (0.88 + rnd() * 0.24);
+      upper.push([x + nx * wa, y + ny * wa]);
+      lower.push([x - nx * wb, y - ny * wb]);
+      if (i > 1 && i < N) {
+        [[1, wa], [-1, wb]].forEach(([side, w]) => {
+          // Cada barba sale inclinada hacia la punta.
+          const bx = x + (side * nx * 0.92 + tx * 0.62) * w, by = y + (side * ny * 0.92 + ty * 0.62) * w;
+          const dark = rnd() > 0.45;
+          barbs += `<path d="M${x.toFixed(1)} ${y.toFixed(1)}L${bx.toFixed(1)} ${by.toFixed(1)}" stroke="${dark ? "#26110a" : "#a2674a"}" stroke-opacity="${dark ? 0.38 : 0.26}" stroke-width="0.9"/>`;
+        });
+      }
+    }
+    const outline = [...upper, ...lower.reverse()].map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`).join("") + "Z";
+    const rachis = `M${P0[0]} ${P0[1]}Q${P1[0]} ${P1[1]} ${P2[0]} ${P2[1]}`;
+    return `<svg viewBox="0 0 ${QUILL.w} ${QUILL.h}" width="${QUILL.w}" height="${QUILL.h}" aria-hidden="true">
+      <defs><linearGradient id="quill-vane" x1="0" y1="1" x2="1" y2="0">
+        <stop offset="0" stop-color="#3b1f14"/><stop offset="0.5" stop-color="#6b3b26"/><stop offset="1" stop-color="#4a2818"/>
+      </linearGradient></defs>
+      <path d="M10 352L${P0[0]} ${P0[1]}" stroke="#b48a74" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+      <path d="M18 322L25 298" stroke="#b5642b" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <path d="${outline}" fill="url(#quill-vane)"/>
+      ${barbs}
+      <path d="${rachis}" stroke="#d2ac99" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      <path d="M4 338L15 341L9 358Z" fill="#aab0b4"/><path d="M7.5 351L10.5 351.5L9 358Z" fill="#1c1210"/>
+    </svg>`;
+  }
+
+  // Nombre del inicio: se escribe letra a letra. Cada letra se descubre de izquierda a derecha
+  // (clip-path) y la punta de la pluma sigue el borde de la tinta, con un temblor de mano.
   // aria-label conserva el nombre completo para lectores de pantalla.
-  function splitName() {
+  async function splitName() {
     const name = document.querySelector(".hero-name");
     if (!name || !canAnimate()) return;
     name.setAttribute("aria-label", name.textContent.replace(/\s+/g, " ").trim());
     name.dataset.noI18n = "";
-    [...name.children].forEach((line) => {
+    const lines = [...name.children];
+    lines.forEach((line) => {
       const words = line.textContent.trim().split(" ");
       line.setAttribute("aria-hidden", "true");
       line.replaceChildren(...words.flatMap((word, i) => {
@@ -400,10 +448,109 @@
       }));
     });
     const chars = [...name.querySelectorAll(".ch")];
-    chars.forEach((char) => { char.style.transform = "translateY(112%)"; });
+    const HIDDEN = "inset(-25% 100% -25% -15%)";
+    chars.forEach((char) => { char.style.clipPath = HIDDEN; });
     name.style.opacity = "1"; // Gana a .intro-pending: las letras ya estan escondidas.
-    M.animate(chars, { y: ["112%", "0%"] }, { delay: M.stagger(0.035, { startDelay: 0.15 }), duration: 0.95, ease: EASE_OUT })
-      .then(() => { name.style.opacity = ""; });
+    await (document.fonts?.ready ?? Promise.resolve()); // Las medidas dependen de la fuente final.
+
+    const stage = name.parentElement; // .wrap: la pluma se posiciona dentro de el.
+    const stageBox = stage.getBoundingClientRect();
+    const fontSize = parseFloat(getComputedStyle(name).fontSize);
+    const speed = fontSize * 3.4; // px de tinta por segundo.
+    // Pluma 3D (js/quill3d.js, three.js) sobre un canvas que cubre el nombre y el aire de arriba.
+    // Si WebGL o el archivo no estan, se usa la pluma SVG dibujada arriba.
+    const nameBox = name.getBoundingClientRect();
+    const reach = fontSize * 2.1; // largo de la pluma en px
+    const canvasLeft = nameBox.left - stageBox.left - fontSize * 0.8;
+    const canvasTop = nameBox.top - stageBox.top - reach * 1.3;
+    const feather = window.QuillFeather?.create({
+      length: reach,
+      width: Math.round(nameBox.width + fontSize * 3.2),
+      height: Math.round(nameBox.height + reach * 1.3 + fontSize * 0.4)
+    }) ?? null;
+    let quill, ax = 0, ay = 0;
+    if (feather) {
+      quill = feather.canvas;
+      quill.classList.add("quill", "quill-3d");
+      quill.setAttribute("aria-hidden", "true");
+      quill.style.left = `${canvasLeft}px`;
+      quill.style.top = `${canvasTop}px`;
+    } else {
+      const k = (fontSize * 2.0) / QUILL.h; // La pluma crece con el nombre.
+      quill = element("span", "quill");
+      quill.innerHTML = quillSvg(); // SVG propio, sin datos externos.
+      const svg = quill.firstElementChild;
+      svg.setAttribute("width", String(QUILL.w * k));
+      svg.setAttribute("height", String(QUILL.h * k));
+      ax = QUILL.tipX * k;
+      ay = QUILL.tipY * k;
+      quill.style.transformOrigin = `${ax}px ${ay}px`;
+    }
+    stage.append(quill);
+
+    // Tiempos: cada letra dura segun su ancho; hay pausa entre palabras y un viaje entre lineas.
+    let clock = 0.25, prevWord = null, prevLine = -1;
+    const marks = chars.map((char) => {
+      const box = char.getBoundingClientRect();
+      const word = char.parentElement, line = lines.indexOf(word.parentElement);
+      if (prevLine !== -1 && line !== prevLine) clock += 0.55;
+      else if (prevWord && word !== prevWord) clock += 0.14;
+      const mark = {
+        char, x: box.left - stageBox.left, w: box.width, base: box.top - stageBox.top + box.height * 0.8,
+        start: clock, end: clock + Math.max(0.05, box.width / speed), line
+      };
+      clock = mark.end; prevWord = word; prevLine = line;
+      return mark;
+    });
+    const first = marks[0], last = marks[marks.length - 1];
+    const t0 = performance.now();
+    let fading = false;
+    const place = (x, y, lift, now) => {
+      const rot = -4 + Math.sin(now * 11) * 2.2 - lift * 0.12;
+      if (feather) {
+        feather.setPose(x - canvasLeft, y - lift - canvasTop, rot, now);
+        feather.render();
+      } else {
+        quill.style.transform = `translate(${x - ax}px, ${y - lift - ay}px) rotate(${rot}deg)`;
+      }
+    };
+    function frame() {
+      const now = (performance.now() - t0) / 1000;
+      let current = -1;
+      if (!fading) quill.style.opacity = String(Math.min(1, now / 0.2));
+      marks.forEach((mark, i) => {
+        if (mark.start <= now) current = i;
+        if (mark.done) return;
+        const p = Math.min(1, Math.max(0, (now - mark.start) / (mark.end - mark.start)));
+        if (p >= 1) { mark.char.style.clipPath = "none"; mark.done = true; }
+        else if (p > 0) mark.char.style.clipPath = `inset(-25% ${((1 - p) * 100).toFixed(1)}% -25% -15%)`;
+      });
+      if (current === -1) {
+        place(first.x, first.base, 24 * (1 - Math.min(1, now / 0.25)), now); // Baja hasta la primera letra.
+      } else {
+        const m = marks[current], next = marks[current + 1];
+        if (now <= m.end) {
+          const p = (now - m.start) / (m.end - m.start);
+          place(m.x + p * m.w, m.base + Math.sin(now * 38) * fontSize * 0.012, 0, now);
+        } else if (next) {
+          // Entre palabras o lineas la pluma se levanta y se desplaza.
+          const s = (now - m.end) / (next.start - m.end);
+          const ease = s * s * (3 - 2 * s);
+          const x = m.x + m.w + (next.x - (m.x + m.w)) * ease;
+          const y = m.base + (next.base - m.base) * ease;
+          place(x, y, Math.sin(Math.PI * s) * (next.line !== m.line ? fontSize * 0.35 : fontSize * 0.14), now);
+        } else {
+          place(last.x + last.w, last.base, 0, now);
+        }
+      }
+      if (now > last.end && !fading) {
+        fading = true;
+        name.style.opacity = "";
+        M.animate(quill, { opacity: [1, 0] }, { delay: 0.5, duration: 0.7, ease: "easeIn" }).then(() => { feather?.dispose(); quill.remove(); });
+      }
+      if (!fading || quill.isConnected) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
   }
 
   // Efectos que dependen de las tarjetas dibujadas: parallax, revelado al bajar y cinta de proyectos.
