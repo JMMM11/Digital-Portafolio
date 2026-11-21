@@ -1,0 +1,81 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Jair M. Morales Magallon | Cybersecurity student and web developer" description="Portfolio of Jair M. Morales Magallon, a cybersecurity student in Panama who builds invitations, digital gifts, informational sites and web apps." page="index" scripts={["js/projects-data.js", "js/showroom.js"]}>
+      <!-- INICIO: VITRINA. Un monitor en 3D pasa los proyectos (public/js/showroom.js; fuente en
+           src/three/showroom.js, se arma con npm run build:showroom). Detras, el nombre gigante.
+           En las esquinas, guinos de programador: un editor que escribe solo y una terminal (js/site.js). -->
+      <section class="showroom" aria-labelledby="hero-name" data-showroom>
+        <p class="showroom-name" aria-hidden="true"><span>Jair</span><span>Morales</span></p>
+        <canvas class="showroom-canvas" aria-hidden="true"></canvas>
+        <div class="wrap showroom-copy">
+          <h1 class="sr-only" id="hero-name">Jair M. Morales Magallon</h1>
+          <p class="mono-label intro-eyebrow" data-intro>Portfolio / Panama</p>
+        </div>
+        <pre class="code-card" aria-hidden="true"><code data-typing></code><i class="caret"></i></pre>
+        <p class="terminal-chip" aria-hidden="true"><span data-terminal></span><i class="caret"></i></p>
+        <p class="mono-label showroom-caption" aria-live="polite" data-showroom-caption></p>
+      </section>
+
+      <!-- PRESENTACION: que hago y como contactarme. Se entiende en menos de 10 segundos. -->
+      <section class="intro" aria-label="Introduction">
+        <div class="wrap intro-grid">
+          <p class="mono-label intro-eyebrow" data-intro>Portfolio / Panama</p>
+          <p class="intro-role" data-intro>Cybersecurity student and web developer in Panama.</p>
+          <div class="intro-side" data-intro>
+            <p class="hero-intro">I study at Universidad Tecnológica de Panamá and build websites by hand: invitations, digital gifts, informational sites and working web apps.</p>
+            <div class="hero-actions">
+              <a class="button" href="projects.html">See my projects</a>
+              <a class="link-strong" href="contact.html">Get in touch</a>
+              <a class="link-strong" href="cv.html">View CV</a>
+            </div>
+          </div>
+          <dl class="hero-facts" data-intro>
+            <dt>Studying</dt><dd>Cybersecurity, Universidad Tecnológica de Panamá</dd>
+            <dt>Teaching</dt><dd>Technology at Centro ¡Supérate! Fundación Alberto Motta, La Chorrera</dd>
+            <dt>Based in</dt><dd>Panama</dd>
+          </dl>
+        </div>
+      </section>
+
+      <!-- CINTA: los nombres de los proyectos pasan en bucle (los dibuja js/site.js desde projects-data.js). -->
+      <div class="marquee" aria-hidden="true"><div class="marquee-track" data-marquee></div></div>
+
+      <!-- PROYECTOS DESTACADOS: salen de js/projects-data.js (los que tienen featured: true). -->
+      <section class="section" aria-labelledby="work-title">
+        <div class="wrap">
+          <div class="section-head">
+            <h2 id="work-title">Recent work</h2>
+            <p>Four projects that show the range: a community alert platform, a quinceañera invitation, a site for a community initiative and an app you control with your hands.</p>
+          </div>
+          <ul class="work-list" data-projects="featured"></ul>
+          <noscript><p class="muted">The project list needs JavaScript. You can also see my work on <a href="https://github.com/JMMM11">GitHub</a>.</p></noscript>
+          <p class="more-work"><a class="link-strong" href="projects.html">See all projects</a></p>
+        </div>
+      </section>
+
+      <!-- AHORA ("Now"): lo que estoy haciendo este mes.
+           Para actualizarlo: cambia los <li>, la fecha visible y su datetime="AAAA-MM".
+           Cambia tambien las mismas lineas en js/i18n-es.js para la version en espanol. -->
+      <section class="wrap now" aria-labelledby="now-title">
+        <div class="now-head">
+          <h2 id="now-title">Now</h2>
+          <p class="now-date">Updated <time datetime="2026-10">October 2026</time></p>
+        </div>
+        <ul class="now-list">
+          <li>Learning Data Structures at Universidad Tecnológica de Panamá</li>
+          <li>Teaching HTML &amp; CSS, Python and Excel at Centro ¡Supérate!</li>
+        </ul>
+      </section>
+
+      <!-- CIERRE: llamada a contacto. -->
+      <section class="closing" aria-labelledby="closing-title">
+        <div class="wrap closing-inner">
+          <div>
+            <h2 id="closing-title">Need an invitation, a landing page or a full site?</h2>
+            <p>Tell me what you have in mind and who it is for. I answer by email.</p>
+          </div>
+          <a class="button" href="contact.html">Write to me</a>
+        </div>
+      </section>
+</Base>

@@ -1,0 +1,805 @@
+@charset "UTF-8";
+/*
+ * ESTILOS COMPARTIDOS POR TODAS LAS PAGINAS.
+ *
+ * Indice (busca el titulo con Ctrl+F):
+ *   1. Fuentes
+ *   2. Variables: colores, tipografia, espaciado
+ *   3. Base y precarga
+ *   4. Piezas comunes: contenedor, botones, enlaces
+ *   5. Cabecera y navegacion
+ *   6. Encabezado de pagina
+ *   7. Inicio: nombre en relieve, presentacion, cinta, "Now" y cierre
+ *   8. Proyectos: galeria
+ *   9. Sobre mi
+ *  10. Habilidades
+ *  11. Experiencia
+ *  12. Contacto
+ *  13. Servicios
+ *  14. CV en linea
+ *  15. Pie de pagina
+ *  16. Pantallas pequenas
+ *  17. Transicion entre paginas y movimiento reducido
+ *
+ * Idea visual "invernadero": papel crema, tinta verde bosque y un verde salvia de acento.
+ *   - Instrument Serif para titulos (peso 400, grandes); Instrument Sans para el texto.
+ *   - Lineas finas en vez de sombras. Paneles verde bosque para los momentos importantes.
+ *   - Nada pesado para el navegador: sin filtros fijos ni desenfoques detras del menu.
+ */
+
+/* ---------- 1. Fuentes (locales, en assets/fonts; licencias en assets/licenses) ---------- */
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../assets/fonts/instrument-serif-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../assets/fonts/instrument-serif-italic-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../assets/fonts/instrument-sans-variable.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- 2. Variables ---------- */
+:root {
+  /* Colores */
+  --bg: #f4f0e6;          /* papel crema */
+  --raised: #ebe5d5;      /* paneles */
+  --raised-2: #faf8f2;    /* campos y tarjetas claras */
+  --text: #17261c;        /* tinta verde casi negra */
+  --muted: #5a6a5e;       /* texto secundario */
+  --line: rgb(23 38 28 / 0.12);         /* separadores finos */
+  --line-strong: rgb(23 38 28 / 0.26);  /* bordes de botones y campos */
+  --accent: #2e5e43;      /* verde bosque: accion principal y pagina activa */
+  --sage: #9dbaa4;        /* verde salvia: detalles y resplandores */
+  --sage-soft: #d3e0cf;   /* salvia claro: paneles destacados */
+  --deep: #1c3326;        /* verde profundo: cierre, proceso y pie */
+  --on-deep: #f1ecdf;     /* texto sobre verde profundo */
+  --focus: #2e5e43;
+
+  /* Tipografia */
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --font-code: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace; /* guinos de programador */
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: clamp(1.5rem, 1.3rem + 0.6vw, 1.875rem);
+  --text-2xl: clamp(2rem, 1.5rem + 1.8vw, 3rem);
+  --text-3xl: clamp(2.75rem, 1.6rem + 4.2vw, 5rem);
+  --tracking-display: -0.02em;
+
+  /* Espaciado y medidas (escala de 8px) */
+  --gutter: clamp(16px, 5vw, 48px);
+  --wrap: 1240px;
+  --space-section: clamp(72px, 10vw, 128px);
+  --radius-sm: 10px;
+  --radius: 22px;
+  --radius-pill: 999px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  color-scheme: light;
+}
+
+/* ---------- 3. Base y precarga ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; background: var(--bg); }
+/* Con el scroll suave (Lenis, js/vendor/lenis.min.js) el navegador no debe suavizar por su cuenta. */
+html.lenis, html.lenis body { height: auto; scroll-behavior: auto; }
+.lenis.lenis-stopped { overflow: clip; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip; /* clip, no hidden: hidden rompe la cabecera al abrir el menu movil */
+}
+
+/* PRECARGA: cortina crema con el nombre y una linea que se llena.
+   theme.js pone "preloading" solo en la primera pagina de la visita; site.js la quita
+   cuando las fuentes y la pagina estan listas, y la cortina sube. */
+body::before {
+  content: "Jair M. Morales";
+  content: "Jair M. Morales" / "";
+  position: fixed; inset: 0; z-index: 500;
+  display: grid; place-items: center;
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-display); font-size: clamp(2.75rem, 9vw, 6rem); line-height: 1; letter-spacing: -0.02em;
+  transform: translateY(-101%);
+  transition: transform 0.9s var(--ease-in-out);
+  pointer-events: none;
+}
+body::after {
+  content: "";
+  position: fixed; z-index: 501; left: 50%; top: calc(50% + clamp(2.5rem, 6vw, 4rem)); width: 180px; height: 1px; margin-left: -90px;
+  background: var(--accent);
+  transform: scaleX(0); transform-origin: left center;
+  opacity: 0; transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+html.preloading body::before { transform: none; }
+html.preloading body::after { opacity: 1; animation: preload-line 1.4s var(--ease-out) forwards; }
+@keyframes preload-line { to { transform: scaleX(1); } }
+
+h1, h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--tracking-display);
+  text-wrap: balance;
+}
+h3, h4 { margin: 0; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+ul, ol, dl, dd, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+img, svg, canvas { display: block; max-width: 100%; }
+img { height: auto; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+::selection { background: var(--sage); color: var(--text); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: absolute; left: var(--gutter); top: 0; z-index: 600;
+  padding: 10px 16px; border-radius: var(--radius-pill); background: var(--accent); color: var(--on-deep);
+  transform: translateY(-120%);
+}
+.skip-link:focus { transform: translateY(12px); }
+
+/* Entrada: site.js anima los [data-intro]. Solo se ocultan mientras "intro-pending" existe. */
+.intro-pending [data-intro] { opacity: 0; }
+/* Espanol: la pagina espera a que site.js traduzca, para no mostrar el ingles un instante. */
+.i18n-pending body { visibility: hidden; }
+
+/* ---------- 4. Piezas comunes ---------- */
+.wrap { width: min(100% - 2 * var(--gutter), var(--wrap)); margin-inline: auto; }
+.section { padding-block: var(--space-section); }
+.section-tight { padding-block: calc(var(--space-section) * 0.55); }
+.lead { font-size: var(--text-lg); line-height: 1.5; max-width: 34em; }
+.measure { max-width: 38em; }
+.muted { color: var(--muted); }
+
+body { counter-reset: section; }
+.section-head {
+  counter-increment: section;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px 48px; align-items: end;
+  margin-bottom: clamp(36px, 5vw, 64px); padding-top: 20px; border-top: 1px solid var(--line-strong);
+}
+.section-head h2 { font-size: var(--text-3xl); }
+.section-head::before { content: "// " counter(section, decimal-leading-zero); grid-column: 1 / -1; font: 500 0.8125rem/1 var(--font-code); color: var(--accent); }
+.section-head p { color: var(--muted); max-width: 32em; justify-self: end; }
+
+/* Etiqueta: Instrument Sans en mayusculas, pequena y espaciada. */
+.mono-label {
+  font-family: var(--font-body); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.35;
+}
+
+/* Boton principal: pastilla verde bosque con flecha. */
+.button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 50px; padding: 12px 26px;
+  background: var(--accent); color: var(--on-deep);
+  border: 1px solid var(--accent);
+  font-family: var(--font-body); font-weight: 600; font-size: 1rem;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out), color 0.3s var(--ease-out), transform 0.15s ease;
+}
+.button::after { content: "\2192"; transition: transform 0.35s var(--ease-out); }
+.button:hover { background: var(--deep); border-color: var(--deep); }
+.button:hover::after { transform: translateX(4px); }
+.button:active { transform: scale(0.97); }
+.button:focus-visible { outline-offset: 4px; }
+
+/* Enlace de texto: subrayado fino que se vuelve verde al pasar el cursor. */
+.link-strong {
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+  transition: text-decoration-color 0.2s ease, color 0.2s ease;
+}
+.link-strong:hover { text-decoration-color: var(--accent); color: var(--accent); }
+.prose a { color: var(--accent); text-underline-offset: 3px; }
+
+/* ---------- 5. Cabecera y navegacion ---------- */
+.site-header { position: relative; z-index: 50; padding-block: 14px; }
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  min-height: 60px;
+}
+.brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-size: 1.5rem; letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.bird { width: 40px; height: auto; flex: none; color: var(--accent); transition: transform 0.3s ease; }
+.brand:hover .bird { transform: translateY(-3px) rotate(-4deg); }
+.bird path { fill: none; stroke: currentColor; stroke-width: 30; stroke-linecap: round; stroke-linejoin: round; }
+
+/* El menu va dentro de una capsula con borde fino. */
+.nav-list {
+  position: relative; display: flex; align-items: center;
+  padding: 4px; border: 1px solid var(--line); border-radius: var(--radius-pill);
+  background: var(--raised-2);
+}
+.nav-link {
+  position: relative; z-index: 1;
+  display: block; padding: 8px 15px;
+  font-weight: 500; font-size: 0.9375rem; color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.nav-link:hover { color: var(--text); }
+/* Pestana deslizante (la crea site.js). Rectangulo base de 100px que se escala. */
+.nav-tab {
+  position: absolute; left: 0; top: 4px; z-index: 0;
+  width: 100px; height: calc(100% - 8px);
+  background: var(--accent);
+  /* Radio eliptico: la pestana se escala en horizontal y asi sigue viendose como pastilla. */
+  border-radius: 20px / 50%;
+  transform-origin: left center;
+  opacity: 0;
+  pointer-events: none;
+}
+.nav-link.is-tabbed { color: var(--on-deep); }
+/* Sin JavaScript no hay pestana: el enlace activo lleva el color el mismo. */
+html:not(.js) .nav-link[aria-current="page"] { background: var(--accent); color: var(--on-deep); border-radius: var(--radius-pill); }
+
+.header-tools { display: flex; align-items: center; gap: 8px; }
+.lang-toggle, .menu-toggle {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  width: 44px; height: 44px; padding: 0;
+  background: var(--raised-2); border: 1px solid var(--line); border-radius: var(--radius-pill);
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+.lang-toggle:hover, .menu-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.lang-toggle:active, .menu-toggle:active { transform: scale(0.95); }
+.lang-toggle { font-weight: 600; font-size: 0.75rem; letter-spacing: 0.08em; }
+.menu-toggle { display: none; padding: 0; }
+.menu-toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.menu-toggle-bars { position: relative; width: 16px; height: 10px; }
+.menu-toggle-bars::before, .menu-toggle-bars::after {
+  content: ""; position: absolute; left: 0; width: 100%; height: 1.5px; background: currentColor;
+  transition: transform 0.22s ease;
+}
+.menu-toggle-bars::before { top: 0; }
+.menu-toggle-bars::after { bottom: 0; }
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars::before { transform: translateY(4px) rotate(45deg); }
+.menu-toggle[aria-expanded="true"] .menu-toggle-bars::after { transform: translateY(-4px) rotate(-45deg); }
+
+/* Con siete enlaces (y los textos en espanol, mas largos) el menu completo necesita unos 1120 px. */
+@media (max-width: 1119px) {
+  html.js .menu-toggle { display: inline-flex; }
+  html.js .nav {
+    /* Debajo de la cabecera y tan alto como la pantalla. */
+    position: absolute; top: 100%; left: 0; right: 0; height: 100dvh; z-index: 40;
+    display: none;
+    padding: 16px var(--gutter) 40px;
+    background: var(--bg);
+    overflow-y: auto;
+  }
+  html.js .nav.is-open { display: block; }
+  html.js .nav-list { flex-direction: column; align-items: stretch; padding: 0; border: 0; border-radius: 0; background: none; }
+  html.js .nav-tab { display: none; }
+  html.js .nav-link {
+    padding: 12px 0 12px 24px;
+    font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 8vw, 2.75rem); line-height: 1.1; letter-spacing: -0.02em;
+    border-bottom: 1px solid var(--line);
+    color: var(--text);
+  }
+  /* En movil la pagina activa se marca con un punto verde a la izquierda. */
+  html.js .nav-link[aria-current="page"] { color: var(--accent); font-style: italic; }
+  html.js .nav-link[aria-current="page"]::before {
+    content: ""; position: absolute; left: 0; top: 50%; width: 10px; height: 10px; margin-top: -5px;
+    border-radius: 50%; background: var(--accent);
+  }
+  html.menu-open { overflow: hidden; }
+  /* Sin JavaScript: los enlaces quedan visibles en una fila que se desplaza. */
+  html:not(.js) .header-inner { flex-wrap: wrap; }
+  html:not(.js) .nav { order: 3; width: 100%; overflow-x: auto; }
+}
+
+/* ---------- 6. Encabezado de pagina (todas menos Inicio) ---------- */
+.page-head {
+  position: relative;
+  padding-block: clamp(56px, 9vw, 140px) clamp(36px, 5vw, 64px);
+}
+/* Un brillo salvia suave arriba a la derecha. */
+.page-head::before {
+  content: ""; position: absolute; z-index: -1; top: -40%; right: -10%; width: min(70vw, 820px); aspect-ratio: 1;
+  background: radial-gradient(closest-side, rgb(157 186 164 / 0.45), transparent);
+  pointer-events: none;
+}
+.page-head h1 { font-size: clamp(3.25rem, 1.2rem + 7.5vw, 8rem); line-height: 0.95; max-width: 11em; }
+.page-head .lead { margin-top: 28px; color: var(--muted); }
+/* Al bajar, el titulo se achica un poco (--hp lo escribe site.js). */
+.page-head h1 { scale: calc(1 - var(--hp, 0) * 0.16); transform-origin: left top; }
+/* Titulo en agua: el canvas dibuja el texto bajo las olas encima del h1, que queda transparente y quieto. */
+.title-water { position: absolute; z-index: 1; pointer-events: none; }
+.page-head.has-water h1 { color: transparent; scale: none; }
+/* Ruta de terminal sobre el titulo: ~/jair/about */
+.crumb { position: relative; z-index: 2; margin-bottom: 18px; font: 500 0.8125rem/1.3 var(--font-code); color: var(--accent); }
+.crumb::before { content: "$ cd "; color: var(--muted); }
+.crumb::after { content: ""; display: inline-block; width: 0.55em; height: 1.05em; margin-left: 4px; vertical-align: text-bottom; background: var(--accent); animation: caret 1s steps(1) infinite; }
+/* projects.html: titulo a la izquierda y la terminal con el listado a la derecha. */
+.page-head-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px clamp(32px, 5vw, 72px); align-items: end; }
+.ls-window {
+  align-self: center; padding: 0 0 18px; overflow: hidden;
+  background: var(--deep); color: var(--on-deep); border-radius: 14px;
+  font: 500 0.8125rem/1.7 var(--font-code);
+  box-shadow: 0 30px 60px -36px rgb(23 38 28 / 0.7);
+}
+.ls-bar { display: flex; align-items: center; gap: 7px; padding: 12px 16px; margin-bottom: 12px; background: rgb(241 236 223 / 0.06); color: rgb(241 236 223 / 0.55); font-size: 0.75rem; }
+.ls-bar i { width: 10px; height: 10px; border-radius: 50%; background: #e96b5f; }
+.ls-bar i:nth-child(2) { background: #e9b94f; }
+.ls-bar i:nth-child(3) { background: #62b867; }
+.ls-bar span { margin-left: auto; }
+.ls-cmd { padding-inline: 18px; color: var(--sage); }
+.ls-list { padding-inline: 18px; }
+.ls-row { display: grid; grid-template-columns: auto auto auto minmax(0, 1fr); gap: 14px; white-space: nowrap; }
+.ls-perm, .ls-size { color: rgb(241 236 223 / 0.45); }
+.ls-name { color: #e4c98f; text-decoration: none; }
+.ls-name:hover { text-decoration: underline; text-underline-offset: 3px; }
+.ls-comment { overflow: hidden; text-overflow: ellipsis; color: rgb(241 236 223 / 0.45); }
+.ls-window :focus-visible { outline-color: var(--sage); }
+@media (max-width: 960px) { .page-head-split { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 520px) { .ls-perm { display: none; } .ls-row { grid-template-columns: auto auto minmax(0, 1fr); } }
+/* 404: una terminal que no encuentra el archivo. */
+.terminal-404 { margin-top: 36px; padding: 20px 22px; max-width: 34rem; background: var(--deep); color: var(--on-deep); border-radius: 14px; font: 500 0.875rem/1.8 var(--font-code); }
+.t-prompt { color: var(--sage); }
+.t-error { color: #e09a87; }
+.t-links { display: flex; gap: 18px; }
+.t-links a { color: #e4c98f; }
+.page-head .lead { translate: 0 calc(var(--hp, 0) * 30px); }
+
+/* ---------- 7. Inicio ---------- */
+/* Presentacion bajo el nombre: rejilla de 12 columnas. */
+.intro { padding-block: clamp(56px, 8vw, 112px) var(--space-section); }
+.intro-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 28px 24px; align-items: start; }
+.intro-eyebrow { grid-column: 1 / -1; color: var(--accent); display: flex; align-items: center; gap: 12px; }
+.intro-eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.intro-role { grid-column: 1 / span 7; font-family: var(--font-display); font-size: var(--text-3xl); line-height: 1; letter-spacing: var(--tracking-display); }
+.intro-side { grid-column: 9 / -1; display: grid; gap: 32px; padding-top: 10px; }
+.hero-intro { color: var(--muted); font-size: var(--text-lg); line-height: 1.5; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+.hero-facts {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 24px;
+  margin-top: clamp(24px, 4vw, 56px); border-top: 1px solid var(--line-strong);
+}
+.hero-facts dt { grid-row: 1; padding-top: 18px; color: var(--muted); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.hero-facts dd { grid-row: 2; padding-top: 6px; font-weight: 500; }
+
+/* Cinta de proyectos: sus nombres pasan en bucle. site.js repite la lista dos veces.
+   Uno en tinta y otro en cursiva verde. */
+.marquee { overflow: hidden; padding-block: clamp(14px, 2vw, 22px); border-block: 1px solid var(--line-strong); }
+.marquee-track { display: flex; width: max-content; align-items: center; gap: clamp(24px, 3vw, 48px); padding-right: clamp(24px, 3vw, 48px); animation: marquee 42s linear infinite; }
+.marquee-track:empty { display: none; }
+.marquee-track span { font-family: var(--font-display); font-size: clamp(2.75rem, 1rem + 5.5vw, 6rem); line-height: 1.1; white-space: nowrap; letter-spacing: -0.02em; }
+.marquee-track span:nth-of-type(even) { font-style: italic; color: var(--accent); }
+.marquee-track i { font-style: normal; color: var(--sage); font-size: 1.25rem; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* "Now": panel salvia con un punto que respira. */
+.now {
+  position: relative;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 16px 48px; align-items: start;
+  margin-bottom: var(--space-section); padding: clamp(28px, 4vw, 48px);
+  background: var(--sage-soft); border-radius: var(--radius);
+}
+.now h2 { display: flex; align-items: center; gap: 14px; font-size: var(--text-2xl); }
+.now h2::before { content: ""; flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 rgb(46 94 67 / 0.5); animation: breathe 2.4s ease-out infinite; }
+@keyframes breathe { 70% { box-shadow: 0 0 0 12px rgb(46 94 67 / 0); } 100% { box-shadow: 0 0 0 0 rgb(46 94 67 / 0); } }
+.now-date { margin-top: 10px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.now-list { display: grid; gap: 14px; font-size: var(--text-lg); }
+.now-list li { padding-bottom: 14px; border-bottom: 1px solid var(--line-strong); }
+.now-list li:last-child { padding-bottom: 0; border-bottom: 0; }
+
+/* Cierre: panel verde profundo con un brillo salvia. */
+.closing {
+  width: min(100% - 2 * var(--gutter), var(--wrap)); margin: 0 auto var(--space-section);
+  background: radial-gradient(120% 140% at 85% 0%, rgb(157 186 164 / 0.35), transparent 55%), var(--deep);
+  color: var(--on-deep);
+  border-radius: calc(var(--radius) * 1.5);
+}
+.closing-inner {
+  display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 32px;
+  width: auto; padding: clamp(40px, 7vw, 88px);
+}
+.closing h2 { font-size: var(--text-3xl); max-width: 13em; }
+.closing p { margin-top: 18px; max-width: 30em; opacity: 0.8; }
+.closing .button { background: var(--on-deep); border-color: var(--on-deep); color: var(--deep); }
+.closing .button:hover { background: var(--sage); border-color: var(--sage); }
+.closing :focus-visible { outline-color: var(--sage); }
+
+/* ---------- 8. Proyectos: galeria ----------
+   Tres piezas, todas con la captura grande y parallax (.px):
+     .work-card  captura + panel. En el inicio se apilan al bajar (.work-list).
+     .tile       captura grande y texto debajo (cuadricula de projects.html).
+     .project-card  solo lo usa services.html. */
+/* Marco con parallax: la imagen es mas alta que el marco y site.js la desplaza al bajar. */
+.px { position: relative; display: block; overflow: hidden; background: var(--raised); }
+.px img { position: absolute; left: 0; top: -10%; width: 100%; height: 120%; object-fit: cover; object-position: top center; }
+.px.is-typographic { display: grid; align-items: end; padding: 24px; }
+.media-title { position: relative; font-family: var(--font-display); font-size: clamp(3rem, 8vw, 5rem); line-height: 0.9; }
+
+.work-list { display: grid; gap: clamp(20px, 3vw, 32px); }
+/* Tres tonos que se alternan: verde profundo, crema y salvia. */
+.work-card {
+  --p: 0; /* site.js: cuanto la cubre la tarjeta siguiente (0 a 1). */
+  --panel: var(--deep); --on-panel: var(--on-deep);
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  min-height: clamp(440px, 74vh, 640px);
+  background: var(--panel); color: var(--on-panel);
+  border-radius: var(--radius);
+  transform-origin: center top;
+  scale: calc(1 - var(--p) * 0.07);
+}
+.work-card.tone-1 { --panel: var(--raised); --on-panel: var(--text); }
+.work-card.tone-2 { --panel: var(--sage-soft); --on-panel: var(--text); }
+/* Al quedar cubierta, la tarjeta se oscurece. */
+.work-card::after { content: ""; position: absolute; inset: 0; background: var(--text); opacity: calc(var(--p) * 0.35); pointer-events: none; }
+.work-media { min-height: 260px; }
+.work-panel { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; padding: clamp(28px, 4vw, 52px); }
+.work-panel > .mono-label { opacity: 0.75; }
+.work-name { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.75rem, 1.2rem + 4.4vw, 5.5rem); line-height: 0.95; letter-spacing: -0.02em; }
+.work-name a { text-decoration: none; }
+.work-name a:hover { font-style: italic; }
+.work-summary { max-width: 30em; opacity: 0.8; }
+.work-panel .project-links { margin-top: auto; }
+.project-links { display: flex; flex-wrap: wrap; gap: 10px 26px; }
+/* Enlace con flecha: etiqueta en mayusculas y flecha que se adelanta al pasar el cursor. */
+.arrow-link {
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none; padding-bottom: 4px; border-bottom: 1px solid currentColor;
+}
+.arrow-link::after { content: " \2197"; display: inline-block; transition: transform 0.3s var(--ease-out); }
+.arrow-link:hover::after { transform: translate(3px, -3px); }
+.work-card :focus-visible, .tile :focus-visible { outline-color: currentColor; }
+.project-note { font-size: var(--text-sm); opacity: 0.75; }
+.work-card .px img, .tile-media img { transition: scale 0.9s var(--ease-out); }
+.work-card:hover .px img, .tile:hover .tile-media img { scale: 1.05; }
+
+@media (min-width: 861px) {
+  /* Pila: cada tarjeta se queda arriba y la siguiente sube por encima. */
+  .work-list { display: block; }
+  .work-item { position: sticky; top: 24px; margin-bottom: clamp(24px, 6vh, 56px); }
+  .work-item:last-child { margin-bottom: 0; }
+  .work-media { min-height: 0; }
+}
+
+/* Cuadricula de projects.html */
+.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: clamp(44px, 5vw, 72px) clamp(20px, 3vw, 32px); }
+.project-grid.is-wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr)); }
+.tile { display: grid; gap: 20px; align-content: start; }
+.tile-media { aspect-ratio: 4 / 3; border-radius: var(--radius); }
+.tile-body { display: grid; gap: 10px; }
+.tile-body > .mono-label { color: var(--accent); }
+.tile-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 1.4rem + 1.4vw, 2.75rem); line-height: 1; letter-spacing: -0.02em; }
+.tile-title a { text-decoration: none; background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 1px no-repeat; transition: background-size 0.45s var(--ease-out); }
+.tile:hover .tile-title a, .tile-title a:focus-visible { background-size: 100% 1px; }
+.tile-summary { color: var(--muted); }
+.tile-stack { color: var(--muted); }
+.tile .project-links { padding-top: 6px; color: var(--accent); }
+
+.filter-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-bottom: 40px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.filter {
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 44px; padding: 8px 18px;
+  background: transparent; border: 1px solid var(--line-strong); border-radius: var(--radius-pill);
+  font-weight: 500; color: var(--muted);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+.filter:hover { color: var(--text); border-color: var(--text); }
+.filter:active { transform: scale(0.97); }
+.filter[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-deep); }
+.filter-count { font-size: 0.75rem; opacity: 0.7; }
+.filter-status { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.more-work { margin-top: 56px; color: var(--muted); }
+
+/* Destacados de projects.html: misma .work-card, sin pila, con problema, reto y resultado. */
+.case-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(24px, 4vw, 40px); }
+.case-list .work-card { min-height: 0; }
+.more-title { font-size: var(--text-2xl); margin-bottom: 28px; padding-top: 20px; border-top: 1px solid var(--line-strong); }
+.case-points { display: grid; gap: 4px; margin: 0; }
+.case-points dt { opacity: 0.7; }
+.case-points dd { margin-bottom: 14px; opacity: 0.9; }
+.case-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.case-tags li { padding: 5px 12px; border: 1px solid currentColor; border-radius: var(--radius-pill); font-size: 0.75rem; font-weight: 500; opacity: 0.85; }
+@media (min-width: 861px) {
+  /* Uno si y uno no, la captura pasa a la derecha. */
+  .case-list .work-card:nth-child(even) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
+  .case-list .work-card:nth-child(even) .work-media { order: 2; }
+  .case-list .work-media { min-height: 440px; }
+}
+
+/* Vitrina (projects.html): nombre gigante detras, monitor 3D delante, guinos de programador en las esquinas. */
+.showroom { position: relative; height: calc(100svh - 88px); min-height: 620px; max-height: 1000px; overflow: hidden; }
+.showroom-name {
+  position: absolute; inset: 0; z-index: 0; margin: 0;
+  display: grid; place-content: center; text-align: center;
+  font-family: var(--font-display); font-size: min(25vw, 36vh); line-height: 0.8; letter-spacing: -0.03em; white-space: nowrap;
+  /* Las letras salen de la tinta verde y se funden con el papel. */
+  background: linear-gradient(180deg, #1c3326 0%, #5d7c66 40%, #c5d4c2 72%, rgb(244 240 230 / 0.4) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  pointer-events: none; user-select: none;
+}
+.showroom-name span { display: block; }
+.showroom-name span + span { font-style: italic; }
+.showroom-canvas, .showroom-fallback { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; }
+.showroom-fallback { object-fit: contain; padding: 12% 18%; }
+.showroom-copy { position: absolute; left: 0; right: 0; top: clamp(12px, 3vh, 32px); z-index: 2; pointer-events: none; }
+.showroom-copy h1 { font-size: clamp(2.5rem, 1.4rem + 3vw, 4.25rem); }
+.showroom-copy .lead { margin-top: 10px; max-width: 22em; font-size: var(--text-base); color: var(--muted); }
+/* Editor de codigo que escribe solo. */
+.code-card {
+  position: absolute; left: var(--gutter); bottom: clamp(20px, 5vh, 48px); z-index: 2; margin: 0;
+  width: min(390px, 38vw); min-height: 15.5em; padding: 14px 18px 16px;
+  background: var(--deep); color: var(--on-deep); border-radius: 12px;
+  font: 500 13px/1.6 ui-monospace, "Cascadia Code", Consolas, monospace; white-space: pre-wrap;
+  box-shadow: 0 26px 50px -30px rgb(23 38 28 / 0.7);
+  rotate: -2deg;
+}
+.code-card::before {
+  content: ""; display: block; height: 10px; margin-bottom: 12px;
+  background:
+    radial-gradient(circle 5px at 5px 5px, #e96b5f 96%, transparent) 0 0 / 18px 10px no-repeat,
+    radial-gradient(circle 5px at 5px 5px, #e9b94f 96%, transparent) 18px 0 / 18px 10px no-repeat,
+    radial-gradient(circle 5px at 5px 5px, #62b867 96%, transparent) 36px 0 / 18px 10px no-repeat;
+}
+.code-card code { font: inherit; }
+.tk-kw { color: #9dbaa4; } .tk-fn { color: #f1ecdf; } .tk-prop { color: #8fc1dc; }
+.tk-str { color: #e4c98f; } .tk-num { color: #e09a87; } .tk-com { color: rgb(241 236 223 / 0.5); }
+.caret { display: inline-block; width: 0.55em; height: 1.1em; margin-left: 2px; vertical-align: text-bottom; background: currentColor; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+/* Terminal flotante. */
+.terminal-chip {
+  position: absolute; right: var(--gutter); top: clamp(90px, 15vh, 150px); z-index: 2; margin: 0;
+  padding: 10px 16px; border-radius: var(--radius-pill);
+  background: var(--raised-2); border: 1px solid var(--line); color: var(--accent);
+  font: 500 13px/1 ui-monospace, "Cascadia Code", Consolas, monospace; white-space: nowrap;
+  box-shadow: 0 18px 36px -26px rgb(23 38 28 / 0.6);
+  animation: drift 7s ease-in-out infinite alternate;
+}
+@keyframes drift { to { transform: translate(-16px, 12px) rotate(-1.5deg); } }
+/* Pie del monitor: que proyecto esta en pantalla. */
+.showroom-caption {
+  position: absolute; left: 50%; bottom: clamp(20px, 5vh, 48px); translate: -50% 0; z-index: 2;
+  padding: 9px 16px; border-radius: var(--radius-pill); background: var(--raised-2); border: 1px solid var(--line);
+  white-space: nowrap; color: var(--text);
+}
+.showroom-caption:empty { display: none; }
+@media (max-width: 1100px) { .showroom-caption { left: auto; right: var(--gutter); translate: none; } }
+@media (max-width: 760px) {
+  .code-card, .terminal-chip { display: none; }
+  .showroom-caption { left: 50%; right: auto; translate: -50% 0; width: max-content; max-width: calc(100% - 2 * var(--gutter)); white-space: normal; text-align: center; line-height: 1.4; }
+  .showroom-name { font-size: 31vw; }
+}
+
+/* ---------- 9. Sobre mi ---------- */
+.about-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: clamp(32px, 6vw, 112px); align-items: start; }
+.prose { display: grid; gap: 22px; max-width: 38em; }
+/* Texto justificado; los guiones evitan espacios grandes entre palabras en el celular. */
+.prose p, .timeline-description { text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
+.prose h2 { font-size: var(--text-2xl); margin-top: 36px; }
+.prose h2:first-child { margin-top: 0; }
+.about-aside { position: sticky; top: 32px; display: grid; gap: 28px; padding: clamp(24px, 3vw, 36px); background: var(--raised); border-radius: var(--radius); }
+.about-mark { width: min(100%, 260px); color: var(--accent); }
+.about-mark path { fill: none; stroke: currentColor; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.fact-list { display: grid; gap: 14px; padding-top: 24px; border-top: 1px solid var(--line-strong); font-size: var(--text-sm); }
+.fact-list dt { color: var(--muted); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.fact-list dd { font-weight: 500; }
+/* Cita propia: grande, en cursiva y con comillas salvia. */
+.motto {
+  position: relative; margin: 12px 0; padding-top: 28px;
+  font-family: var(--font-display); font-style: italic; font-size: var(--text-2xl); line-height: 1.1; letter-spacing: -0.015em;
+}
+.motto::before { content: "\201C"; position: absolute; top: -6px; left: -4px; font-size: 3.5rem; line-height: 1; color: var(--sage); }
+.principles { display: grid; gap: 14px; }
+.principles li { display: grid; grid-template-columns: 7.5em 1fr; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.principles strong { font-weight: 600; }
+.principles span { color: var(--muted); }
+
+/* ---------- 10. Habilidades ---------- */
+.skill-group {
+  display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(20px, 5vw, 80px);
+  padding-block: clamp(36px, 5vw, 64px); border-top: 1px solid var(--line-strong);
+}
+.skill-group h2 { font-size: var(--text-2xl); }
+.skill-group > div > p { margin-top: 12px; color: var(--muted); max-width: 24em; }
+.skill-list { display: grid; gap: 24px; }
+.skill-list h3 { font-size: var(--text-lg); }
+.skill-list p { margin-top: 4px; color: var(--muted); max-width: 36em; }
+.skill-list a { color: var(--accent); text-underline-offset: 3px; }
+
+/* ---------- 11. Experiencia ---------- */
+.experience-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+.experience-art { position: sticky; top: 24px; }
+.experience-art figcaption { margin-top: 12px; font-size: var(--text-sm); color: var(--muted); max-width: 30em; }
+/* Origami de experience.html en los verdes del sitio. */
+html .origami-journey { --oj-ink: #2e5e43; --oj-neutral: #17261c; --oj-logo-edge: #9dbaa4; }
+.timeline { position: relative; display: grid; gap: 56px; padding-left: 32px; }
+.timeline::before, .timeline-progress { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 1px; }
+.timeline::before { background: var(--line-strong); }
+/* site.js escala esta linea con el scroll (scaleY de 0 a 1). */
+.timeline-progress { width: 2px; left: -0.5px; background: var(--accent); transform-origin: top; }
+.timeline-group h2 { font-size: var(--text-2xl); margin-bottom: 24px; }
+.timeline-entry { position: relative; padding-bottom: 26px; }
+.timeline-entry + .timeline-entry { padding-top: 26px; border-top: 1px solid var(--line); }
+.timeline-entry h3 { font-size: var(--text-lg); }
+.timeline-date { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.timeline-place { font-weight: 500; margin-top: 2px; }
+.timeline-description { margin-top: 8px; color: var(--muted); max-width: 36em; }
+
+/* ---------- 12. Contacto ---------- */
+.contact-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 96px); align-items: start; padding-bottom: var(--space-section); }
+.contact-direct { display: grid; gap: 28px; }
+.contact-email {
+  font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em;
+  font-size: clamp(2rem, 1.2rem + 2.6vw, 3rem);
+  overflow-wrap: anywhere;
+}
+.contact-list { display: grid; gap: 14px; }
+.contact-list li { display: grid; grid-template-columns: 6em 1fr; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.contact-list span { color: var(--muted); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding-top: 3px; }
+.contact-form { display: grid; gap: 20px; padding: clamp(24px, 4vw, 40px); background: var(--raised); border-radius: var(--radius); }
+.field { display: grid; gap: 8px; }
+.field label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.field input, .field select, .field textarea {
+  width: 100%; min-height: 48px; padding: 12px 14px;
+  background: var(--raised-2); border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  transition: border-color 0.15s ease;
+}
+.field textarea { min-height: 150px; resize: vertical; }
+.field input:hover, .field select:hover, .field textarea:hover { border-color: var(--muted); }
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { outline-offset: 0; border-color: var(--accent); }
+.form-hint, .form-status { font-size: var(--text-sm); color: var(--muted); }
+.form-status { padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--line-strong); background: var(--raised-2); color: var(--text); }
+.contact-form .button { justify-self: start; }
+/* WhatsApp: mismo boton, con el verde de la marca. */
+.button-whatsapp { justify-self: start; background: #25d366; border-color: #25d366; color: #04160b; }
+.button-whatsapp:hover { background: var(--deep); border-color: var(--deep); color: var(--on-deep); }
+
+/* ---------- 13. Servicios (services.html) ---------- */
+.service-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: clamp(20px, 3vw, 28px); }
+.project-card {
+  display: flex; flex-direction: column; gap: 16px; padding: clamp(26px, 3vw, 36px);
+  background: var(--raised); border-radius: var(--radius);
+  transition: translate 0.45s var(--ease-out);
+}
+.project-card:nth-child(2) { background: var(--deep); color: var(--on-deep); }
+.project-card:nth-child(3) { background: var(--sage-soft); }
+.project-card:hover, .project-card:focus-within { translate: 0 -6px; }
+.project-tab { align-self: flex-start; padding: 5px 12px; border: 1px solid currentColor; border-radius: var(--radius-pill); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }
+.project-body { display: flex; flex-direction: column; flex: 1; gap: 14px; }
+.project-summary { opacity: 0.8; }
+.service-title { font-family: var(--font-display); font-weight: 400; font-size: var(--text-2xl); letter-spacing: -0.02em; }
+.service-list { display: grid; gap: 10px; padding-top: 4px; }
+.service-list li { position: relative; padding-left: 20px; }
+.service-list li::before { content: ""; position: absolute; left: 2px; top: 0.65em; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.6; }
+.service-time { margin-top: auto; padding-top: 12px; border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+.service-card .button { align-self: start; }
+.project-card:nth-child(2) .button { background: var(--on-deep); border-color: var(--on-deep); color: var(--deep); }
+.project-card:nth-child(2) .button:hover { background: var(--sage); border-color: var(--sage); }
+.project-card :focus-visible { outline-color: currentColor; }
+/* Proceso: panel verde profundo con los cuatro pasos. */
+.process {
+  margin-bottom: var(--space-section); padding: clamp(40px, 6vw, 80px);
+  background: var(--deep); color: var(--on-deep); border-radius: calc(var(--radius) * 1.5);
+}
+.process .section-head { border-top: 0; padding-top: 0; }
+.process .section-head p { color: inherit; opacity: 0.75; }
+.process-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(24px, 3vw, 40px); }
+.process-list li { display: grid; align-content: start; gap: 10px; padding-top: 22px; border-top: 1px solid rgb(241 236 223 / 0.25); }
+.process-list p { opacity: 0.75; }
+.process-number { font-family: var(--font-display); font-style: italic; font-size: 3rem; line-height: 0.9; color: var(--sage); }
+.process-list h3 { font-size: var(--text-xl); }
+.process :focus-visible { outline-color: var(--sage); }
+@media (max-width: 960px) { .process-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .process-list { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- 14. CV en linea (cv.html) ---------- */
+.cv-bar { display: flex; justify-content: flex-end; margin-bottom: 16px; }
+.cv-frame { display: block; width: 100%; height: min(86vh, 1100px); min-height: 520px; border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--raised); }
+.cv-fallback { margin-top: 16px; font-size: var(--text-sm); }
+.cv-section { padding-bottom: var(--space-section); }
+
+/* ---------- 15. Pie de pagina ----------
+   Verde profundo. Arriba: estado y una llamada grande. En medio: cuatro columnas con
+   encabezados como comentarios de codigo. Abajo: derechos y version. Al fondo, el nombre en fantasma. */
+.site-footer { position: relative; overflow: hidden; padding-top: clamp(64px, 9vw, 120px); background: var(--deep); color: var(--on-deep); font-size: var(--text-sm); }
+.footer-top { display: grid; gap: 22px; padding-bottom: clamp(48px, 7vw, 88px); border-bottom: 1px solid rgb(241 236 223 / 0.16); }
+.footer-status { display: flex; align-items: center; gap: 10px; font: 500 0.8125rem/1 var(--font-code); color: var(--sage); }
+.status-dot { width: 9px; height: 9px; border-radius: 50%; background: #62d18a; box-shadow: 0 0 0 0 rgb(98 209 138 / 0.6); animation: breathe-live 2.2s ease-out infinite; }
+@keyframes breathe-live { 70% { box-shadow: 0 0 0 10px rgb(98 209 138 / 0); } 100% { box-shadow: 0 0 0 0 rgb(98 209 138 / 0); } }
+.footer-cta {
+  justify-self: start; font-family: var(--font-display); font-size: clamp(3rem, 1.4rem + 7vw, 8rem); line-height: 0.92; letter-spacing: -0.03em;
+  text-decoration: none;
+}
+.footer-cta em { color: var(--sage); }
+.footer-cta::after { content: "\2192"; display: inline-block; margin-left: 0.2em; font-family: var(--font-body); font-size: 0.5em; transition: transform 0.4s var(--ease-out); }
+.footer-cta:hover::after { transform: translateX(12px); }
+.footer-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px 24px; padding-block: clamp(40px, 6vw, 64px); }
+.footer-comment { margin-bottom: 14px; font: 500 0.8125rem/1 var(--font-code); color: var(--sage); }
+.footer-col ul { display: grid; gap: 8px; }
+.footer-col a { text-decoration: none; opacity: 0.8; transition: opacity 0.2s ease; overflow-wrap: anywhere; }
+.footer-col a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+.footer-clock { display: grid; gap: 4px; }
+.footer-clock [data-clock] { font: 500 2rem/1 var(--font-code); letter-spacing: -0.02em; }
+.footer-clock span + span { opacity: 0.7; }
+.footer-build { margin-top: 14px; font: 500 0.75rem/1 var(--font-code); opacity: 0.5; }
+.footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; padding-block: 22px 28px; border-top: 1px solid rgb(241 236 223 / 0.16); opacity: 0.75; }
+.footer-meta { display: flex; gap: 24px; font-family: var(--font-code); font-size: 0.8125rem; }
+.footer-meta a { text-decoration: none; }
+.footer-meta a::after { content: " \2191"; }
+.footer-meta a:hover { text-decoration: underline; text-underline-offset: 4px; }
+/* El nombre en fantasma, cortado por el borde inferior. */
+.footer-mark {
+  margin: 0 0 -0.22em; text-align: center; white-space: nowrap; pointer-events: none; user-select: none;
+  font-family: var(--font-display); font-size: 19vw; line-height: 0.9; letter-spacing: -0.03em;
+  color: rgb(241 236 223 / 0.06);
+}
+.site-footer :focus-visible { outline-color: var(--sage); }
+@media (max-width: 860px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- 16. Pantallas pequenas ---------- */
+@media (max-width: 860px) {
+  .about-grid, .skill-group, .experience-grid, .contact-grid { grid-template-columns: minmax(0, 1fr); }
+  .section-head { grid-template-columns: minmax(0, 1fr); }
+  .section-head p { justify-self: start; }
+  .intro-role, .intro-side { grid-column: 1 / -1; }
+  .hero-facts { grid-template-columns: minmax(0, 1fr); }
+  .hero-facts dt, .hero-facts dd { grid-row: auto; }
+  .hero-facts dd { padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .work-card { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .work-media { aspect-ratio: 16 / 11; }
+  .about-aside, .experience-art { position: static; }
+  .about-mark { width: 160px; }
+  .principles li, .contact-list li { grid-template-columns: 1fr; gap: 2px; }
+  .now { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  .hero-actions .button { width: 100%; }
+}
+
+/* ---------- 17. Transicion entre paginas y movimiento reducido ----------
+   Fundido corto al navegar entre las paginas del sitio (View Transitions API).
+   La cabecera tiene nombre propio: se queda quieta mientras el contenido se funde. */
+@view-transition { navigation: auto; }
+.site-header { view-transition-name: site-header; }
+::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0.35s; animation-timing-function: var(--ease-out); }
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  html { scroll-behavior: auto; }
+  .marquee-track, .now h2::before, .terminal-chip, .caret, .crumb::after, .status-dot { animation: none; }
+  .work-card, .page-head h1, .page-head .lead { scale: none; translate: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}

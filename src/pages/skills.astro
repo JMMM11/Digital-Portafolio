@@ -1,0 +1,86 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Skills | Jair M. Morales Magallon" description="What Jair M. Morales Magallon works with: HTML, CSS, JavaScript, Python, Java, Supabase, Firebase, Power BI, Git and GitHub, grouped by use." page="skills" scripts={["js/name-water.js"]}>
+      <div class="wrap page-head">
+        <p class="crumb">~/jair/skills</p>
+        <h1 data-intro>What I work with</h1>
+        <p class="lead" data-intro>Grouped by what I use each thing for, with the project where you can see it when there is one.</p>
+      </div>
+
+      <!-- HABILIDADES: cada skill-group es un area. Para agregar una habilidad, copia un <li> completo. -->
+      <div class="wrap section-tight" data-intro>
+        <section class="skill-group" aria-labelledby="skills-web">
+          <div>
+            <h2 id="skills-web">Building for the web</h2>
+            <p>Where I spend most of my time.</p>
+          </div>
+          <ul class="skill-list">
+            <li><h3>HTML and CSS</h3><p>Semantic, responsive layouts written by hand, with shared styles and variables so a site stays easy to change. This portfolio is built this way.</p></li>
+            <li><h3>JavaScript</h3><p>Interaction and animation in the browser: guided story flows, particle systems and form handling. See <a href="projects.html">La Gran Noche and Feliz Navidad</a>.</p></li>
+            <li><h3>UX and interface design</h3><p>Planning the flow and the look of a page so it fits the person or occasion it is for.</p></li>
+          </ul>
+        </section>
+
+        <section class="skill-group" aria-labelledby="skills-languages">
+          <div>
+            <h2 id="skills-languages">Programming languages</h2>
+            <p>For logic and problem solving beyond the browser.</p>
+          </div>
+          <ul class="skill-list">
+            <li><h3>Python</h3><p>Certified with Python Essentials (PCEP) from Cisco Networking Academy and IT Specialist: Python from Certiport.</p></li>
+            <li><h3>TypeScript</h3><p>JavaScript with types, for projects that need to grow without breaking.</p></li>
+            <li><h3>Java</h3><p>Object-oriented programming.</p></li>
+          </ul>
+        </section>
+
+        <section class="skill-group" aria-labelledby="skills-data">
+          <div>
+            <h2 id="skills-data">Data and back end</h2>
+            <p>Where a site stops being static and starts remembering things.</p>
+          </div>
+          <ul class="skill-list">
+            <li><h3>Flask, FastAPI and SQLAlchemy</h3><p>Back ends and APIs written in Python, connected to databases with SQLAlchemy.</p></li>
+            <li><h3>Supabase</h3><p>Stores the RSVPs and guest messages for <a href="projects.html">La Gran Noche</a>, with the table structure written in SQL.</p></li>
+            <li><h3>Firebase</h3><p>Database and authentication for web projects.</p></li>
+            <li><h3>Databases</h3><p>Designing tables and querying them with SQL.</p></li>
+            <li><h3>Power BI</h3><p>Turning raw data into reports and dashboards.</p></li>
+          </ul>
+        </section>
+
+        <section class="skill-group" aria-labelledby="skills-tools">
+          <div>
+            <h2 id="skills-tools">Tools and workflow</h2>
+            <p>How the work gets saved, shared and published.</p>
+          </div>
+          <ul class="skill-list">
+            <li><h3>Git and GitHub</h3><p>Version control for every project. My public work is on <a href="https://github.com/JMMM11" target="_blank" rel="noopener noreferrer">GitHub</a> and deployed with GitHub Pages.</p></li>
+            <li><h3>Editors and design</h3><p>VS Code, IntelliJ IDEA and Figma.</p></li>
+            <li><h3>Office suites</h3><p>Microsoft 365 and Google Workspace. Certified in Excel (Microsoft Office Specialist).</p></li>
+          </ul>
+        </section>
+
+        <section class="skill-group" aria-labelledby="skills-people">
+          <div>
+            <h2 id="skills-people">Working with people</h2>
+            <p>What teaching and customer service have taught me.</p>
+          </div>
+          <ul class="skill-list">
+            <li><h3>Teaching</h3><p>Explaining programming to freshman, junior and senior groups at Centro ¡Supérate!.</p></li>
+            <li><h3>Communication and teamwork</h3><p>Years of customer service and team projects.</p></li>
+            <li><h3>Languages</h3><p>Spanish, native. English, upper-intermediate (B2, TOEIC).</p></li>
+          </ul>
+        </section>
+
+        <section class="skill-group" aria-labelledby="skills-security">
+          <div>
+            <h2 id="skills-security">Security</h2>
+            <p>What I am studying now.</p>
+          </div>
+          <ul class="skill-list">
+            <!-- TODO: cuando tengas cursos, laboratorios o certificaciones de seguridad, agregalos aqui. -->
+            <li><h3>Cybersecurity degree, in progress</h3><p>Universidad Tecnológica de Panamá.</p></li>
+          </ul>
+        </section>
+      </div>
+</Base>

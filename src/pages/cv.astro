@@ -1,0 +1,21 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="CV | Jair M. Morales Magallon" description="Online CV of Jair M. Morales Magallon, cybersecurity student and web developer in Panama. View it here or download the PDF." page="cv" scripts={["js/name-water.js"]}>
+      <div class="wrap page-head">
+        <p class="crumb">~/jair/cv</p>
+        <h1 data-intro>Curriculum vitae</h1>
+        <p class="lead" data-intro>My CV exactly as the PDF, here on the page. It follows the site language.</p>
+      </div>
+
+      <!-- CV EN LINEA: el PDF se muestra con el visor del navegador. site.js elige el PDF segun el idioma (data-cv).
+           Para actualizarlo, reemplaza los archivos de assets/cv/ con el mismo nombre. -->
+      <section class="wrap section-tight cv-section" aria-labelledby="cv-title" data-intro>
+        <h2 class="sr-only" id="cv-title">CV document</h2>
+        <div class="cv-bar">
+          <a class="button" href="assets/cv/Jair_Morales_CV_EN.pdf" download data-cv>Download PDF</a>
+        </div>
+        <iframe class="cv-frame" src="assets/cv/Jair_Morales_CV_EN.pdf#view=FitH" data-cv title="CV of Jair M. Morales Magallon"></iframe>
+        <p class="muted cv-fallback">If the CV does not appear on your phone, <a class="link-strong" href="assets/cv/Jair_Morales_CV_EN.pdf" data-cv>open the PDF directly</a>.</p>
+      </section>
+</Base>

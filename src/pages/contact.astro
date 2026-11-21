@@ -1,0 +1,59 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Contact | Jair M. Morales Magallon" description="Contact Jair M. Morales Magallon by email or GitHub about an invitation, a website, a web app or a job opportunity." page="contact" scripts={["js/name-water.js"]}>
+      <div class="wrap page-head">
+        <p class="crumb">~/jair/contact</p>
+        <h1 data-intro>Tell me what you need built.</h1>
+        <p class="lead" data-intro>An invitation, a gift, a site for your project or a role on your team. WhatsApp and email are the fastest ways to reach me.</p>
+      </div>
+
+      <div class="wrap contact-grid" data-intro>
+        <!-- CONTACTO DIRECTO: cambia aqui tu correo y tus enlaces.
+             El correo aparece tambien en el formulario (data-to) y en el pie de cada pagina. -->
+        <div class="contact-direct">
+          <a class="contact-email link-strong" href="mailto:jairm9010@gmail.com">jairm9010@gmail.com</a>
+          <!-- WHATSAPP: abre un chat pidiendo cotizacion. -->
+          <a class="button button-whatsapp" href="https://wa.me/50760028971?text=Hi%20Jair%2C%20I%27d%20like%20a%20quote%20for%20a%20website" target="_blank" rel="noopener noreferrer" data-wa="quote">Message me on WhatsApp</a>
+          <ul class="contact-list">
+            <li><span>GitHub</span><a class="link-strong" href="https://github.com/JMMM11" target="_blank" rel="noopener noreferrer">github.com/JMMM11</a></li>
+            <li><span>CV</span><a class="link-strong" href="cv.html">View CV</a></li>
+            <li><span>WhatsApp</span><a class="link-strong" href="https://wa.me/50760028971?text=Hola%20Jair%2C%20vi%20tu%20portafolio%20y%20quiero%20hablar%20contigo%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer">Send a message</a></li>
+            <li><span>Phone</span><a class="link-strong" href="tel:+50760028971">+507 6002-8971</a></li>
+            <li><span>Location</span><strong>La Chorrera, Panama</strong></li>
+          </ul>
+          <!-- Para agregar otra red, copia un <li> de arriba. -->
+        </div>
+
+        <!-- FORMULARIO: el sitio es estatico, asi que no envia nada a un servidor.
+             Al enviarlo, site.js abre la app de correo del visitante con el mensaje listo. -->
+        <form class="contact-form" data-contact-form data-to="jairm9010@gmail.com" aria-labelledby="form-title">
+          <h2 id="form-title">Write a message</h2>
+          <div class="field">
+            <label for="contact-name">Your name</label>
+            <input id="contact-name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="contact-email">Your email</label>
+            <input id="contact-email" name="email" type="email" autocomplete="email" spellcheck="false" required>
+          </div>
+          <div class="field">
+            <label for="contact-topic">What is it about?</label>
+            <select id="contact-topic" name="topic" required>
+              <option>Invitation or digital gift</option>
+              <option>Informational website</option>
+              <option>Web application</option>
+              <option>Job or internship opportunity</option>
+              <option>Something else</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" name="message" required></textarea>
+          </div>
+          <button class="button" type="submit">Open email draft</button>
+          <p class="form-hint">This opens your email app with the message ready to send. Nothing is stored on this site.</p>
+          <p class="form-status" role="status" data-form-status hidden>Your email app should have opened with the draft. If nothing happened, write to jairm9010@gmail.com.</p>
+        </form>
+      </div>
+</Base>

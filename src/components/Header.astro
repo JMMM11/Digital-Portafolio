@@ -1,0 +1,37 @@
+---
+/*
+ * CABECERA Y MENU. Un solo archivo para todas las paginas.
+ * current: la pagina activa ("index", "about"...); su enlace lleva aria-current="page"
+ * y la pestana verde de site.js se coloca sobre el.
+ * Para agregar una pagina al menu, agregala a la lista `links`.
+ */
+interface Props { current: string }
+const { current } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const links = [
+  ["index", "Home"], ["about", "About"], ["projects", "Projects"], ["services", "Services"],
+  ["skills", "Skills"], ["experience", "Experience"], ["contact", "Contact"]
+];
+const href = (page: string) => (page === "index" ? base : `${base}${page}.html`);
+---
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href={base} aria-label="Jair M. Morales Magallon, home">
+      <svg class="bird" viewBox="0 0 934 506" aria-hidden="true"><path d="M12 447 305 324 260 18 348 223 574 223 636 74 747 13 868 122 716 99 655 258 922 240 648 374 644 450 582 450 565 491 375 491 317 414Z"/><path d="m305 324 250 59-543 64m336-224 202 54 5 106 10 108M348 223l-43 101m269-101-24 54M747 13 582 450m73-192-7 116"/></svg>
+      <span>Jair M.</span>
+    </a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        {links.map(([page, label]) => (
+          <li><a class="nav-link" href={href(page)} aria-current={page === current ? "page" : undefined}>{label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <div class="header-tools">
+      <button class="lang-toggle" type="button" hidden><span class="lang-toggle-code">ES</span></button>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="menu-toggle-label">Menu</span><span class="menu-toggle-bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>

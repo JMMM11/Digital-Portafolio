@@ -1,0 +1,74 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Services | Jair M. Morales Magallon" description="Digital invitations with online RSVP, informational websites and personal portfolios, designed and built by Jair M. Morales Magallon in Panama." page="services" scripts={["js/name-water.js"]}>
+      <div class="wrap page-head">
+        <p class="crumb">~/jair/services</p>
+        <h1 data-intro>What I can build for you</h1>
+        <p class="lead" data-intro>Three kinds of projects I take on. Each one is designed and coded by hand, and is usually ready in about a week.</p>
+      </div>
+
+      <!-- SERVICIOS: cada article es una carpeta. Para agregar un punto, copia un <li>.
+           El boton abre WhatsApp con un mensaje pidiendo cotizacion (data-wa="quote"). -->
+      <div class="wrap service-grid section-tight" data-intro>
+        <article class="project-card service-card">
+          <span class="project-tab">Events</span>
+          <div class="project-body">
+            <h2 class="service-title">Digital invitations</h2>
+            <p class="project-summary">For weddings, quinceañeras and birthdays: an invitation your guests open on their phone and remember.</p>
+            <ul class="service-list">
+              <li>A design made for your event and its theme</li>
+              <li>Online RSVP: guests confirm from the invitation</li>
+              <li>Date, place and schedule in one link</li>
+              <li>Ready to share on WhatsApp</li>
+            </ul>
+            <p class="service-time">Typical delivery: about 1 week</p>
+            <a class="button service-button" href="https://wa.me/50760028971?text=Hi%20Jair%2C%20I%27d%20like%20a%20quote%20for%20a%20website" target="_blank" rel="noopener noreferrer" data-wa="quote">Get a quote on WhatsApp</a>
+          </div>
+        </article>
+        <article class="project-card service-card">
+          <span class="project-tab">Business</span>
+          <div class="project-body">
+            <h2 class="service-title">Informational websites</h2>
+            <p class="project-summary">For small businesses and entrepreneurs who need a clear, professional place online.</p>
+            <ul class="service-list">
+              <li>Pages for your services, story and contact</li>
+              <li>Looks and works right on phones</li>
+              <li>Contact by WhatsApp and email</li>
+              <li>Published and ready to share</li>
+            </ul>
+            <p class="service-time">Typical delivery: about 1 week</p>
+            <a class="button service-button" href="https://wa.me/50760028971?text=Hi%20Jair%2C%20I%27d%20like%20a%20quote%20for%20a%20website" target="_blank" rel="noopener noreferrer" data-wa="quote">Get a quote on WhatsApp</a>
+          </div>
+        </article>
+        <article class="project-card service-card">
+          <span class="project-tab">Personal</span>
+          <div class="project-body">
+            <h2 class="service-title">Personal portfolios</h2>
+            <p class="project-summary">For students and professionals who want to show their work and be easy to contact.</p>
+            <ul class="service-list">
+              <li>Your projects, experience and skills</li>
+              <li>A design with your own identity</li>
+              <li>Light and dark mode</li>
+              <li>Contact links and a downloadable CV</li>
+            </ul>
+            <p class="service-time">Typical delivery: about 1 week</p>
+            <a class="button service-button" href="https://wa.me/50760028971?text=Hi%20Jair%2C%20I%27d%20like%20a%20quote%20for%20a%20website" target="_blank" rel="noopener noreferrer" data-wa="quote">Get a quote on WhatsApp</a>
+          </div>
+        </article>
+      </div>
+
+      <!-- PROCESO: cuatro pasos en orden. -->
+      <section class="wrap section process" aria-labelledby="process-title">
+        <div class="section-head">
+          <h2 id="process-title">Process</h2>
+          <p>How a project goes from an idea to a link you can share.</p>
+        </div>
+        <ol class="process-list">
+          <li><span class="process-number" aria-hidden="true">01</span><h3>Idea</h3><p>We talk about what you need, who it is for and the content you already have.</p></li>
+          <li><span class="process-number" aria-hidden="true">02</span><h3>Design</h3><p>I plan the pages and the look, and you approve the direction before I code.</p></li>
+          <li><span class="process-number" aria-hidden="true">03</span><h3>Development</h3><p>I build it by hand, test it on phones and computers and adjust it with your feedback.</p></li>
+          <li><span class="process-number" aria-hidden="true">04</span><h3>Launch</h3><p>I publish it online and send you the link, ready to share.</p></li>
+        </ol>
+      </section>
+</Base>

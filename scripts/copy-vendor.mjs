@@ -1,8 +1,9 @@
-// Copia la libreria Motion desde node_modules a js/vendor/ para que el sitio
+// Copia la libreria Motion desde node_modules a public/js/vendor/ para que el sitio
 // funcione como archivos estaticos (GitHub Pages no publica node_modules).
 // Uso: npm install && npm run vendor
 import { copyFile, mkdir } from "node:fs/promises";
 
-await mkdir("js/vendor", { recursive: true });
-await copyFile("node_modules/motion/dist/motion.js", "js/vendor/motion.js");
-console.log("Motion copiado en js/vendor/motion.js");
+await mkdir("public/js/vendor", { recursive: true });
+await copyFile("node_modules/motion/dist/motion.js", "public/js/vendor/motion.js");
+await copyFile("node_modules/lenis/dist/lenis.min.js", "public/js/vendor/lenis.min.js");
+console.log("Motion y Lenis copiados en public/js/vendor/");

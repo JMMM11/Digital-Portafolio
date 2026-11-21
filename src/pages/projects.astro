@@ -1,0 +1,43 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Projects | Jair M. Morales Magallon" description="Websites built by Jair M. Morales Magallon: digital invitations and gifts, informational sites and web apps, with live demos and source code." page="projects" scripts={["js/projects-data.js", "js/name-water.js"]}>
+      <!-- ENCABEZADO DE PROYECTOS: el titulo queda bajo una lamina de agua (js/name-water.js) y una terminal
+           lista todos los proyectos (la llena js/site.js desde projects-data.js). -->
+      <div class="wrap page-head page-head-split">
+        <div>
+          <p class="crumb">~/jair/projects</p>
+          <h1 data-intro>Projects</h1>
+          <p class="lead" data-intro>Things I have built and published. Each one has a live demo, its source code, or both.</p>
+        </div>
+        <div class="ls-window" data-intro>
+          <p class="ls-bar" aria-hidden="true"><i></i><i></i><i></i><span>zsh: ~/projects</span></p>
+          <p class="ls-cmd" aria-hidden="true">$ ls -la ~/projects</p>
+          <ul class="ls-list" aria-label="All projects" data-ls></ul>
+        </div>
+      </div>
+
+      <!-- DESTACADOS: los proyectos con "spotlight" en js/projects-data.js, con problema y reto. -->
+      <section class="wrap section-tight" aria-labelledby="spotlight-title" data-intro>
+        <h2 class="sr-only" id="spotlight-title">Featured projects</h2>
+        <div class="case-list" data-spotlight></div>
+      </section>
+
+      <!-- PROYECTOS: el contenido sale de js/projects-data.js. No se edita aqui. -->
+      <section class="wrap section-tight" aria-labelledby="more-title" data-intro>
+        <h2 class="more-title" id="more-title">More projects</h2>
+        <div class="filter-bar">
+          <!-- FILTROS: data-filter debe coincidir con "category" en projects-data.js. -->
+          <div class="filters" role="group" aria-label="Filter projects by type">
+            <button class="filter" type="button" data-filter="all" aria-pressed="true"><span>All</span> <span class="filter-count"></span></button>
+            <button class="filter" type="button" data-filter="gift" aria-pressed="false"><span>Invitations and gifts</span> <span class="filter-count"></span></button>
+            <button class="filter" type="button" data-filter="website" aria-pressed="false"><span>Websites</span> <span class="filter-count"></span></button>
+            <button class="filter" type="button" data-filter="app" aria-pressed="false"><span>Web apps</span> <span class="filter-count"></span></button>
+          </div>
+          <p class="filter-status" role="status" aria-live="polite" data-filter-status></p>
+        </div>
+        <div class="project-grid is-wide" data-projects="all"></div>
+          <noscript><p class="muted">The project list needs JavaScript. You can also see my work on <a href="https://github.com/JMMM11">GitHub</a>.</p></noscript>
+        <p class="more-work">More experiments live on <a class="link-strong" href="https://github.com/JMMM11?tab=repositories" target="_blank" rel="noopener noreferrer">my GitHub profile</a>.</p>
+      </section>
+</Base>

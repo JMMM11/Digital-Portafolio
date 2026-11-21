@@ -1,0 +1,57 @@
+---
+/*
+ * PIE DE PAGINA. Un solo archivo para todas las paginas.
+ * Arriba: estado y una llamada grande a contacto. En medio: cuatro columnas con encabezados
+ * como comentarios de codigo. Abajo: derechos, version y "volver arriba".
+ * La hora de Panama la actualiza site.js ([data-clock]); la fecha de compilacion sale de Astro.
+ */
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const year = new Date().getFullYear();
+const built = new Date().toISOString().slice(0, 10);
+const pages = [
+  ["index", "Home"], ["about", "About"], ["projects", "Projects"], ["services", "Services"],
+  ["skills", "Skills"], ["experience", "Experience"], ["contact", "Contact"]
+];
+const href = (page: string) => (page === "index" ? base : `${base}${page}.html`);
+---
+<footer class="site-footer">
+  <div class="wrap footer-top">
+    <p class="footer-status"><span class="status-dot" aria-hidden="true"></span><span>Available for new projects</span></p>
+    <a class="footer-cta" href={`${base}contact.html`}><span>Let's build</span> <em>something.</em></a>
+  </div>
+
+  <div class="wrap footer-grid">
+    <div class="footer-col">
+      <p class="footer-comment">// contact</p>
+      <ul>
+        <li><a href="mailto:jairm9010@gmail.com">jairm9010@gmail.com</a></li>
+        <li><a href="https://wa.me/50760028971?text=Hola%20Jair%2C%20vi%20tu%20portafolio%20y%20quiero%20hablar%20contigo%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
+        <li><a href="tel:+50760028971">+507 6002-8971</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <p class="footer-comment">// navigate</p>
+      <ul>
+        {pages.map(([page, label]) => <li><a href={href(page)}>{label}</a></li>)}
+      </ul>
+    </div>
+    <div class="footer-col">
+      <p class="footer-comment">// elsewhere</p>
+      <ul>
+        <li><a href="https://github.com/JMMM11" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href={`${base}cv.html`}>CV</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <p class="footer-comment">// local time</p>
+      <p class="footer-clock"><span data-clock>--:--</span> <span>Panama (UTC-5)</span></p>
+      <p class="footer-build">build {built}</p>
+    </div>
+  </div>
+
+  <div class="wrap footer-bottom">
+    <p>&copy; <span data-year>{year}</span> <span>Jair M. Morales Magallon. Built by hand in Panama.</span></p>
+    <p class="footer-meta"><span>&lt;/&gt; with Astro</span> <a href="#main">Back to top</a></p>
+  </div>
+  <p class="footer-mark" aria-hidden="true">Jair Morales</p>
+</footer>
