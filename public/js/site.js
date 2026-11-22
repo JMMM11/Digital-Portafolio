@@ -327,7 +327,6 @@
     initEffects();
     refreshTitleWater();
     renderLs();
-    renderCaption();
     // CV en el idioma elegido, mensaje de WhatsApp y textos de botones.
     document.querySelectorAll("[data-cv]").forEach((node) => {
       if (node.tagName === "IFRAME") node.src = `${ui().cv}#view=FitH`;
@@ -555,22 +554,10 @@
 
   // Vitrina (inicio): el monitor 3D pasa las obras principales primero y despues el resto.
   const showroom = document.querySelector("[data-showroom]");
-  let showroomIndex = 0;
   function showroomProjects() {
     const all = (window.PROJECTS ?? []).map((project) => (lang === "es" && project.es ? { ...project, ...project.es } : project));
     return [...all.filter((p) => p.spotlight).sort((a, b) => a.spotlight - b.spotlight), ...all.filter((p) => !p.spotlight)];
   }
-  // Pie del monitor: numero, titulo y tipo del proyecto que esta en pantalla.
-  function renderCaption() {
-    const caption = showroom?.querySelector("[data-showroom-caption]");
-    if (!caption) return;
-    const list = showroomProjects();
-    const project = list[showroomIndex];
-    if (!project) return;
-    const pad = (n) => String(n).padStart(2, "0");
-    caption.textContent = `${pad(showroomIndex + 1)} / ${pad(list.length)} \u00b7 ${project.title} \u00b7 ${project.kind}`;
-  }
-
   // Editor que escribe solo: un objeto con los datos de Jair. Colores como un editor de codigo.
   function typeCode() {
     const target = showroom?.querySelector("[data-typing]");
@@ -622,18 +609,12 @@
   function startShowroomSection() {
     if (!showroom) return;
     const list = showroomProjects();
-    renderCaption();
     typeCode();
     runTerminal();
     const stop = window.startShowroom?.({
       canvas: showroom.querySelector(".showroom-canvas"),
       projects: list.map((p) => ({ image: p.image, url: p.demo || p.repo, title: p.title })),
-      reducedMotion: reduceMotion.matches,
-      onChange: (i) => {
-        showroomIndex = i;
-        renderCaption();
-        if (canAnimate()) M.animate(showroom.querySelector("[data-showroom-caption]"), { opacity: [0, 1], y: [6, 0] }, { duration: 0.4, ease: EASE_OUT });
-      }
+      reducedMotion: reduceMotion.matches
     });
     if (stop) { window.addEventListener("pagehide", () => stop(), { once: true }); return; }
     // Sin WebGL: la captura del primer proyecto, quieta, delante del nombre.

@@ -591,14 +591,6 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--accent); color:
   animation: drift 7s ease-in-out infinite alternate;
 }
 @keyframes drift { to { transform: translate(-16px, 12px) rotate(-1.5deg); } }
-/* Pie del monitor: que proyecto esta en pantalla. */
-.showroom-caption {
-  position: absolute; left: 50%; bottom: clamp(20px, 5vh, 48px); translate: -50% 0; z-index: 2;
-  padding: 9px 16px; border-radius: var(--radius-pill); background: var(--raised-2); border: 1px solid var(--line);
-  white-space: nowrap; color: var(--text);
-}
-.showroom-caption:empty { display: none; }
-@media (max-width: 1100px) { .showroom-caption { left: auto; right: var(--gutter); translate: none; } }
 /* Telefonos y tablets en vertical: el nombre arriba, el monitor al centro y el editor abajo. */
 @media (max-width: 760px), (orientation: portrait) and (max-width: 1100px) {
   .showroom { height: max(640px, calc(100svh - 80px)); max-height: none; }
@@ -616,8 +608,6 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--accent); color:
     padding: 10px 14px 12px; font-size: 10.5px; line-height: 1.55; rotate: -1deg;
   }
   .code-card::before { height: 8px; margin-bottom: 8px; }
-  /* En el telefono no hay pie del proyecto: la barra del navegador en la pantalla ya dice cual es. */
-  .showroom-caption { display: none; }
 }
 
 /* ---------- 9. Sobre mi ---------- */
