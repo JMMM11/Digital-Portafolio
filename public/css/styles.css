@@ -360,14 +360,15 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--accent); color:
 .ls-bar span { margin-left: auto; }
 .ls-cmd { padding-inline: 18px; color: var(--sage); }
 .ls-list { padding-inline: 18px; }
-.ls-row { display: grid; grid-template-columns: auto auto auto minmax(0, 1fr); gap: 14px; white-space: nowrap; }
-.ls-perm, .ls-size { color: rgb(241 236 223 / 0.45); }
-.ls-name { color: #e4c98f; text-decoration: none; }
+.ls-row { display: grid; grid-template-columns: auto auto auto auto minmax(0, 1fr); gap: 14px; white-space: pre; }
+.ls-perm, .ls-size, .ls-date { color: rgb(241 236 223 / 0.45); }
+.ls-name { display: inline-block; padding-block: 2px; color: #e4c98f; text-decoration: none; } /* 24 px de alto para el dedo */
 .ls-name:hover { text-decoration: underline; text-underline-offset: 3px; }
 .ls-comment { overflow: hidden; text-overflow: ellipsis; color: rgb(241 236 223 / 0.45); }
 .ls-window :focus-visible { outline-color: var(--sage); }
 @media (max-width: 960px) { .page-head-split { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 520px) { .ls-perm { display: none; } .ls-row { grid-template-columns: auto auto minmax(0, 1fr); } }
+@media (max-width: 520px) { .ls-perm, .ls-date { display: none; } .ls-row { grid-template-columns: auto auto minmax(0, 1fr); } }
+@media (min-width: 521px) and (max-width: 1240px) { .ls-perm { display: none; } .ls-row { grid-template-columns: auto auto auto minmax(0, 1fr); } }
 /* 404: una terminal que no encuentra el archivo. */
 .terminal-404 { margin-top: 36px; padding: 20px 22px; max-width: 34rem; background: var(--deep); color: var(--on-deep); border-radius: 14px; font: 500 0.875rem/1.8 var(--font-code); }
 .t-prompt { color: var(--sage); }
@@ -591,6 +592,12 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--accent); color:
   animation: drift 7s ease-in-out infinite alternate;
 }
 @keyframes drift { to { transform: translate(-16px, 12px) rotate(-1.5deg); } }
+/* Telefono en horizontal: poca altura. El nombre arriba en una linea y el monitor debajo. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .showroom { height: calc(100svh - 72px); min-height: 300px; }
+  .showroom-name { place-content: start center; grid-auto-flow: column; column-gap: 0.25em; padding-top: 6px; font-size: min(14vw, 26vh); }
+  .code-card, .terminal-chip, .showroom-copy { display: none; }
+}
 /* Telefonos y tablets en vertical: el nombre arriba, el monitor al centro y el editor abajo. */
 @media (max-width: 760px), (orientation: portrait) and (max-width: 1100px) {
   .showroom { height: max(640px, calc(100svh - 80px)); max-height: none; }
@@ -761,14 +768,15 @@ html .origami-journey { --oj-ink: #2e5e43; --oj-neutral: #17261c; --oj-logo-edge
 .footer-clock { display: grid; gap: 4px; }
 .footer-clock [data-clock] { font: 500 2rem/1 var(--font-code); letter-spacing: -0.02em; }
 .footer-clock span + span { opacity: 0.7; }
-.footer-build { margin-top: 14px; font: 500 0.75rem/1 var(--font-code); opacity: 0.5; }
+.footer-build { margin-top: 14px; font: 500 0.75rem/1 var(--font-code); opacity: 0.75; }
 .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; padding-block: 22px 28px; border-top: 1px solid rgb(241 236 223 / 0.16); opacity: 0.75; }
 .footer-meta { display: flex; gap: 24px; font-family: var(--font-code); font-size: 0.8125rem; }
 .footer-meta a { text-decoration: none; }
 .footer-meta a::after { content: " \2191"; }
 .footer-meta a:hover { text-decoration: underline; text-underline-offset: 4px; }
-/* El nombre en fantasma, cortado por el borde inferior. */
-.footer-mark {
+/* El nombre en fantasma, cortado por el borde inferior (decorativo: va en CSS, no en el texto). */
+.site-footer::after {
+  content: "Jair Morales"; content: "Jair Morales" / ""; display: block;
   margin: 0 0 -0.22em; text-align: center; white-space: nowrap; pointer-events: none; user-select: none;
   font-family: var(--font-display); font-size: 19vw; line-height: 0.9; letter-spacing: -0.03em;
   color: rgb(241 236 223 / 0.06);

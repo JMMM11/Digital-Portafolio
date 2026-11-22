@@ -12,6 +12,7 @@
     "build:showroom": "npx --yes esbuild@0.28.2 src/three/showroom.js --bundle --minify --format=iife --outfile=public/js/showroom.js"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.6",
     "@fontsource-variable/instrument-sans": "^5.3.0",
     "@fontsource/instrument-serif": "^5.3.0",
     "astro": "^7.4.13",

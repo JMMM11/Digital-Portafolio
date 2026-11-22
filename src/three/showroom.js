@@ -13,7 +13,7 @@
  */
 import {
   WebGLRenderer, Scene, PerspectiveCamera, Group, Mesh, PlaneGeometry, ShaderMaterial,
-  MeshPhysicalMaterial, MeshBasicMaterial, CanvasTexture, SRGBColorSpace, PMREMGenerator,
+  MeshPhysicalMaterial, MeshStandardMaterial, MeshBasicMaterial, CanvasTexture, SRGBColorSpace, PMREMGenerator,
   DirectionalLight, HemisphereLight, ACESFilmicToneMapping, MathUtils
 } from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
@@ -197,15 +197,23 @@ function startShowroom({ canvas, projects, reducedMotion = false, onChange }) {
   const camera = new PerspectiveCamera(20, 1, 0.1, 200);
   camera.position.set(0, 0.6, 33);
 
+  // En pantallas chicas el material "fisico" (con barniz) se cambia por el estandar: se ve casi
+  // igual a ese tamano y su shader compila mucho mas rapido, asi el telefono no se traba al arrancar.
+  const lite = window.innerWidth < 760;
+  const physical = (params) => {
+    if (!lite) return new MeshPhysicalMaterial(params);
+    const { clearcoat, clearcoatRoughness, ...standard } = params;
+    return new MeshStandardMaterial(standard);
+  };
   const owned = [];
   const own = (x) => { owned.push(x); return x; };
 
   /* ---------- Monitor ---------- */
   const monitor = new Group();
   scene.add(monitor);
-  const sage = own(new MeshPhysicalMaterial({ color: "#a9c3ae", metalness: 0.35, roughness: 0.32, clearcoat: 0.6, clearcoatRoughness: 0.2 }));
-  const sageDeep = own(new MeshPhysicalMaterial({ color: "#7fa48a", metalness: 0.45, roughness: 0.3, clearcoat: 0.4 }));
-  const bezel = own(new MeshPhysicalMaterial({ color: "#f6f4ee", metalness: 0, roughness: 0.18, clearcoat: 1, clearcoatRoughness: 0.05 }));
+  const sage = own(physical({ color: "#a9c3ae", metalness: 0.35, roughness: 0.32, clearcoat: 0.6, clearcoatRoughness: 0.2 }));
+  const sageDeep = own(physical({ color: "#7fa48a", metalness: 0.45, roughness: 0.3, clearcoat: 0.4 }));
+  const bezel = own(physical({ color: "#f6f4ee", metalness: 0, roughness: 0.18, clearcoat: 1, clearcoatRoughness: 0.05 }));
 
   const shell = new Mesh(own(new RoundedBoxGeometry(7.1, 4.95, 0.26, 10, 0.16)), sage);
   shell.position.set(0, 0, -0.08);
@@ -230,7 +238,7 @@ function startShowroom({ canvas, projects, reducedMotion = false, onChange }) {
   }));
   const screen = new Mesh(own(new PlaneGeometry(SCREEN_W, SCREEN_H)), screenMaterial);
   screen.position.set(0, 0.36, 0.1);
-  const glass = new Mesh(screen.geometry, own(new MeshPhysicalMaterial({
+  const glass = new Mesh(screen.geometry, own(physical({
     color: "#ffffff", metalness: 0, roughness: 0.02, transparent: true, opacity: 0.1, envMapIntensity: 3,
     clearcoat: 1, clearcoatRoughness: 0, depthWrite: false
   })));
@@ -252,7 +260,7 @@ function startShowroom({ canvas, projects, reducedMotion = false, onChange }) {
 
   /* ---------- Laptop que orbita ---------- */
   const laptop = new Group();
-  const metal = own(new MeshPhysicalMaterial({ color: "#d9d6cc", metalness: 0.7, roughness: 0.28 }));
+  const metal = own(physical({ color: "#d9d6cc", metalness: 0.7, roughness: 0.28 }));
   const lapBase = new Mesh(own(new RoundedBoxGeometry(1.7, 0.08, 1.15, 3, 0.03)), metal);
   const hinge = new Group();
   hinge.position.set(0, 0.04, -0.55);
@@ -267,15 +275,22 @@ function startShowroom({ canvas, projects, reducedMotion = false, onChange }) {
   scene.add(laptop);
 
   /* ---------- Proyectos ---------- */
-  projects.forEach((project, i) => {
-    loadImage(project.image).then((image) => {
-      textures[i] = own(browserWindow(image, project.url));
+  // Las pantallas se preparan a medida que hacen falta (la actual y la siguiente), no las diez
+  // de golpe: asi el arranque no traba el telefono.
+  const loading = [];
+  function ensure(i) {
+    if (textures[i] || loading[i]) return;
+    loading[i] = true;
+    loadImage(projects[i].image).then((image) => {
+      textures[i] = own(browserWindow(image, projects[i].url));
       if (i === 0) {
         screenMaterial.uniforms.uA.value = textures[0];
         screenMaterial.uniforms.uB.value = textures[0];
       }
     });
-  });
+  }
+  ensure(0);
+  ensure(1 % projects.length);
   let current = 0, phaseStart = performance.now() / 1000, switching = false;
   onChange?.(0);
 
@@ -287,7 +302,7 @@ function startShowroom({ canvas, projects, reducedMotion = false, onChange }) {
   };
   window.addEventListener("pointermove", onPointer, { passive: true });
 
-  let portrait = false;
+  let portrait = false, shortLandscape = false;
   function resize() {
     const box = canvas.getBoundingClientRect();
     const w = Math.max(1, box.width), h = Math.max(1, box.height);
@@ -301,6 +316,9 @@ function startShowroom({ canvas, projects, reducedMotion = false, onChange }) {
     camera.position.z = ratio < 1 ? 33 / ratio * (0.78 + (ratio - 0.46) * 0.7) : 33;
     // En vertical el monitor baja para dejar arriba el nombre, y la laptop orbita mas cerca.
     portrait = w / h < 1;
+    // Telefono en horizontal (poca altura): la camara se aleja y el monitor baja bajo el nombre.
+    shortLandscape = !portrait && h < 520;
+    if (shortLandscape) camera.position.z = 48;
     camera.updateProjectionMatrix();
   }
   const resizer = new ResizeObserver(resize);
@@ -336,6 +354,7 @@ function startShowroom({ canvas, projects, reducedMotion = false, onChange }) {
       if (p >= 1) {
         switching = false;
         current = (current + 1) % projects.length;
+        ensure((current + 1) % projects.length);
         u.uA.value = u.uB.value;
         u.uMix.value = 0;
         u.uGlitch.value = 0;
@@ -354,7 +373,7 @@ function startShowroom({ canvas, projects, reducedMotion = false, onChange }) {
     look.y = lerp(look.y, pointer.y, k);
     const float = reducedMotion ? 0 : Math.sin(t * 0.9) * 0.08;
     monitor.rotation.set(-0.04 + look.y * 0.12 + scrolled * 0.25, -0.12 + look.x * 0.35, 0);
-    monitor.position.y = (portrait ? -0.9 : 0.2) + float - scrolled * 1.2;
+    monitor.position.y = (portrait ? -0.9 : shortLandscape ? -2.2 : 0.2) + float - scrolled * 1.2;
 
     // La laptop da vueltas alrededor del monitor, a veces delante y a veces detras.
     const orbit = reducedMotion ? 1.2 : t * 0.22;

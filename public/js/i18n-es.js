@@ -15,7 +15,7 @@ window.I18N = {
   // Textos que arma site.js (botones, estados, tarjetas de proyectos).
   ui: {
     en: {
-      langButton: "ES", langLabel: "Ver en español",
+      langButton: "ES", langLabel: "ES, ver en español",
       menu: "Menu", close: "Close",
       role: "My role", builtWith: "Built with", demo: "Live demo", source: "Source code",
       shown: (n) => `${n} ${n === 1 ? "project" : "projects"} shown`,
@@ -26,7 +26,7 @@ window.I18N = {
       problem: "Problem", challenge: "Challenge", result: "Result"
     },
     es: {
-      langButton: "EN", langLabel: "View in English",
+      langButton: "EN", langLabel: "EN, view in English",
       menu: "Menú", close: "Cerrar",
       role: "Mi rol", builtWith: "Hecho con", demo: "Ver demo", source: "Código fuente",
       shown: (n) => `${n} ${n === 1 ? "proyecto" : "proyectos"}`,

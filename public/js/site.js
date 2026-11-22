@@ -150,6 +150,9 @@
     if (project.image) {
       const image = element("img");
       image.src = project.image;
+      // Version de 720 px (nombre-720.webp) para pantallas chicas.
+      image.srcset = `${project.image.replace(/\.webp$/, "-720.webp")} 720w, ${project.image} 1280w`;
+      image.sizes = "(max-width: 860px) calc(100vw - 40px), 55vw";
       image.alt = "";
       image.width = 1280;
       image.height = 800;
@@ -174,7 +177,7 @@
     const card = element("article", `work-card tone-${index % 3}`);
     card.dataset.category = project.category;
     const panel = element("div", "work-panel");
-    panel.append(element("p", "mono-label", `${String(index + 1).padStart(2, "0")} / ${project.kind}`));
+    panel.append(element("p", "mono-label", `${String(index + 1).padStart(2, "0")} / ${project.kind}${project.date ? ` · ${project.date.slice(0, 4)}` : ""}`));
     const title = element("h3", "work-name");
     const url = project.demo || project.repo;
     if (url) title.append(externalLink(project.title, url, ""));
@@ -202,7 +205,7 @@
     const tile = element("article", "tile");
     tile.dataset.category = project.category;
     const body = element("div", "tile-body");
-    body.append(element("p", "mono-label", `${project.kind}`));
+    body.append(element("p", "mono-label", `${project.kind}${project.date ? ` · ${project.date.slice(0, 4)}` : ""}`));
     const title = element("h3", "tile-title");
     const url = project.demo || project.repo;
     if (url) title.append(externalLink(project.title, url, ""));
@@ -526,6 +529,9 @@
       const slug = project.title.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
       item.append(element("span", "ls-perm", project.spotlight ? "drwxr-xr-x*" : "drwxr-xr-x "));
       item.append(element("span", "ls-size", String(project.stack.length).padStart(2, " ")));
+      // Fecha como en un ls -la de verdad: "Oct 20  2026".
+      const when = project.date ? new Date(`${project.date}T12:00:00`) : null;
+      item.append(element("span", "ls-date", when ? `${when.toLocaleString("en-US", { month: "short" })} ${String(when.getDate()).padStart(2, " ")}  ${when.getFullYear()}` : ""));
       const link = element("a", "ls-name", `${slug}/`);
       link.href = project.demo || project.repo;
       link.target = "_blank";
@@ -606,14 +612,30 @@
     step();
   }
 
-  function startShowroomSection() {
+  // showroom.js (547 KB, three.js) no se carga con la pagina: se pide aqui, cuando la pagina ya
+  // se ve. Asi el primer pintado es rapido aunque el 3D tarde un poco mas.
+  const scriptBase = document.currentScript?.src.replace(/site\.js(\?.*)?$/, "") ?? "js/";
+  function loadScript(src) {
+    return new Promise((resolve) => {
+      const tag = document.createElement("script");
+      tag.src = src;
+      tag.onload = tag.onerror = () => resolve();
+      document.head.append(tag);
+    });
+  }
+
+  async function startShowroomSection() {
     if (!showroom) return;
     const list = showroomProjects();
     typeCode();
     runTerminal();
+    // Se espera a que el navegador este libre (como mucho 1.5 s) para no trabar el primer pintado.
+    await new Promise((resolve) => (window.requestIdleCallback ? requestIdleCallback(resolve, { timeout: 1500 }) : setTimeout(resolve, 300)));
+    if (!window.startShowroom) await loadScript(`${scriptBase}showroom.js`);
     const stop = window.startShowroom?.({
       canvas: showroom.querySelector(".showroom-canvas"),
-      projects: list.map((p) => ({ image: p.image, url: p.demo || p.repo, title: p.title })),
+      // En pantallas chicas, las capturas de 720 px: pesan la mitad.
+      projects: list.map((p) => ({ image: innerWidth < 760 ? p.image.replace(/\.webp$/, "-720.webp") : p.image, url: p.demo || p.repo, title: p.title })),
       reducedMotion: reduceMotion.matches
     });
     if (stop) { window.addEventListener("pagehide", () => stop(), { once: true }); return; }

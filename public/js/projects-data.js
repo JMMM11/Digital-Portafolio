@@ -13,6 +13,7 @@
  *   alt      Descripcion de la captura para lectores de pantalla.
  *   demo     URL de la demo en vivo. Usa "" si no hay.
  *   repo     URL del repositorio. Usa "" si no hay.
+ *   date     Fecha del proyecto (AAAA-MM-DD). Se muestra el ano en las tarjetas y la fecha en el ls de projects.html.
  *   note     Texto opcional que aparece cuando falta la demo o el repositorio.
  *   spotlight  Opcional. 1, 2, 3...: obra principal. Sale primero en el museo y en los destacados
  *              de projects.html, en ese orden,
@@ -34,6 +35,7 @@ window.PROJECTS = [
     alt: "FLUYA home page: a rainy street with the headline Your community, informed in time, and a sample flood alert confirmed by three neighbors.",
     demo: "https://jmmm11.github.io/FLUYA/",
     repo: "https://github.com/JMMM11/FLUYA",
+    date: "2026-10-20",
     note: "",
     spotlight: 3,
     problem: "In Villa del Campo, Valle Dorado, Nicolás Solano and Martín Sánchez, neighbors learn too late about river floods, water cuts and closed roads, and rumors spread faster than facts.",
@@ -60,6 +62,7 @@ window.PROJECTS = [
     alt: "Opening screen of the invitation: a brick townhouse covered in wisteria behind an iron gate.",
     demo: "https://jmmm11.github.io/Adriana-Victoria-Pinzon-Jaen/",
     repo: "https://github.com/JMMM11/Adriana-Victoria-Pinzon-Jaen",
+    date: "2026-10-02",
     note: "",
     spotlight: 1,
     problem: "A quinceañera needed an invitation guests would remember, and the family needed one place to collect RSVPs and guest messages.",
@@ -87,6 +90,7 @@ window.PROJECTS = [
     alt: "Hydronexis home page: a family tending lettuce in a home hydroponic system.",
     demo: "https://jmmm11.github.io/Hydronexis/livedemo00.template-help.com/wt_prod-10492/theme/index.html",
     repo: "https://github.com/JMMM11/Hydronexis",
+    date: "2026-10-08",
     note: "",
     spotlight: 2,
     tags: ["HTML", "CSS", "JavaScript", "Python", "Flask", "Gemini API"],
@@ -115,6 +119,7 @@ window.PROJECTS = [
     alt: "PanaRoots home page: the name over a palm-covered island in turquoise water, with a search bar for destination, starting point and experience type.",
     demo: "https://jmmm11.github.io/Panaroots/",
     repo: "https://github.com/JMMM11/Panaroots",
+    date: "2026-10-12",
     note: "",
     es: {
       kind: "Sitio de turismo",
@@ -136,6 +141,7 @@ window.PROJECTS = [
     alt: "HealthBoost home page: a pilates class behind the headline Train wherever you want, whenever you want, with buttons to choose a plan and view programs.",
     demo: "https://jmmm11.github.io/HealthBoost/",
     repo: "https://github.com/JMMM11/HealthBoost",
+    date: "2026-10-12",
     note: "",
     es: {
       kind: "Sitio de bienestar",
@@ -157,6 +163,7 @@ window.PROJECTS = [
     alt: "FoodWizz home page: the headline Smarter inventory for small restaurants next to a burger with its layers floating over an orange circle.",
     demo: "https://jmmm11.github.io/Foodwizz/",
     repo: "https://github.com/JMMM11/Foodwizz",
+    date: "2026-10-14",
     note: "",
     tags: ["HTML", "CSS", "JavaScript", "Firebase Hosting"],
     problem: "Small restaurants and food trucks need a simple way to keep track of their stock. FoodWizz is inventory software built for them, and its site has to explain the features, compare the pricing plans and let people download the app.",
@@ -184,6 +191,7 @@ window.PROJECTS = [
     alt: "Hands running in the browser: the word HOLA drawn in blue particles over the camera view, with a guide of gestures along the bottom.",
     demo: "https://jmmm11.github.io/Hands/",
     repo: "https://github.com/JMMM11/Hands",
+    date: "2026-03-16",
     note: "The demo asks for camera access to detect your hands.",
     es: {
       kind: "Web app con gestos",
@@ -205,6 +213,7 @@ window.PROJECTS = [
     alt: "Title screen in gold lettering over a starry sky, followed by the first chapter of the letter.",
     demo: "https://jmmm11.github.io/My-life/",
     repo: "https://github.com/JMMM11/My-life",
+    date: "2025-12-16",
     note: "",
     es: {
       kind: "Regalo de graduación",
@@ -226,6 +235,7 @@ window.PROJECTS = [
     alt: "Illustrated field of yellow roses with a bee and a butterfly under a bright sun.",
     demo: "https://jmmm11.github.io/Roses/",
     repo: "https://github.com/JMMM11/Roses",
+    date: "2026-09-21",
     note: "",
     es: {
       kind: "Regalo digital",
@@ -247,6 +257,7 @@ window.PROJECTS = [
     alt: "A Christmas tree made of green particles with a yellow star, snowflakes and colored lights on a dark background.",
     demo: "https://jmmm11.github.io/Navidad/",
     repo: "https://github.com/JMMM11/Navidad",
+    date: "2025-12-22",
     note: "",
     es: {
       kind: "Tarjeta animada",

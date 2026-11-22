@@ -6,4 +6,5 @@ import { copyFile, mkdir } from "node:fs/promises";
 await mkdir("public/js/vendor", { recursive: true });
 await copyFile("node_modules/motion/dist/motion.js", "public/js/vendor/motion.js");
 await copyFile("node_modules/lenis/dist/lenis.min.js", "public/js/vendor/lenis.min.js");
+await copyFile("node_modules/lenis/dist/lenis.min.js.map", "public/js/vendor/lenis.min.js.map");
 console.log("Motion y Lenis copiados en public/js/vendor/");
