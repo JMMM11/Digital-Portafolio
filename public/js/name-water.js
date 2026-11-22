@@ -69,7 +69,7 @@
     // bordes del lienzo para que no se note su rectangulo.
     vec2 e = min(uv, 1.0 - uv);
     float fade = smoothstep(0.0, 0.12, min(e.x * uRes.x / uRes.y, e.y));
-    float waterA = clamp(abs(shade) * 0.9 + spec * 0.6, 0.0, 0.16) * fade;
+    float waterA = clamp(abs(shade) * 0.7 + spec * 0.5, 0.0, 0.1) * fade;
     vec3 water = shade > 0.0 ? FOAM : vec3(0.36, 0.47, 0.40);
     vec3 col = mix(water, ink, text);
     float a = max(text, waterA);
@@ -207,11 +207,16 @@
     };
     const onDown = (event) => { const p = toSim(event.clientX, event.clientY); drops.push({ ...p, r: 18, s: 1.4 }); };
     const onLeave = () => { last = null; };
+    // En el telefono: el dedo tambien deja ondas (el navegador cancela los pointermove al hacer scroll).
+    const onTouch = (event) => { const t = event.touches[0]; if (t) onMove({ clientX: t.clientX, clientY: t.clientY }); };
+    const onTouchStart = (event) => { const t = event.touches[0]; if (t) { last = null; const p = toSim(t.clientX, t.clientY); drops.push({ ...p, r: 14, s: 0.9 }); } };
     const host = canvas.parentElement;
     if (waves) {
       host.addEventListener("pointermove", onMove);
       host.addEventListener("pointerdown", onDown);
       host.addEventListener("pointerleave", onLeave);
+      host.addEventListener("touchmove", onTouch, { passive: true });
+      host.addEventListener("touchstart", onTouchStart, { passive: true });
     }
 
     const resizer = new ResizeObserver(build);
@@ -281,6 +286,8 @@
       host.removeEventListener("pointermove", onMove);
       host.removeEventListener("pointerdown", onDown);
       host.removeEventListener("pointerleave", onLeave);
+      host.removeEventListener("touchmove", onTouch);
+      host.removeEventListener("touchstart", onTouchStart);
       states.forEach(({ tex, fb }) => { gl.deleteTexture(tex); gl.deleteFramebuffer(fb); });
       gl.deleteTexture(maskTex);
       gl.deleteProgram(sim);

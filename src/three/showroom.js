@@ -287,14 +287,20 @@ function startShowroom({ canvas, projects, reducedMotion = false, onChange }) {
   };
   window.addEventListener("pointermove", onPointer, { passive: true });
 
+  let portrait = false;
   function resize() {
     const box = canvas.getBoundingClientRect();
     const w = Math.max(1, box.width), h = Math.max(1, box.height);
-    renderer.setPixelRatio(Math.min((window.devicePixelRatio || 1) * 1.25, 2.5)); // un poco de supermuestreo
+    // Escritorio: un poco de supermuestreo. Telefono: menos pixeles para que vaya fluido y no gaste bateria.
+    renderer.setPixelRatio(w < 760 ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min((window.devicePixelRatio || 1) * 1.25, 2.5));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     // En pantallas estrechas la camara se aleja para que el monitor quepa entero.
-    camera.position.z = w / h < 1 ? 33 / Math.max(0.42, w / h) * 0.78 : 33;
+    // En vertical la camara se aleja segun la proporcion: telefono (0.46) y tablet (0.7) dejan sitio al nombre.
+    const ratio = Math.max(0.42, w / h);
+    camera.position.z = ratio < 1 ? 33 / ratio * (0.78 + (ratio - 0.46) * 0.7) : 33;
+    // En vertical el monitor baja para dejar arriba el nombre, y la laptop orbita mas cerca.
+    portrait = w / h < 1;
     camera.updateProjectionMatrix();
   }
   const resizer = new ResizeObserver(resize);
@@ -348,11 +354,12 @@ function startShowroom({ canvas, projects, reducedMotion = false, onChange }) {
     look.y = lerp(look.y, pointer.y, k);
     const float = reducedMotion ? 0 : Math.sin(t * 0.9) * 0.08;
     monitor.rotation.set(-0.04 + look.y * 0.12 + scrolled * 0.25, -0.12 + look.x * 0.35, 0);
-    monitor.position.y = 0.2 + float - scrolled * 1.2;
+    monitor.position.y = (portrait ? -0.9 : 0.2) + float - scrolled * 1.2;
 
     // La laptop da vueltas alrededor del monitor, a veces delante y a veces detras.
     const orbit = reducedMotion ? 1.2 : t * 0.22;
-    laptop.position.set(Math.cos(orbit) * 5.6, -2.6 + Math.sin(t * 1.3) * 0.15, Math.sin(orbit) * 2.8);
+    const radius = portrait ? 3.4 : 5.6;
+    laptop.position.set(Math.cos(orbit) * radius, (portrait ? -3.6 : -2.6) + Math.sin(t * 1.3) * 0.15, Math.sin(orbit) * 2.8);
     laptop.rotation.set(0.12, -orbit + Math.PI / 2 + 0.6, Math.sin(t * 0.8) * 0.05);
 
     renderer.render(scene, camera);

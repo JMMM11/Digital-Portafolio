@@ -557,6 +557,8 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--accent); color:
 .showroom-fallback { object-fit: contain; padding: 12% 18%; }
 .showroom-copy { position: absolute; left: 0; right: 0; top: clamp(12px, 3vh, 32px); z-index: 2; pointer-events: none; }
 .showroom-copy h1 { font-size: clamp(2.5rem, 1.4rem + 3vw, 4.25rem); }
+.showroom-prompt { font: 500 0.8125rem/1.3 var(--font-code); color: var(--accent); }
+.showroom-prompt::after { content: ""; display: inline-block; width: 0.55em; height: 1.05em; margin-left: 4px; vertical-align: text-bottom; background: var(--accent); animation: caret 1s steps(1) infinite; }
 .showroom-copy .lead { margin-top: 10px; max-width: 22em; font-size: var(--text-base); color: var(--muted); }
 /* Editor de codigo que escribe solo. */
 .code-card {
@@ -597,10 +599,25 @@ html:not(.js) .nav-link[aria-current="page"] { background: var(--accent); color:
 }
 .showroom-caption:empty { display: none; }
 @media (max-width: 1100px) { .showroom-caption { left: auto; right: var(--gutter); translate: none; } }
-@media (max-width: 760px) {
-  .code-card, .terminal-chip { display: none; }
-  .showroom-caption { left: 50%; right: auto; translate: -50% 0; width: max-content; max-width: calc(100% - 2 * var(--gutter)); white-space: normal; text-align: center; line-height: 1.4; }
-  .showroom-name { font-size: 31vw; }
+/* Telefonos y tablets en vertical: el nombre arriba, el monitor al centro y el editor abajo. */
+@media (max-width: 760px), (orientation: portrait) and (max-width: 1100px) {
+  .showroom { height: max(640px, calc(100svh - 80px)); max-height: none; }
+  /* El nombre arriba, grande y entero: el monitor queda debajo. */
+  .showroom-name {
+    place-content: start center; padding-top: clamp(64px, 11svh, 120px);
+    font-size: 30vw; line-height: 0.82;
+    background: linear-gradient(180deg, #1c3326 0%, #3e6a4d 55%, #8fae97 100%);
+    -webkit-background-clip: text; background-clip: text;
+  }
+  .terminal-chip { display: none; }
+  /* Editor compacto abajo, de lado a lado. */
+  .code-card {
+    left: var(--gutter); right: var(--gutter); bottom: 14px; width: auto; min-height: 0;
+    padding: 10px 14px 12px; font-size: 10.5px; line-height: 1.55; rotate: -1deg;
+  }
+  .code-card::before { height: 8px; margin-bottom: 8px; }
+  /* En el telefono no hay pie del proyecto: la barra del navegador en la pantalla ya dice cual es. */
+  .showroom-caption { display: none; }
 }
 
 /* ---------- 9. Sobre mi ---------- */
@@ -743,9 +760,9 @@ html .origami-journey { --oj-ink: #2e5e43; --oj-neutral: #17261c; --oj-logo-edge
   justify-self: start; font-family: var(--font-display); font-size: clamp(3rem, 1.4rem + 7vw, 8rem); line-height: 0.92; letter-spacing: -0.03em;
   text-decoration: none;
 }
-.footer-cta em { color: var(--sage); }
-.footer-cta::after { content: "\2192"; display: inline-block; margin-left: 0.2em; font-family: var(--font-body); font-size: 0.5em; transition: transform 0.4s var(--ease-out); }
-.footer-cta:hover::after { transform: translateX(12px); }
+.footer-cta em { color: var(--sage); white-space: nowrap; }
+.footer-cta em::after { content: "\2192"; display: inline-block; margin-left: 0.2em; font-family: var(--font-body); font-size: 0.5em; transition: transform 0.4s var(--ease-out); }
+.footer-cta:hover em::after { transform: translateX(12px); }
 .footer-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px 24px; padding-block: clamp(40px, 6vw, 64px); }
 .footer-comment { margin-bottom: 14px; font: 500 0.8125rem/1 var(--font-code); color: var(--sage); }
 .footer-col ul { display: grid; gap: 8px; }
@@ -768,6 +785,7 @@ html .origami-journey { --oj-ink: #2e5e43; --oj-neutral: #17261c; --oj-logo-edge
 }
 .site-footer :focus-visible { outline-color: var(--sage); }
 @media (max-width: 860px) { .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .footer-cta { font-size: clamp(2.5rem, 12vw, 3.25rem); } .footer-bottom { flex-direction: column; } }
 
 /* ---------- 16. Pantallas pequenas ---------- */
 @media (max-width: 860px) {
@@ -799,7 +817,7 @@ html .origami-journey { --oj-ink: #2e5e43; --oj-neutral: #17261c; --oj-logo-edge
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
   html { scroll-behavior: auto; }
-  .marquee-track, .now h2::before, .terminal-chip, .caret, .crumb::after, .status-dot { animation: none; }
+  .marquee-track, .now h2::before, .terminal-chip, .caret, .crumb::after, .status-dot, .showroom-prompt::after { animation: none; }
   .work-card, .page-head h1, .page-head .lead { scale: none; translate: none; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
