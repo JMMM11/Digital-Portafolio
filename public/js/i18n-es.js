@@ -81,7 +81,7 @@ window.I18N = {
     "Based in": "Vivo en",
     "Panama": "Panamá",
     "Recent work": "Trabajo reciente",
-    "Four projects that show the range: a community alert platform, a quinceañera invitation, a site for a community initiative and an app you control with your hands.": "Cuatro proyectos que muestran lo que hago: una plataforma de alertas comunitarias, una invitación de quinceaños, un sitio para una iniciativa comunitaria y una app que controlas con las manos.",
+    "Four projects that show the range: a student company with its own online shop, a community alert platform, a quinceañera invitation and a site for a community initiative.": "Cuatro proyectos que muestran lo que hago: una empresa estudiantil con su propia tienda en línea, una plataforma de alertas comunitarias, una invitación de quinceaños y un sitio para una iniciativa comunitaria.",
     "See all projects": "Ver todos los proyectos",
     "Now": "Ahora",
     "Updated <time datetime=\"2026-10\">October 2026</time>": "Actualizado <time datetime=\"2026-10\">octubre 2026</time>",

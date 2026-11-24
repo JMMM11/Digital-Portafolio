@@ -24,6 +24,28 @@
  */
 window.PROJECTS = [
   {
+    title: "GREENOVA",
+    kind: "Student company website",
+    category: "website",
+    featured: true,
+    summary: "A bilingual site for GREENOVA, a student company from Escuela Secundaria Pedro Pablo Sánchez in La Chorrera that germinates corn, cucumber and tomato seedlings in an automated chamber and delivers them ready to transplant. It has a video hero, a 3D scene of a growing seedling, a shop with a cart that needs no account, a batch planner and a contact form.",
+    role: "Front-end development",
+    stack: ["React", "TypeScript", "Vite", "Three.js", "Tailwind CSS", "Motion"],
+    image: "assets/images/projects/greenova.webp",
+    alt: "GREENOVA home page: the headline Donde crece el futuro over a photo of the germination chamber with seedling trays.",
+    demo: "https://greenova-pps.vercel.app/es",
+    repo: "https://github.com/JMMM11/GREENOVA",
+    date: "2026-11-24",
+    note: "",
+    es: {
+      kind: "Sitio de empresa estudiantil",
+      summary: "Un sitio bilingüe para GREENOVA, empresa estudiantil de la Escuela Secundaria Pedro Pablo Sánchez en La Chorrera que germina plantones de maíz, pepino y tomate en una cámara automatizada y los entrega listos para trasplante. Tiene un hero en video, una escena 3D de un plantón que crece, una tienda con carrito sin cuentas, un planificador de lotes y un formulario de contacto.",
+      role: "Desarrollo front-end",
+      alt: "Inicio de GREENOVA: el titular Donde crece el futuro sobre una foto de la cámara de germinación con bandejas de plantones.",
+      note: "",
+    }
+  },
+  {
     title: "FLUYA",
     kind: "Community alert platform",
     category: "app",
